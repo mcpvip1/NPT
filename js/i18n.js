@@ -1,0 +1,237 @@
+// Translations. Add new keys to BOTH languages.
+
+const i18n = {
+  my: {
+    appSubtitle: 'သင့်ကျန်းမာရေးနှင့် ရာသီစက်ဝန်း',
+
+    lblHeroDay: 'ရက်မြောက်',
+    lblCardPeriod: 'ရာသီလာရက်',
+    lblCardFertile: 'မျိုးဥထွက်ချိန်',
+    lblCardOvulation: 'မျိုးဥထွက်ရက်',
+    lblCardNext: 'နောက်လာမည့်ရက်',
+    lblHistoryTitle: '📜 မှတ်တမ်း',
+    lblHistorySubtext: 'ရက်စွဲအလိုက် မှတ်တမ်းများ',
+    lblSetupTitle: '⚙️ အပြင်အဆင်',
+    lblUserName: 'သင့်အမည်',
+    lblLastDate: 'နောက်ဆုံးရာသီရက်',
+    lblCycleLength: 'စက်ဝန်း (ရက်)',
+    lblPeriodLength: 'ရာသီ (ရက်)',
+    lblLutealLength: 'Luteal (ရက်)',
+    lblNotifyHeading: '🔔 သတိပေးချက်',
+    lblNotifyEnable: 'ရာသီနီးပါက သတိပေးရန်',
+    lblNotifyDays: 'ရက်အလိုတွင်',
+    lblDataHeading: '💾 ဒေတာ',
+    btnSave: 'သိမ်းမည်',
+
+    lblWelcomeName: 'သင့်အမည်',
+    lblWelcomeLastDate: 'နောက်ဆုံးရာသီရက်',
+    lblWelcomeCycle: 'စက်ဝန်း (ရက်)',
+    lblWelcomePeriod: 'ရာသီ (ရက်)',
+    btnWelcomeStart: 'စတင်မည် ✨',
+
+    lblModalFlowHead: '🩸 သွေးဆင်းပမာဏ',
+    lblModalSymptomsHead: '✨ ခံစားချက်',
+    lblModalNotes: '📝 မှတ်စု',
+    lblAdviceHeading: '💡 ကျန်းမာရေး အကြံပြုချက်',
+
+    lblInsightsTitle: '📊 ခွဲခြမ်း',
+    lblInsightCycle: 'စက်ဝန်း ခြုံငုံ',
+    lblStatCycleDay: 'လက်ရှိရက်',
+    lblStatCycleLen: 'စက်ဝန်း',
+    lblStatPeriodLen: 'ရာသီ',
+    lblStatDaysLeft: 'နောက်ရာသီအထိ',
+    lblInsightPredictions: 'နောက်လာမည့် ၃ ကြိမ်',
+    lblInsightSymptoms: 'လက္ခဏာ အကြိမ်ရေ',
+    lblInsightFlow: 'သွေးဆင်းပမာဏ',
+    lblInsightTotals: 'မှတ်တမ်း',
+    lblStatTotalLogs: 'စုစုပေါင်း',
+    lblStatMonthLogs: 'ယခုလ',
+
+    navHome: 'ပင်မ',
+    navInsights: 'ခွဲခြမ်း',
+    navHistory: 'မှတ်တမ်း',
+    navSettings: 'ပြင်ဆင်',
+
+    legPeriod: 'ရာသီ',
+    legFertile: 'မျိုးဥနိုင်',
+    legOvulation: 'မျိုးဥထွက်',
+    legNext: 'လာမည့်ရက်',
+
+    phaseMenstrual: 'ရာသီလာချိန်',
+    phaseFollicular: 'ဖောလီကူလာ',
+    phaseFertile: 'မျိုးဥထွက်နိုင်ချိန်',
+    phaseOvulation: 'မျိုးဥထွက်ရက်',
+    phaseLuteal: 'လူတီရယ်',
+
+    daysUnit: 'ရက်',
+    todayLabel: 'ယနေ့',
+    peak: 'အမြင့်ဆုံး',
+    noData: 'ဒေတာ မရှိပါ',
+    noLogs: 'မှတ်တမ်း မရှိသေးပါ',
+    searchPlaceholder: 'ရှာဖွေရန်...',
+    allMonths: 'အားလုံး',
+    confirm: 'အတည်ပြု',
+    cancel: 'မလုပ်တော့',
+    confirmResetTitle: 'ဒေတာဖျက်မည်',
+    confirmResetMsg: 'မှတ်တမ်းများ အားလုံး ပျက်မည်။',
+    confirmDeleteTitle: 'မှတ်တမ်းဖျက်မည်',
+    confirmDeleteMsg: 'ဤရက်စွဲ၏ မှတ်တမ်းကို ဖျက်မည်လား?',
+    importTitle: 'ဒေတာထည့်ရန်',
+    importHint: 'Export လုပ်ထားသော JSON ကို Paste လုပ်ပါ။',
+    msgSaved: 'သိမ်းပြီးပါပြီ',
+    msgDeleted: 'ဖျက်ပြီးပါပြီ',
+    msgImported: 'ထည့်သွင်းပြီးပါပြီ',
+    msgImportError: 'ဒေတာ ဖတ်မရပါ',
+    msgExported: 'ထုတ်ယူပြီးပါပြီ',
+    msgCycleStart: '🌸 ရာသီစက်ဝန်း အသစ် စတင်ပါပြီ',
+    alarmTitle: 'Aura',
+    alarmText: d => `နောက်ရာသီရက် ${d} ရက်သာ လိုပါတော့သည်။`,
+    daysLeft: d => d <= 0 ? 'ယနေ့' : `${d} ရက်ကျန်`,
+    predDays: d => d <= 0 ? 'ယနေ့' : `${d} ရက်`,
+
+    flows: {
+      spotting: '📍 စွန်းရုံ', light: '💧 နည်း',
+      medium: '💧💧 အသင့်အတင့်', heavy: '💧💧💧 များ'
+    },
+    chips: {
+      cramps: '⚡ ကိုက်ခဲ', bloating: '🎈 ဗိုက်ကယ်', tired: '😴 နွမ်း',
+      happy: '😊 ပျော်', moody: '😭 စိတ်ဆိုး', cravings: '🍕 အစားကြိုက်',
+      headache: '💆 ခေါင်းကိုက်', acne: '🌶 ဝက်ခြံ',
+      backpain: '🦴 ခါးနာ', nausea: '🤢 ပျို့'
+    },
+    advices: {
+      cramps: 'ဗိုက်ပေါ်တွင် ရေနွေးအိတ် ကပ်ပါ၊ ရေနွေးနွေး သောက်ပါ။',
+      bloating: 'ဆားလျှော့စားပါ၊ ရေများများ သောက်ပါ။',
+      tired: 'အနားယူပါ၊ သံဓာတ်ပါသော အစားအစာ စားပါ။',
+      happy: 'စိတ်ကြည်လင်နေသောအချိန် — လေ့ကျင့်ခန်း လုပ်ပါ။',
+      moody: 'ကဖင်း လျှော့ပါ၊ အသက်ရှူလေ့ကျင့်ခန်း လုပ်ပါ။',
+      cravings: 'အသီးအနှံ သို့မဟုတ် အခွံမာသီး စားပါ။',
+      headache: 'ရေဓာတ်ဖြည့်ပါ၊ အလင်းမှိန်တွင် အနားယူပါ။',
+      acne: 'မျက်နှာ သန့်ရှင်းစွာထားပါ၊ အဆီ လျှော့ပါ။',
+      backpain: 'အပူကပ်ပါ၊ ပေါ့ပါးသော လေ့ကျင့်ခန်း လုပ်ပါ။',
+      nausea: 'အစာနည်းနည်း မကြာခဏ စားပါ။'
+    },
+
+    weekdays: ['တနင်္ဂနွေ', 'တနင်္လာ', 'အင်္ဂါ', 'ဗုဒ္ဓဟူး', 'ကြာသပတေး', 'သောကြာ', 'စနေ'],
+    months: ['ဇန်', 'ဖေ', 'မတ်', 'ဧပြီ', 'မေ', 'ဇွန်', 'ဇူ', 'ဩ', 'စက်', 'အောက်', 'နို', 'ဒီ']
+  },
+
+  en: {
+    appSubtitle: 'Cycle Tracker',
+
+    lblHeroDay: 'Day of Cycle',
+    lblCardPeriod: 'Period',
+    lblCardFertile: 'Fertile',
+    lblCardOvulation: 'Ovulation',
+    lblCardNext: 'Next Period',
+    lblHistoryTitle: '📜 History',
+    lblHistorySubtext: 'Detailed daily logs',
+    lblSetupTitle: '⚙️ Settings',
+    lblUserName: 'Your Name',
+    lblLastDate: 'Last Period Date',
+    lblCycleLength: 'Cycle (days)',
+    lblPeriodLength: 'Period (days)',
+    lblLutealLength: 'Luteal (days)',
+    lblNotifyHeading: '🔔 Period Alarm',
+    lblNotifyEnable: 'Notify when period is near',
+    lblNotifyDays: 'Days in advance',
+    lblDataHeading: '💾 Data',
+    btnSave: 'Save',
+
+    lblWelcomeName: 'Your Name',
+    lblWelcomeLastDate: 'Last Period Date',
+    lblWelcomeCycle: 'Cycle (days)',
+    lblWelcomePeriod: 'Period (days)',
+    btnWelcomeStart: 'Get Started ✨',
+
+    lblModalFlowHead: '🩸 Flow Rate',
+    lblModalSymptomsHead: '✨ Symptoms & Mood',
+    lblModalNotes: '📝 Notes',
+    lblAdviceHeading: '💡 Health Tips',
+
+    lblInsightsTitle: '📊 Insights',
+    lblInsightCycle: 'Cycle Overview',
+    lblStatCycleDay: 'Current Day',
+    lblStatCycleLen: 'Cycle Length',
+    lblStatPeriodLen: 'Period Length',
+    lblStatDaysLeft: 'Until Next',
+    lblInsightPredictions: 'Next 3 Periods',
+    lblInsightSymptoms: 'Symptom Frequency',
+    lblInsightFlow: 'Flow Distribution',
+    lblInsightTotals: 'Log Summary',
+    lblStatTotalLogs: 'Total Logs',
+    lblStatMonthLogs: 'This Month',
+
+    navHome: 'Home',
+    navInsights: 'Insights',
+    navHistory: 'Log',
+    navSettings: 'Settings',
+
+    legPeriod: 'Period',
+    legFertile: 'Fertile',
+    legOvulation: 'Ovulation',
+    legNext: 'Expected',
+
+    phaseMenstrual: 'Menstrual Phase',
+    phaseFollicular: 'Follicular Phase',
+    phaseFertile: 'Fertile Window',
+    phaseOvulation: 'Ovulation Day',
+    phaseLuteal: 'Luteal Phase',
+
+    daysUnit: 'days',
+    todayLabel: 'Today',
+    peak: 'Peak',
+    noData: 'No data yet',
+    noLogs: 'No logs yet. Tap a date to add one.',
+    searchPlaceholder: 'Search...',
+    allMonths: 'All months',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    confirmResetTitle: 'Reset All Data',
+    confirmResetMsg: 'All logs and settings will be erased.',
+    confirmDeleteTitle: 'Delete Log',
+    confirmDeleteMsg: 'Delete this day\'s log?',
+    importTitle: 'Import Data',
+    importHint: 'Paste your exported JSON.',
+    msgSaved: 'Saved',
+    msgDeleted: 'Deleted',
+    msgImported: 'Imported',
+    msgImportError: 'Could not parse that JSON',
+    msgExported: 'Exported',
+    msgCycleStart: '🌸 A new cycle begins',
+    alarmTitle: 'Aura',
+    alarmText: d => `Next period in ${d} day${d === 1 ? '' : 's'}.`,
+    daysLeft: d => d <= 0 ? 'Today' : `${d} day${d === 1 ? '' : 's'} left`,
+    predDays: d => d <= 0 ? 'Today' : `${d} day${d === 1 ? '' : 's'}`,
+
+    flows: {
+      spotting: '📍 Spotting', light: '💧 Light',
+      medium: '💧💧 Medium', heavy: '💧💧💧 Heavy'
+    },
+    chips: {
+      cramps: '⚡ Cramps', bloating: '🎈 Bloating', tired: '😴 Tired',
+      happy: '😊 Happy', moody: '😭 Moody', cravings: '🍕 Cravings',
+      headache: '💆 Headache', acne: '🌶 Acne',
+      backpain: '🦴 Back Pain', nausea: '🤢 Nausea'
+    },
+    advices: {
+      cramps: 'Apply a heating pad and stay warm.',
+      bloating: 'Reduce sodium and drink plenty of water.',
+      tired: 'Rest more and eat iron-rich foods.',
+      happy: 'Great energy! Enjoy light exercise.',
+      moody: 'Limit caffeine and try deep breathing.',
+      cravings: 'Snack on fruit or nuts instead.',
+      headache: 'Hydrate and rest in a dim room.',
+      acne: 'Keep skin clean, reduce oily foods.',
+      backpain: 'Use a heat pad and gentle stretching.',
+      nausea: 'Eat small frequent meals, stay hydrated.'
+    },
+
+    weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  }
+};
+
+function t() { return i18n[state.lang]; }
+function locale() { return state.lang === 'my' ? 'my-MM' : 'en-US'; }
+function fmtShort(d) { return d.toLocaleDateString(locale(), { month: 'short', day: 'numeric' }); }
