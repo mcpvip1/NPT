@@ -725,7 +725,10 @@ function renderAdvicePage() {
     }
   }
 
-  els.doctorFlagsList.innerHTML = (T.doctorFlags || []).map(f => `<li>${esc(f)}</li>`).join('');
+  const flags = T.doctorFlags || [];
+  els.doctorFlagsList.innerHTML = flags.map(f => `<li>${esc(f)}</li>`).join('');
+  const strip = document.getElementById('doctor-strip');
+  if (strip) strip.classList.toggle('hidden', !flags.length);
 
   if (typeof renderRecommendations === 'function') renderRecommendations();
 }

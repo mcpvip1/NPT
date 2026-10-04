@@ -293,33 +293,181 @@ function initSettings() {
     fillSettingsForm();
     applyLang();
     renderAll();
-    openModal(els.welcome);
+    wizOpen();
     toast(T.msgDeleted, 'ok');
   });
 }
 
+// ---- welcome wizard ------------------------------------------------------
+// 5 steps: language -> country (IP auto-detected) -> profile -> what the
+// app can do -> notifications + home-screen install.
+let wizStep = 1;
+const WIZ_STEPS = 5;
+let wizCountry = 'mm';
+let wizCountryDetected = false;
+let deferredInstallPrompt = null;
+
+function wizShow(n) {
+  wizStep = Math.min(Math.max(n, 1), WIZ_STEPS);
+  document.querySelectorAll('.wiz-step').forEach(s =>
+    s.classList.toggle('hidden', +s.dataset.step !== wizStep));
+  const dots = $('wiz-dots');
+  dots.innerHTML = '';
+  for (let i = 1; i <= WIZ_STEPS; i++) {
+    const d = document.createElement('span');
+    d.className = 'wiz-dot' + (i === wizStep ? ' active' : '') + (i < wizStep ? ' done' : '');
+    dots.appendChild(d);
+  }
+  const T = t();
+  $('wiz-stepof').textContent = T.wizStepOf(wizStep, WIZ_STEPS);
+  $('wiz-back').style.visibility = wizStep === 1 ? 'hidden' : 'visible';
+  // last step: the next button becomes the finish button
+  $('wiz-next').dataset.lbl = wizStep === WIZ_STEPS ? 'btnDone' : 'btnNext';
+  applyLang();
+}
+
+function wizMarkActive(containerSel, attr, val) {
+  document.querySelectorAll(containerSel + ' [' + attr + ']').forEach(b =>
+    b.classList.toggle('active', b.getAttribute(attr) === val));
+}
+
+// Best-effort country guess from the user's IP. Offline or blocked -> 'mm'.
+async function detectCountry() {
+  try {
+    const c = new AbortController();
+    const timer = setTimeout(() => c.abort(), 5000);
+    const r = await fetch('https://ipapi.co/country_code/', { signal: c.signal, cache: 'no-store' });
+    clearTimeout(timer);
+    if (!r.ok) return 'mm';
+    const code = (await r.text()).trim().toUpperCase();
+    return code === 'TH' ? 'th' : 'mm';
+  } catch (e) {
+    return 'mm';
+  }
+}
+
+function wizOpen() {
+  wizCountry = state.data.country === 'th' ? 'th' : 'mm';
+  wizCountryDetected = false;
+  wizMarkActive('#wiz-lang-opts', 'data-lang-val', state.lang);
+  wizMarkActive('#wiz-country-opts', 'data-country-val', wizCountry);
+  $('wiz-country-auto').classList.add('hidden');
+  $('wiz-notif-status').classList.add('hidden');
+  $('wiz-install-status').classList.add('hidden');
+  openModal(els.welcome);
+  wizShow(1);
+  // detect in the background; when it lands, pre-select + say so
+  detectCountry().then(cc => {
+    wizCountry = cc;
+    wizCountryDetected = true;
+    state.data.country = cc;
+    wizMarkActive('#wiz-country-opts', 'data-country-val', cc);
+    $('wiz-country-auto').classList.remove('hidden');
+  });
+}
+
+function wizFinish() {
+  const T = t();
+  const name = $('w-name').value.trim();
+  const last = $('w-last').value;
+  if (!name || !last) {
+    wizShow(3);
+    (!name ? $('w-name') : $('w-last')).focus();
+    toast(T.msgFillRequired || 'Please fill the required fields', 'err');
+    return;
+  }
+  state.data.userName = name;
+  state.data.lastDate = last;
+  state.data.cycleLength = clamp(parseInt($('w-cycle').value, 10), 15, 90, 28);
+  state.data.periodLength = clamp(parseInt($('w-period').value, 10), 1, 15, 5);
+  state.data.lutealPhase = 14;
+  state.data.country = wizCountry;
+  state.data.age = numOrNull($('w-age').value, 9, 100);
+  state.data.weightKg = numOrNull($('w-weight').value, 20, 300);
+  state.data.heightCm = numOrNull($('w-height').value, 80, 250);
+
+  saveData();
+  closeModal(els.welcome);
+  fillSettingsForm();
+  applyLang();
+  renderAll();
+  renderBotHello(); // greet the new user right away
+  maybeShowInstallNudge();
+  toast(t().msgSaved, 'ok');
+}
+
 function initWelcome() {
+  // step 1: language
+  document.querySelectorAll('#wiz-lang-opts [data-lang-val]').forEach(b =>
+    b.addEventListener('click', () => {
+      setLang(b.dataset.langVal);
+      wizMarkActive('#wiz-lang-opts', 'data-lang-val', state.lang);
+      setTimeout(() => { if (wizStep === 1) wizShow(2); }, 280);
+    }));
+
+  // step 2: country
+  document.querySelectorAll('#wiz-country-opts [data-country-val]').forEach(b =>
+    b.addEventListener('click', () => {
+      wizCountry = b.dataset.countryVal;
+      state.data.country = wizCountry;
+      wizMarkActive('#wiz-country-opts', 'data-country-val', wizCountry);
+      setTimeout(() => { if (wizStep === 2) wizShow(3); }, 280);
+    }));
+
+  // step 3: enter key moves forward instead of submitting nowhere
   els.welcomeForm.addEventListener('submit', e => {
     e.preventDefault();
-    state.data.userName = $('w-name').value.trim();
-    state.data.lastDate = $('w-last').value;
-    state.data.cycleLength = clamp(parseInt($('w-cycle').value, 10), 15, 90, 28);
-    state.data.periodLength = clamp(parseInt($('w-period').value, 10), 1, 15, 5);
-    state.data.lutealPhase = 14;
-    state.data.notify = true;
-    state.data.notifyDays = 2;
-    state.data.age = numOrNull($('w-age').value, 9, 100);
-    state.data.weightKg = numOrNull($('w-weight').value, 20, 300);
-    state.data.heightCm = numOrNull($('w-height').value, 80, 250);
+    if (wizStep === 3) wizShow(4);
+  });
 
-    saveData();
-    closeModal(els.welcome);
-    fillSettingsForm();
-    applyLang();
-    renderAll();
-    renderBotHello(); // greet the new user right away
-    maybeShowInstallNudge();
-    toast(t().msgSaved, 'ok');
+  // step 5: notifications
+  $('wiz-notif-btn').addEventListener('click', async () => {
+    const T = t();
+    const st = $('wiz-notif-status');
+    st.classList.remove('hidden');
+    if (!('Notification' in window)) { st.textContent = T.notifDenied; return; }
+    if (Notification.permission === 'granted') {
+      state.data.notify = true;
+      st.textContent = T.notifGranted;
+      return;
+    }
+    try {
+      const perm = await Notification.requestPermission();
+      state.data.notify = perm === 'granted';
+      st.textContent = perm === 'granted' ? T.notifGranted : T.notifDenied;
+    } catch (e) {
+      st.textContent = T.notifDenied;
+    }
+  });
+
+  // step 5: add to home screen
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+  });
+  $('wiz-install-btn').addEventListener('click', async () => {
+    const T = t();
+    const st = $('wiz-install-status');
+    st.classList.remove('hidden');
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      try {
+        const choice = await deferredInstallPrompt.userChoice;
+        st.textContent = choice && choice.outcome === 'accepted' ? T.installDone : T.installManual;
+      } catch (e) {
+        st.textContent = T.installManual;
+      }
+      deferredInstallPrompt = null;
+    } else {
+      st.textContent = T.installManual;
+    }
+  });
+
+  // nav
+  $('wiz-back').addEventListener('click', () => wizShow(wizStep - 1));
+  $('wiz-next').addEventListener('click', () => {
+    if (wizStep < WIZ_STEPS) wizShow(wizStep + 1);
+    else wizFinish();
   });
 }
 
@@ -572,7 +720,7 @@ function init() {
   initEscape();
 
   if (!hasSettings || !state.data.lastDate) {
-    openModal(els.welcome);
+    wizOpen();
     renderCalendar();
   } else {
     fillSettingsForm();
