@@ -64,6 +64,7 @@ const i18n = {
     btnAdvice: '💡 အကြံဉာဏ်ရယူမယ်',
     lblAdviceJustLogged: 'ခုနက မှတ်တမ်းတင်ထားတာအပေါ် အခြေခံပြီး',
     btnLogToday: '＋ ယနေ့ မှတ်တမ်းတင်မယ်',
+    btnUpdate: 'အပ်ဒိတ်',
     phasePopup: {
       period: {
         desc: 'ရာသီလာမယ့်ရက်က {range} ဖြစ်ပြီး {n} ရက်ခန့်ကြာမှာပါ။ သွေးစဆင်းတဲ့ရက်ဟာ စက်ဝန်းအသစ်ရဲ့ ပထမဆုံးရက်ဖြစ်ပါတယ်။',
@@ -315,6 +316,7 @@ const i18n = {
     btnAdvice: '💡 Give me advice',
     lblAdviceJustLogged: 'Based on what you just logged',
     btnLogToday: '＋ Log today',
+    btnUpdate: 'Update',
     phasePopup: {
       period: {
         desc: 'Your period is expected {range} — about {n} days. The first day of bleeding is day 1 of your cycle.',
