@@ -296,6 +296,12 @@ const i18n = {
     lblInsightFlow: 'သွေးဆင်းပမာဏ',
     lblInsightMood: 'စိတ်အခြေအနေ',
     lblInsightTotals: 'မှတ်တမ်း',
+    lblPhaseGuide: 'လက်ရှိအချိန်မှာ',
+    lblPhaseTimeline: 'စက်ဝန်းအဆင့်များ',
+    phaseShort: { menstrual: 'ရာသီ', follicular: 'ဖောလီကူလာ', ovulation: 'မျိုးဥထွက်', luteal: 'လူတီရယ်' },
+    lblCycleTrend: 'စက်ဝန်းပုံစံ',
+    trendNote: (avg, lo, hi) => `ပျမ်းမျှ ${avg} ရက် · ${lo}–${hi} ရက်ကြား`,
+    trendEmpty: 'စက်ဝန်း ၂ ခုမှတ်မှ ပုံစံပေါ်မယ် — ဆက်မှတ်ထားပါ',
     lblStatTotalLogs: 'စုစုပေါင်း',
     lblStatMonthLogs: 'ယခုလ',
 
@@ -316,7 +322,6 @@ const i18n = {
     phaseLuteal: 'လူတီရယ်',
 
     daysUnit: 'ရက်',
-    todayLabel: 'ယနေ့',
     peak: 'အမြင့်ဆုံး',
     noData: 'ဒေတာ မရှိပါ',
     noLogs: 'မှတ်တမ်း မရှိသေးပါ',
@@ -669,6 +674,12 @@ const i18n = {
     lblInsightFlow: 'Flow Distribution',
     lblInsightMood: 'Mood',
     lblInsightTotals: 'Log Summary',
+    lblPhaseGuide: 'Right now in your cycle',
+    lblPhaseTimeline: 'Cycle Phases',
+    phaseShort: { menstrual: 'Period', follicular: 'Follicular', ovulation: 'Ovulation', luteal: 'Luteal' },
+    lblCycleTrend: 'Cycle Pattern',
+    trendNote: (avg, lo, hi) => `Avg ${avg} days · ${lo}–${hi} range`,
+    trendEmpty: 'Log 2+ cycles to reveal your pattern — keep tracking',
     lblStatTotalLogs: 'Total Logs',
     lblStatMonthLogs: 'This Month',
 
@@ -689,7 +700,6 @@ const i18n = {
     phaseLuteal: 'Luteal Phase',
 
     daysUnit: 'days',
-    todayLabel: 'Today',
     peak: 'Peak',
     noData: 'No data yet',
     noLogs: 'No logs yet. Tap a date to add one.',
