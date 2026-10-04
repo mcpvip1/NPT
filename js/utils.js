@@ -45,6 +45,14 @@ function clamp(v, lo, hi, fallback) {
   return Math.min(hi, Math.max(lo, v));
 }
 
+// Optional numeric field: empty or out-of-range -> null.
+function numOrNull(v, min, max) {
+  if (v === null || v === undefined || v === '') return null;
+  const n = parseFloat(v);
+  if (isNaN(n) || n < min || n > max) return null;
+  return Math.round(n * 10) / 10;
+}
+
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'

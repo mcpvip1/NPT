@@ -17,6 +17,10 @@ const LS = {
 const DEFAULTS = {
   version: 3,
   userName: '',
+  age: null, // years, optional
+  weightKg: null, // optional
+  heightCm: null, // optional
+  country: 'mm', // recommendation marketplace: 'mm' | 'th'
   lastDate: '',
   cycleLength: 28,
   periodLength: 5,

@@ -7,9 +7,10 @@ const els = {
   headerTitle: $('header-title'),
   sideTitle: $('side-title'),
   sideSubtitle: $('side-subtitle'),
-  langSeg: $('lang-seg'),
+  langSeg: $('hdr-langseg'),
   langSelectDesktop: $('lang-select-desktop'),
-  themeSeg: $('theme-seg'),
+  hdrTheme: $('hdr-theme'),
+  hdrUpdate: $('hdr-update'),
   themeToggleDesktop: $('theme-toggle-desktop'),
 
   alarm: $('alarm-banner'),
@@ -68,6 +69,7 @@ const els = {
   setRemindTime: $('set-remind-time'),
   setWellness: $('set-wellness'),
   setBotName: $('set-bot-name'),
+  setAge: $('set-age'), setWeight: $('set-weight'), setHeight: $('set-height'),
   adviceTitle: $('advice-title'),
   notifDot: $('notif-dot'),
   notifStatusText: $('notif-status-text'),
@@ -364,8 +366,9 @@ function applyTheme() {
   document.documentElement.dataset.theme = state.theme;
   const icon = state.theme === 'dark' ? '☀️' : '🌙';
   els.themeToggleDesktop.textContent = icon;
-  if (els.themeSeg) els.themeSeg.querySelectorAll('[data-theme-val]').forEach(b =>
-    b.classList.toggle('active', b.dataset.themeVal === state.theme));
+  // header theme button shows the icon of the mode you'll switch *to*
+  if (els.hdrTheme && typeof icon3d === 'function')
+    els.hdrTheme.innerHTML = icon3d(state.theme === 'dark' ? 'sun' : 'moon');
   localStorage.setItem(LS.theme, state.theme);
 }
 
@@ -723,6 +726,8 @@ function renderAdvicePage() {
   }
 
   els.doctorFlagsList.innerHTML = (T.doctorFlags || []).map(f => `<li>${esc(f)}</li>`).join('');
+
+  if (typeof renderRecommendations === 'function') renderRecommendations();
 }
 
 // ---------- home ----------
@@ -1249,6 +1254,9 @@ function fillSettingsForm() {
   els.setRemindTime.value = state.data.logReminderTime || '21:00';
   els.setWellness.checked = state.data.wellnessNudges !== false;
   els.setBotName.value = state.data.botName || '';
+  els.setAge.value = state.data.age || '';
+  els.setWeight.value = state.data.weightKg || '';
+  els.setHeight.value = state.data.heightCm || '';
   updateNotifStatus();
 }
 
