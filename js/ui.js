@@ -22,8 +22,6 @@ const els = {
   hmPeriod: $('hm-period'),
   hmFertile: $('hm-fertile'),
   hmOvu: $('hm-ovu'),
-  hmRingDay: $('hm-ring-day'),
-  hmRingProg: $('hm-ring-prog'),
   hmHeroStatus: $('hm-hero-status'),
   sumCycle: $('sum-cycle'),
   sumPeriod: $('sum-period'),
@@ -792,24 +790,19 @@ function renderStats() {
   const T = t();
   const w = cycleWindows();
   const info = cycleInfoFor(today());
-  const C = 2 * Math.PI * 60; // home hero ring circumference
   if (!w || !info) {
     els.hmPeriod.textContent = '\u2013';
     els.hmFertile.textContent = '\u2013';
     els.hmOvu.textContent = '\u2013';
-    if (els.hmRingDay) els.hmRingDay.textContent = '\u2013';
     if (els.hmHeroStatus) els.hmHeroStatus.textContent = '';
     return;
   }
   const day = Math.max(1, diffDays(info.start, today()) + 1);
-  const cycLen = state.data.cycleLength || 28;
   els.hmPeriod.textContent = T.dayOfCycle(day);
   els.hmFertile.textContent = `${w.fDays} ${T.daysUnit}`;
   els.hmOvu.textContent = fmtShort(w.ovu);
 
-  // home hero ring, like the reference's progress ring
-  if (els.hmRingDay) els.hmRingDay.textContent = day;
-  if (els.hmRingProg) els.hmRingProg.style.strokeDasharray = `${Math.min(day / cycLen, 1) * C} ${C}`;
+  // status pill under the calendar
   if (els.hmHeroStatus) {
     const phase = phaseFor(today());
     els.hmHeroStatus.textContent = phase ? `${T.dayOfCycle(day)} · ${phaseLabel(phase)}` : T.dayOfCycle(day);
@@ -1144,6 +1137,32 @@ function renderInsights() {
   const monthCount = Object.keys(state.logs).filter(k => k.startsWith(monthPrefix)).length;
   els.statTotal.textContent = total;
   els.statMonth.textContent = monthCount;
+}
+
+// replay the insights hero ring: the arc draws itself and the day counts up.
+// called every time the insights screen opens.
+function animateInsightsRing() {
+  const info = cycleInfoFor(today());
+  if (!info || !els.insRingProg || !els.insRingDay) return;
+  const day = Math.max(1, diffDays(info.start, today()) + 1);
+  const cycLen = state.data.cycleLength || 28;
+  const C = 2 * Math.PI * 60;
+  const target = Math.min(day / cycLen, 1) * C;
+  // restart the draw: snap to 0, then let the CSS transition sweep to target
+  els.insRingProg.style.transition = 'none';
+  els.insRingProg.style.strokeDasharray = `0 ${C}`;
+  void els.insRingProg.getBoundingClientRect();
+  els.insRingProg.style.transition = '';
+  els.insRingProg.style.strokeDasharray = `${target} ${C}`;
+  // count the day number up
+  const el = els.insRingDay;
+  const t0 = performance.now(), dur = 900;
+  (function tick(t) {
+    const k = Math.min((t - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - k, 3);
+    el.textContent = Math.max(1, Math.round(day * e));
+    if (k < 1) requestAnimationFrame(tick);
+  })(t0);
 }
 
 function drawBars(container, counts, labelFn) {
