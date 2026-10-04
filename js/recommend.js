@@ -55,20 +55,44 @@ const SHOPS = {
 
 // price = estimated street price in the country ("≈", never a live quote).
 // kw = store search keywords per country.
+// cat groups the cards under a clean section header.
 const PRODUCTS = {
-  pads_day:         { icon: 'period', tint: 'tint-red', price: { mm: '≈ 4,000 Ks', th: '≈ ฿79'  }, kw: { mm: 'sanitary pad',             th: 'ผ้าอนามัยกลางวัน' } },
-  pads_night:       { icon: 'period', tint: 'tint-red', price: { mm: '≈ 7,500 Ks', th: '≈ ฿115' }, kw: { mm: 'overnight sanitary pad',   th: 'ผ้าอนามัยกลางคืน' } },
-  liners:           { icon: 'period', tint: 'tint-red', price: { mm: '≈ 3,000 Ks', th: '≈ ฿59'  }, kw: { mm: 'panty liner',              th: 'แผ่นอนามัย' } },
-  period_underwear: { icon: 'period', tint: 'tint-red', price: { mm: '≈ 15,000 Ks', th: '≈ ฿299' }, kw: { mm: 'period underwear',        th: 'กางเกงในอนามัย' } },
-  heat_patch:       { icon: 'sun',    tint: 't-amber', price: { mm: '≈ 2,500 Ks', th: '≈ ฿45' }, kw: { mm: 'heat patch menstrual pain', th: 'แผ่นประคบร้อนปวดประจำเดือน' } },
-  pain_relief:      { icon: 'pills',  tint: 'tint-blue',  price: { mm: '≈ 1,500 Ks', th: '≈ ฿35' }, kw: { mm: 'paracetamol',              th: 'ยาพาราเซตามอล' } },
-  ginger_tea:       { icon: 'tea',    tint: 'tint-green', price: { mm: '≈ 2,000 Ks', th: '≈ ฿40' }, kw: { mm: 'ginger tea',               th: 'ชาขิง' } }
+  pads_day:         { icon: 'period', tint: 't-pink',  cat: 'pads',   price: { mm: '≈ 4,000 Ks', th: '≈ ฿79'  }, kw: { mm: 'sanitary pad',             th: 'ผ้าอนามัยกลางวัน' } },
+  pads_night:       { icon: 'period', tint: 't-pink',  cat: 'pads',   price: { mm: '≈ 7,500 Ks', th: '≈ ฿115' }, kw: { mm: 'overnight sanitary pad',   th: 'ผ้าอนามัยกลางคืน' } },
+  liners:           { icon: 'period', tint: 't-pink',  cat: 'pads',   price: { mm: '≈ 3,000 Ks', th: '≈ ฿59'  }, kw: { mm: 'panty liner',              th: 'แผ่นอนามัย' } },
+  period_underwear: { icon: 'period', tint: 't-pink',  cat: 'pads',   price: { mm: '≈ 15,000 Ks', th: '≈ ฿299' }, kw: { mm: 'period underwear',        th: 'กางเกงในอนามัย' } },
+  heat_patch:       { icon: 'sun',    tint: 't-amber', cat: 'relief', price: { mm: '≈ 2,500 Ks', th: '≈ ฿45' }, kw: { mm: 'heat patch menstrual pain', th: 'แผ่นประคบร้อนปวดประจำเดือน' } },
+  pain_relief:      { icon: 'pills',  tint: 't-blue',  cat: 'relief', price: { mm: '≈ 1,500 Ks', th: '≈ ฿35' }, kw: { mm: 'paracetamol',              th: 'ยาพาราเซตามอล' } },
+  ginger_tea:       { icon: 'tea',    tint: 't-green', cat: 'relief', price: { mm: '≈ 2,000 Ks', th: '≈ ฿40' }, kw: { mm: 'ginger tea',               th: 'ชาขิง' } }
+};
+
+// Example brands per country — common, easy-to-find names, not endorsements
+// and not verified stock. Shown as "e.g." so nobody mistakes them for ads.
+const BRANDS = {
+  mm: {
+    pads_day: 'Sofy, Laurier',
+    pads_night: 'Sofy, Laurier',
+    liners: 'Sofy, Laurier',
+    period_underwear: null,
+    heat_patch: 'Koyo',
+    pain_relief: 'Biogesic, Brufen, Ponstan',
+    ginger_tea: null
+  },
+  th: {
+    pads_day: 'Sofy, Laurier, Whisper',
+    pads_night: 'Sofy, Laurier',
+    liners: 'Sofy, Laurier',
+    period_underwear: null,
+    heat_patch: 'Koyo, ThermaCare',
+    pain_relief: 'Sara, Gofen, Ponstan',
+    ginger_tea: null
+  }
 };
 
 // ---- engine --------------------------------------------------------------
 // Conservative rules from the last 60 days of logs. Pads follow flow,
-// medicine follows symptoms, tea follows low mood. Medicine is always
-// framed as "ask your pharmacist" — never a prescription.
+// medicine follows symptoms, tea follows low mood / nausea / bloating.
+// Medicine is always framed as "ask your pharmacist" — never a prescription.
 function buildRecommendations() {
   const F = {}, S = {}, M = {};
   const cutoff = toKey(addDays(today(), -60));
@@ -93,18 +117,49 @@ function buildRecommendations() {
   if ((F.spotting || 0) >= 1 || (F.light || 0) >= 2)
     recs.push({ id: 'liners', reason: 'recReasonSpotting' });
   if ((F.heavy || 0) >= 2)    recs.push({ id: 'period_underwear', reason: 'recReasonHeavy' });
+
+  if ((S.cramps || 0) >= 1 || (S.backpain || 0) >= 2) {
+    recs.push({ id: 'heat_patch', reason: (S.cramps || 0) >= 1 ? 'recReasonCramps' : 'recReasonBackpain' });
+  }
   if ((S.cramps || 0) >= 1) {
-    recs.push({ id: 'heat_patch', reason: 'recReasonCramps' });
     recs.push({ id: 'pain_relief', reason: 'recReasonCramps' });
   } else if ((S.headache || 0) >= 1) {
     recs.push({ id: 'pain_relief', reason: 'recReasonHeadache' });
+  } else if ((S.backpain || 0) >= 2) {
+    recs.push({ id: 'pain_relief', reason: 'recReasonBackpain' });
   }
-  if (((M.low || 0) + (M.bad || 0)) >= 2)
+
+  if (((M.low || 0) + (M.bad || 0)) >= 2) {
     recs.push({ id: 'ginger_tea', reason: 'recReasonMood' });
+  } else if ((S.nausea || 0) >= 2) {
+    recs.push({ id: 'ginger_tea', reason: 'recReasonNausea' });
+  } else if ((S.bloating || 0) >= 3) {
+    recs.push({ id: 'ginger_tea', reason: 'recReasonBloating' });
+  }
   return recs;
 }
 
 // ---- render --------------------------------------------------------------
+// Clean grouped cards: one row for name + price, one small line for the
+// brand examples, one subtle "why this" line, then the shop buttons.
+function recCardHTML(T, country, r) {
+  const p = PRODUCTS[r.id];
+  const brand = (BRANDS[country] || {})[r.id];
+  const shops = SHOPS[country].map((s, i) =>
+    '<button type="button" class="btn ghost small rec-buy" data-buy="' + r.id + ':' + i + '">' +
+    '🛒 ' + esc(s.name) + '</button>').join('');
+  return '<article class="rec-card">' +
+    '<span class="tile ' + (p.tint || 't-pink') + ' rec-ico">' + icon3d(p.icon) + '</span>' +
+    '<div class="rec-body">' +
+      '<div class="rec-top"><h4>' + esc(T['recName_' + r.id]) + '</h4>' +
+      '<span class="rec-price">' + esc(p.price[country]) + '</span></div>' +
+      (brand ? '<p class="rec-brand">🏷️ ' + esc(T.lblBrand) + ': ' + esc(brand) + '</p>' : '') +
+      '<p class="rec-why">💡 ' + esc(T[r.reason]) + '</p>' +
+      '<div class="rec-shops">' + shops + '</div>' +
+    '</div>' +
+  '</article>';
+}
+
 function renderRecommendations() {
   const T = t();
   const list = $('rec-list');
@@ -114,22 +169,18 @@ function renderRecommendations() {
     b.classList.toggle('active', b.dataset.countryVal === country));
 
   const recs = buildRecommendations();
-  list.innerHTML = recs.map(r => {
-    const p = PRODUCTS[r.id];
-    const shops = SHOPS[country].map((s, i) =>
-      '<button type="button" class="btn ghost small rec-buy" data-buy="' + r.id + ':' + i + '">' +
-      '🛒 ' + esc(s.name) + '</button>').join('');
-    return '<div class="rec-card">' +
-      '<span class="tile ' + (p.tint || 't-pink') + ' rec-ico">' + icon3d(p.icon) + '</span>' +
-      '<div class="rec-body">' +
-        '<div class="rec-name-row"><span class="rec-name">' + esc(T['recName_' + r.id]) + '</span>' +
-        '<span class="rec-price">' + esc(p.price[country]) + '</span></div>' +
-        '<div class="rec-desc">' + esc(T['recDesc_' + r.id]) + '</div>' +
-        '<div class="rec-reason">💡 ' + esc(T[r.reason]) + '</div>' +
-        '<div class="rec-shops">' + shops + '</div>' +
-      '</div>' +
-    '</div>';
-  }).join('');
+  const groups = [
+    { cat: 'pads', title: T.lblCatPads },
+    { cat: 'relief', title: T.lblCatRelief }
+  ];
+  let html = '';
+  groups.forEach(g => {
+    const items = recs.filter(r => PRODUCTS[r.id].cat === g.cat);
+    if (!items.length) return;
+    html += '<h4 class="rec-cat">' + esc(g.title) + '</h4>';
+    html += items.map(r => recCardHTML(T, country, r)).join('');
+  });
+  list.innerHTML = html;
 }
 
 // Open a store search — but only when actually online.

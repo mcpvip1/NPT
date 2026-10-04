@@ -192,22 +192,26 @@
         <!-- ADVICE -->
         <section id="tab-advice" class="page">
           <div class="panel advice-panel">
-            <div class="advice-hero">
-              <span id="advice-bot"></span>
+            <div class="advice-head">
+              <span id="advice-bot" class="advice-head-ico"></span>
               <div>
                 <h2 class="panel-head" id="advice-title">🤖 Ask Aura</h2>
-                <p class="sub-text" data-lbl="lblAdvicePageSub"></p>
+                <p class="sub-text" data-lbl="lblAdviceHeadSub"></p>
               </div>
             </div>
             <div id="advice-perm-note" class="perm-note hidden">
               <span data-lbl="lblAdvicePermNote"></span>
               <button type="button" id="advice-perm-btn" class="btn ghost small" data-lbl="btnAskNotif"></button>
             </div>
-            <h3 class="sec-head" data-lbl="lblAdviceToday"></h3>
+            <details class="doctor-strip hidden" id="doctor-strip">
+              <summary><span data-lbl="lblDoctorFlags"></span></summary>
+              <ul id="doctor-flags-list" class="advice-list"></ul>
+            </details>
+            <h3 class="sec-head clean-head" data-lbl="lblTipsHead"></h3>
             <div id="advice-today" class="advice-cards"></div>
             <div class="rec-sec">
               <div class="rec-head">
-                <h3 class="sec-head rec-title"><span data-icon="shopping-bag"></span><span data-lbl="lblRecTitle">Recommended for you</span></h3>
+                <h3 class="sec-head" data-lbl="lblShopHead"></h3>
                 <div class="seg small" id="country-seg" role="group" aria-label="Country">
                   <button type="button" data-country-val="mm">🇲🇲 <span data-lbl="lblCountryMM">မြန်မာ</span></button>
                   <button type="button" data-country-val="th">🇹🇭 <span data-lbl="lblCountryTH">ထိုင်း</span></button>
@@ -217,10 +221,6 @@
               <div id="rec-list" class="rec-list"></div>
               <p class="sub-text tiny advice-disclaimer" data-lbl="lblRecDisclaimer"></p>
             </div>
-            <details class="doctor-flags">
-              <summary data-lbl="lblDoctorFlags"></summary>
-              <ul id="doctor-flags-list" class="advice-list"></ul>
-            </details>
             <p class="sub-text tiny advice-disclaimer" data-lbl="lblAdviceDisclaimer"></p>
           </div>
         </section>
@@ -474,48 +474,121 @@
     </div>
   </div>
 
-  <!-- Welcome -->
+  <!-- Welcome wizard -->
   <div id="welcome" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="w-title">
     <div class="modal-box welcome-box">
-      <div class="welcome-ico">🌸</div>
-      <h2 id="w-title">Welcome!</h2>
-      <p id="w-sub" class="sub-text">Let's get started.</p>
+      <div class="wiz-dots" id="wiz-dots" aria-hidden="true"></div>
+      <p class="sub-text tiny wiz-stepof" id="wiz-stepof"></p>
 
-      <form id="welcome-form" class="left">
-        <div class="field">
-          <label for="w-name" data-lbl="lblWelcomeName">Name</label>
-          <input type="text" id="w-name" required>
+      <!-- step 1: language -->
+      <div class="wiz-step" data-step="1">
+        <div class="welcome-ico">🌸</div>
+        <h2 id="w-title" data-lbl="wizLangTitle">ဘာသာစကား ရွေးပါ</h2>
+        <p class="sub-text" data-lbl="wizLangSub"></p>
+        <div class="wiz-opts" id="wiz-lang-opts">
+          <button type="button" class="wiz-opt" data-lang-val="my">
+            <span class="wiz-opt-flag">🇲🇲</span>
+            <span class="wiz-opt-name">မြန်မာ</span>
+          </button>
+          <button type="button" class="wiz-opt" data-lang-val="en">
+            <span class="wiz-opt-flag">🇬🇧</span>
+            <span class="wiz-opt-name">English</span>
+          </button>
         </div>
-        <div class="field">
-          <label for="w-last" data-lbl="lblWelcomeLastDate">Last Period Date</label>
-          <input type="date" id="w-last" required>
+      </div>
+
+      <!-- step 2: country -->
+      <div class="wiz-step hidden" data-step="2">
+        <div class="welcome-ico">📍</div>
+        <h2 data-lbl="wizCountryTitle">နေထိုင်ရာနိုင်ငံ</h2>
+        <p class="sub-text" data-lbl="wizCountrySub"></p>
+        <p class="sub-text tiny wiz-auto hidden" id="wiz-country-auto" data-lbl="wizCountryAuto"></p>
+        <div class="wiz-opts" id="wiz-country-opts">
+          <button type="button" class="wiz-opt" data-country-val="mm">
+            <span class="wiz-opt-flag">🇲🇲</span>
+            <span class="wiz-opt-name" data-lbl="lblCountryMM">မြန်မာ</span>
+          </button>
+          <button type="button" class="wiz-opt" data-country-val="th">
+            <span class="wiz-opt-flag">🇹🇭</span>
+            <span class="wiz-opt-name" data-lbl="lblCountryTH">ထိုင်း</span>
+          </button>
         </div>
-        <div class="field-row">
+      </div>
+
+      <!-- step 3: profile + cycle -->
+      <div class="wiz-step hidden" data-step="3">
+        <div class="welcome-ico">👤</div>
+        <h2 data-lbl="wizProfileTitle">သင့်အကြောင်း ပြောပြပါ</h2>
+        <p class="sub-text" data-lbl="wizProfileSub"></p>
+        <form id="welcome-form" class="left" novalidate>
           <div class="field">
-            <label for="w-cycle" data-lbl="lblWelcomeCycle">Cycle (days)</label>
-            <input type="number" id="w-cycle" min="15" max="90" value="28" required>
+            <label for="w-name" data-lbl="lblWelcomeName">Name</label>
+            <input type="text" id="w-name" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="w-age" data-lbl="lblWelcomeAge">Age</label>
+              <input type="number" id="w-age" min="9" max="100" inputmode="numeric" placeholder="—">
+            </div>
+            <div class="field">
+              <label for="w-weight" data-lbl="lblWelcomeWeight">Weight (kg)</label>
+              <input type="number" id="w-weight" min="20" max="300" step="0.5" inputmode="decimal" placeholder="—">
+            </div>
+            <div class="field">
+              <label for="w-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
+              <input type="number" id="w-height" min="80" max="250" inputmode="numeric" placeholder="—">
+            </div>
           </div>
           <div class="field">
-            <label for="w-period" data-lbl="lblWelcomePeriod">Period (days)</label>
-            <input type="number" id="w-period" min="1" max="15" value="5" required>
+            <label for="w-last" data-lbl="lblWelcomeLastDate">Last Period Date</label>
+            <input type="date" id="w-last" required>
           </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="w-cycle" data-lbl="lblWelcomeCycle">Cycle (days)</label>
+              <input type="number" id="w-cycle" min="15" max="90" value="28" required>
+            </div>
+            <div class="field">
+              <label for="w-period" data-lbl="lblWelcomePeriod">Period (days)</label>
+              <input type="number" id="w-period" min="1" max="15" value="5" required>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- step 4: capabilities -->
+      <div class="wiz-step hidden" data-step="4">
+        <div class="welcome-ico">✨</div>
+        <h2 data-lbl="wizFeatTitle">Aura က ဘာတွေ လုပ်ပေးနိုင်လဲ</h2>
+        <p class="sub-text" data-lbl="wizFeatSub"></p>
+        <div class="feat-list">
+          <div class="feat-item"><span class="feat-ico" data-icon="calendar"></span><div><b data-lbl="featPredictT"></b><p data-lbl="featPredictS"></p></div></div>
+          <div class="feat-item"><span class="feat-ico" data-icon="advice"></span><div><b data-lbl="featAdviceT"></b><p data-lbl="featAdviceS"></p></div></div>
+          <div class="feat-item"><span class="feat-ico" data-icon="shopping-bag"></span><div><b data-lbl="featShopT"></b><p data-lbl="featShopS"></p></div></div>
+          <div class="feat-item"><span class="feat-ico" data-icon="chart"></span><div><b data-lbl="featInsightT"></b><p data-lbl="featInsightS"></p></div></div>
+          <div class="feat-item"><span class="feat-ico" data-icon="bell"></span><div><b data-lbl="featRemindT"></b><p data-lbl="featRemindS"></p></div></div>
+          <div class="feat-item"><span class="feat-ico" data-icon="save"></span><div><b data-lbl="featPrivateT"></b><p data-lbl="featPrivateS"></p></div></div>
         </div>
-        <div class="field-row">
-          <div class="field">
-            <label for="w-age" data-lbl="lblWelcomeAge">Age</label>
-            <input type="number" id="w-age" min="9" max="100" inputmode="numeric" placeholder="—">
-          </div>
-          <div class="field">
-            <label for="w-weight" data-lbl="lblWelcomeWeight">Weight (kg)</label>
-            <input type="number" id="w-weight" min="20" max="300" step="0.5" inputmode="decimal" placeholder="—">
-          </div>
-          <div class="field">
-            <label for="w-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
-            <input type="number" id="w-height" min="80" max="250" inputmode="numeric" placeholder="—">
-          </div>
-        </div>
-        <button type="submit" class="btn primary full" data-lbl="btnWelcomeStart">Get Started ✨</button>
-      </form>
+      </div>
+
+      <!-- step 5: notifications + install -->
+      <div class="wiz-step hidden" data-step="5">
+        <div class="welcome-ico">🔔</div>
+        <h2 data-lbl="wizNotifTitle">အဆက်အသွယ် မပြတ်ပါစေနဲ့</h2>
+        <p class="sub-text" data-lbl="wizNotifSub"></p>
+        <button type="button" class="btn secondary full" id="wiz-notif-btn" data-lbl="btnEnableNotif">🔔 သတိပေးချက် ဖွင့်မယ်</button>
+        <p class="sub-text tiny wiz-status hidden" id="wiz-notif-status"></p>
+        <div class="wiz-divider"></div>
+        <h2 class="wiz-h2" data-lbl="wizInstallTitle">Home screen မှာ ထည့်ထားပါ</h2>
+        <p class="sub-text" data-lbl="wizInstallSub"></p>
+        <button type="button" class="btn secondary full" id="wiz-install-btn" data-lbl="btnInstall">📲 Home screen မှာ ထည့်မယ်</button>
+        <p class="sub-text tiny wiz-status hidden" id="wiz-install-status"></p>
+      </div>
+
+      <div class="wiz-nav">
+        <button type="button" class="btn ghost" id="wiz-back" data-lbl="btnBack">← နောက်သို့</button>
+        <button type="button" class="btn primary" id="wiz-next" data-lbl="btnNext">ရှေ့ဆက်မယ် →</button>
+      </div>
     </div>
   </div>
 
