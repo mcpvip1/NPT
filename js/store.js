@@ -9,7 +9,8 @@ const LS = {
   notified: 'aura_notified',
   cycleSeen: 'aura_cycle_seen',
   greeted: 'aura_greeted',
-  reminded: 'aura_reminded'
+  reminded: 'aura_reminded',
+  installNudge: 'aura_install_nudge'
 };
 
 const DEFAULTS = {

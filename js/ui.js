@@ -70,6 +70,10 @@ const els = {
   botHelloMsg: $('bot-hello-msg'),
   botHelloClose: $('bot-hello-close'),
 
+  installNudge: $('install-nudge'),
+  installNotifBtn: $('install-notif-btn'),
+  installGotit: $('install-gotit'),
+
   welcome: $('welcome'),
   welcomeForm: $('welcome-form'),
 
@@ -304,10 +308,12 @@ function botHTML(expr, big) {
     `</span></span>`;
 }
 
-// fills every placeholder with the bot (or clears them when turned off)
+// fills every placeholder with the bot (or clears them when turned off).
+// slots marked data-big get the chunkier version.
 function refreshBotSlots() {
-  const html = botHTML();
-  document.querySelectorAll('.bot-slot').forEach(el => { el.innerHTML = html; });
+  document.querySelectorAll('.bot-slot').forEach(el => {
+    el.innerHTML = botHTML('happy', el.hasAttribute('data-big'));
+  });
 }
 
 const MOOD_SCORE = { great: 4, good: 3, okay: 2, low: 1, bad: 0 };
@@ -380,6 +386,26 @@ function renderBotHello() {
   els.botHelloMsg.textContent = msg;
   els.botHello.classList.remove('hidden');
   localStorage.setItem(LS.greeted, key);
+}
+
+// ---------- install nudge ----------
+// one-time popup: install to home screen + allow notifications,
+// so reminders can actually fire in the background.
+function isInstalled() {
+  return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+    || window.navigator.standalone === true; // old iOS
+}
+
+function maybeShowInstallNudge() {
+  if (isInstalled()) return; // already doing it right, no nagging
+  if (localStorage.getItem(LS.installNudge)) return; // shown before
+  if (!els.welcome.classList.contains('hidden')) return; // welcome still up; next open tries again
+  setTimeout(() => {
+    if (!els.welcome.classList.contains('hidden')) return;
+    if (localStorage.getItem(LS.installNudge)) return;
+    refreshBotSlots();
+    openModal(els.installNudge);
+  }, 1200); // let the greeting land first
 }
 
 // ---------- advice ----------
