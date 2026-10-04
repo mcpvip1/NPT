@@ -2,13 +2,14 @@
 // No build step, no server. Keeps the app shell cached so it opens
 // instantly and still works with flaky connections.
 //
+// v6: fresh cache for the home restructure (tiles, no banner)
 // v5: fresh cache for the pink mobile-layout fix
 // v4: fixed a cache-poisoning bug — the old worker cached EVERYTHING it
 // fetched, including 404/error responses, and served them forever
 // (cache-first). Now only successful responses are cached, and assets are
 // cached one by one so a single failure can't abort the whole install.
 
-const CACHE = 'aura-v5';
+const CACHE = 'aura-v6';
 const ASSETS = [
   './',
   './index.html',
