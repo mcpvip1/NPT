@@ -61,6 +61,14 @@ const els = {
   setNotify: $('set-notify'),
   setNotifyDays: $('set-notify-days'),
   setBot: $('set-bot'),
+  setRemindLog: $('set-remind-log'),
+  setRemindTime: $('set-remind-time'),
+
+  botHello: $('bot-hello'),
+  botHelloBot: $('bot-hello-bot'),
+  botHelloTitle: $('bot-hello-title'),
+  botHelloMsg: $('bot-hello-msg'),
+  botHelloClose: $('bot-hello-close'),
 
   welcome: $('welcome'),
   welcomeForm: $('welcome-form'),
@@ -200,10 +208,15 @@ function applyTheme() {
 }
 
 // ---------- the little bot ----------
-function botHTML() {
+// expr can be 'happy' (default), 'sad' or 'sleepy' — the face changes to match.
+// pass big=true for the chunkier greeting-card version.
+function botHTML(expr, big) {
   // flipped off in settings? then no bot. simple as that.
   if (state.data.showBot === false) return '';
-  return `<span class="bot" aria-hidden="true">` +
+  let cls = '';
+  if (expr && expr !== 'happy') cls += ` bot-${expr}`;
+  if (big) cls += ' bot-big';
+  return `<span class="bot${cls}" aria-hidden="true">` +
     `<span class="bot-antenna"></span>` +
     `<span class="bot-face">` +
       `<span class="bot-eyes"><span class="bot-eye"></span><span class="bot-eye"></span></span>` +
@@ -215,6 +228,78 @@ function botHTML() {
 function refreshBotSlots() {
   const html = botHTML();
   document.querySelectorAll('.bot-slot').forEach(el => { el.innerHTML = html; });
+}
+
+const MOOD_SCORE = { great: 4, good: 3, okay: 2, low: 1, bad: 0 };
+
+// how has the mood been trending over the last week? 'up', 'down' or null.
+function moodTrend() {
+  const scores = [];
+  for (let i = 0; i < 7; i++) {
+    const k = toKey(addDays(today(), -i));
+    const m = state.logs[k] && state.logs[k].mood;
+    if (m && m in MOOD_SCORE) scores.push(MOOD_SCORE[m]);
+  }
+  if (scores.length < 3) return null; // not enough to call it a trend
+  const half = Math.ceil(scores.length / 2);
+  const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+  const diff = avg(scores.slice(0, half)) - avg(scores.slice(half));
+  if (diff <= -0.75) return 'down';
+  if (diff >= 0.75) return 'up';
+  return null;
+}
+
+// most recent logged mood in the last few days, if any
+function latestMood() {
+  for (let i = 0; i < 4; i++) {
+    const k = toKey(addDays(today(), -i));
+    const m = state.logs[k] && state.logs[k].mood;
+    if (m && m in MOOD_SCORE) return m;
+  }
+  return null;
+}
+
+// the welcome card on the home tab. once a day, only when the bot is on.
+function renderBotHello() {
+  if (state.data.showBot === false) return;
+  const key = toKey(today());
+  if (localStorage.getItem(LS.greeted) === key) return; // already said hi today
+
+  const T = t();
+  const hour = new Date().getHours();
+  const name = state.data.userName;
+  const title = hour < 12 ? T.greetMorning(name)
+    : hour < 17 ? T.greetAfternoon(name)
+    : T.greetEvening(name);
+
+  let msg = T.greetGeneric;
+  let expr = 'happy';
+
+  const info = cycleInfoFor(today());
+  const trend = moodTrend();
+  const mood = latestMood();
+
+  if (info && isSameDay(info.start, today())) {
+    msg = T.greetPeriodDay1; // day one. be gentle.
+  } else if (trend === 'down') {
+    msg = T.greetTrendDown;
+    expr = 'sad';
+  } else if (trend === 'up') {
+    msg = T.greetTrendUp;
+  } else if (mood && T.moodTips[mood]) {
+    msg = T.moodTips[mood]; // a little tip matched to how they've been feeling
+    if (mood === 'low' || mood === 'bad') expr = 'sad';
+  } else if (!state.logs[key]) {
+    msg = T.greetLogNudge;
+  }
+
+  if (hour >= 22 || hour < 5) expr = 'sleepy'; // up late? bot gets sleepy too
+
+  els.botHelloBot.innerHTML = botHTML(expr, true);
+  els.botHelloTitle.textContent = title;
+  els.botHelloMsg.textContent = msg;
+  els.botHello.classList.remove('hidden');
+  localStorage.setItem(LS.greeted, key);
 }
 
 // ---------- advice ----------
@@ -672,6 +757,8 @@ function fillSettingsForm() {
   els.setNotify.checked = !!state.data.notify;
   els.setNotifyDays.value = String(state.data.notifyDays);
   els.setBot.checked = state.data.showBot !== false; // old saves don't have the key yet
+  els.setRemindLog.checked = !!state.data.logReminder;
+  els.setRemindTime.value = state.data.logReminderTime || '21:00';
 }
 
 // ---------- master ----------

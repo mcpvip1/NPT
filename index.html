@@ -111,6 +111,15 @@
 
         <!-- HOME -->
         <section id="tab-home" class="page active">
+          <div id="bot-hello" class="bot-hello hidden">
+            <span id="bot-hello-bot"></span>
+            <div class="bot-hello-text">
+              <div class="bot-hello-title" id="bot-hello-title"></div>
+              <div class="bot-hello-msg" id="bot-hello-msg"></div>
+            </div>
+            <button class="icon-btn small" id="bot-hello-close" aria-label="Dismiss">×</button>
+          </div>
+
           <div id="today-pill" class="today-pill">
             <span class="pill-dot" id="pill-dot"></span>
             <span id="pill-text">—</span>
@@ -305,6 +314,17 @@
               <div class="switch-row">
                 <span data-lbl="lblBotEnable">🤖 Show cute helper bot</span>
                 <label class="switch"><input type="checkbox" id="set-bot" checked><span class="switch-track"></span></label>
+              </div>
+
+              <hr class="hr">
+
+              <div class="switch-row">
+                <span data-lbl="lblRemindLog">📝 Daily log reminder</span>
+                <label class="switch"><input type="checkbox" id="set-remind-log"><span class="switch-track"></span></label>
+              </div>
+              <div class="field">
+                <label for="set-remind-time" data-lbl="lblRemindTime">Reminder time</label>
+                <input type="time" id="set-remind-time" value="21:00">
               </div>
 
               <hr class="hr">

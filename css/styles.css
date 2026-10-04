@@ -557,6 +557,49 @@ input, select, textarea { font-family: inherit; }
 }
 .advice-title { display: flex; align-items: center; gap: 8px; }
 
+/* the bot has moods too. sad droops, sleepy dozes off. */
+.bot-sad .bot-smile {
+  border-top: 2px solid var(--primary-dark);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  height: 5px;
+  margin-top: 5px;
+}
+.bot-sad .bot-eye { height: 5px; }
+.bot-sleepy .bot-eye { height: 2px; border-radius: 2px; animation: none; }
+.bot-sleepy .bot-face { transform: rotate(-8deg); }
+
+/* chunkier version for the greeting card */
+.bot-big { width: 46px; }
+.bot-big .bot-antenna { height: 9px; }
+.bot-big .bot-face { width: 42px; height: 38px; border-radius: 13px; }
+.bot-big .bot-eyes { gap: 10px; }
+.bot-big .bot-eye { width: 6px; height: 10px; }
+.bot-big .bot-smile { width: 14px; height: 7px; }
+
+/* the morning hello. shows once a day on the home tab. */
+.bot-hello {
+  display: flex; gap: 12px; align-items: center;
+  background: linear-gradient(135deg, var(--primary-soft), var(--surface));
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  animation: rise .3s ease;
+}
+.bot-hello-text { flex: 1; min-width: 0; }
+.bot-hello-title {
+  font-weight: 800; font-size: .9rem;
+  color: var(--primary-dark);
+  overflow-wrap: break-word;
+}
+.bot-hello-msg {
+  font-size: .8rem; color: var(--muted);
+  margin-top: 2px; line-height: 1.45;
+  overflow-wrap: break-word;
+}
+.bot-hello .icon-btn { align-self: flex-start; flex-shrink: 0; }
+
 /* Collapsible health tips in history — keeps cards compact on mobile */
 .advice-details {
   background: var(--surface);

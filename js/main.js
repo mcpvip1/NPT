@@ -146,6 +146,12 @@ function initSettings() {
     state.data.notify = els.setNotify.checked;
     state.data.notifyDays = parseInt(els.setNotifyDays.value, 10);
     state.data.showBot = els.setBot.checked;
+    state.data.logReminder = els.setRemindLog.checked;
+    state.data.logReminderTime = els.setRemindTime.value || '21:00';
+
+    if (state.data.logReminder && 'Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
 
     if (state.data.notify && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
@@ -209,7 +215,9 @@ function initSettings() {
           lutealPhase: clamp(parseInt(d.lutealPhase, 10), 8, 20, 14),
           notify: !!d.notify,
           notifyDays: clamp(parseInt(d.notifyDays, 10), 1, 30, 2),
-          showBot: d.showBot !== false
+          showBot: d.showBot !== false,
+          logReminder: !!d.logReminder,
+          logReminderTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(d.logReminderTime || '') ? d.logReminderTime : '21:00'
         };
       }
       if (parsed.logs && typeof parsed.logs === 'object') {
@@ -271,6 +279,7 @@ function initWelcome() {
     fillSettingsForm();
     applyLang();
     renderAll();
+    renderBotHello(); // greet the new user right away
     toast(t().msgSaved, 'ok');
   });
 }
@@ -310,6 +319,33 @@ function initQuickLog() {
   $('fab').addEventListener('click', () => openLogModal(toKey(today())));
 }
 
+function checkLogReminder() {
+  const { logReminder, logReminderTime } = state.data;
+  if (!logReminder || !logReminderTime) return;
+  const now = new Date();
+  const hm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  if (hm !== logReminderTime) return;
+  const key = toKey(now);
+  if (localStorage.getItem(LS.reminded) === key) return; // already nudged today
+  if (state.logs[key]) return; // already logged, nothing to nag about
+  localStorage.setItem(LS.reminded, key);
+
+  const T = t();
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try { new Notification(T.notifLogTitle, { body: T.notifLogBody }); } catch (_) { }
+  }
+  toast(T.notifLogBody, 'ok');
+}
+
+function initReminders() {
+  checkLogReminder();
+  setInterval(checkLogReminder, 60000); // close enough to the minute
+}
+
+function initBotHello() {
+  els.botHelloClose.addEventListener('click', () => els.botHello.classList.add('hidden'));
+}
+
 function initEscape() {
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
@@ -334,6 +370,8 @@ function init() {
   initTheme();
   initHistoryControls();
   initQuickLog();
+  initReminders();
+  initBotHello();
   initEscape();
 
   if (!hasSettings || !state.data.lastDate) {
@@ -342,6 +380,7 @@ function init() {
   } else {
     fillSettingsForm();
     renderAll();
+    renderBotHello();
   }
 }
 

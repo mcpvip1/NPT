@@ -7,7 +7,9 @@ const LS = {
   lang: 'aura_lang',
   theme: 'aura_theme',
   notified: 'aura_notified',
-  cycleSeen: 'aura_cycle_seen'
+  cycleSeen: 'aura_cycle_seen',
+  greeted: 'aura_greeted',
+  reminded: 'aura_reminded'
 };
 
 const DEFAULTS = {
@@ -19,7 +21,9 @@ const DEFAULTS = {
   lutealPhase: 14,
   notify: true,
   notifyDays: 2,
-  showBot: true // our little buddy next to the health tips. flippable in settings.
+  showBot: true, // our little buddy next to the health tips. flippable in settings.
+  logReminder: false, // daily "hey, log today!" nudge
+  logReminderTime: '21:00'
 };
 
 const VALID_MOODS = ['great', 'good', 'okay', 'low', 'bad'];
