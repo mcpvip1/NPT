@@ -494,88 +494,37 @@ input, select, textarea { font-family: inherit; }
   color: var(--primary-dark);
 }
 
-/* our little helper bot. hangs out next to the health tips, bobs
-   around and blinks so it feels alive. pure css, no images. */
+/* our 3D helper bot. floats around like it's hovering, and boings
+   when you tap it. happy / sad / sleepy moods are separate renders. */
 .bot-slot:empty { display: none; }
-.bot {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  width: 32px;
+.bot3d {
+  width: 40px; height: 40px;
+  object-fit: contain;
   flex-shrink: 0;
-  animation: bot-bob 2.8s ease-in-out infinite;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+  animation: bot-float 3.4s ease-in-out infinite;
+  filter: drop-shadow(0 6px 5px rgba(244, 114, 182, .28));
 }
-.bot-antenna {
-  width: 2px; height: 6px;
-  background: var(--muted);
-  border-radius: 2px;
-  position: relative;
+.bot3d-big { width: 92px; height: 92px; }
+@keyframes bot-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-7px) rotate(2deg); }
 }
-.bot-antenna::after {
-  content: "";
-  position: absolute; top: -6px; left: 50%;
-  width: 7px; height: 7px;
-  transform: translateX(-50%);
-  background: var(--primary);
-  border-radius: 50%;
-  animation: bot-glow 1.8s ease-in-out infinite;
+/* the tap bounce — a quick squash and stretch */
+.bot3d.boing { animation: bot-boing .45s ease; }
+@keyframes bot-boing {
+  0% { transform: scale(1, 1); }
+  30% { transform: scale(1.18, .8); }
+  55% { transform: scale(.9, 1.12) translateY(-9px); }
+  78% { transform: scale(1.04, .95); }
+  100% { transform: scale(1, 1); }
 }
-.bot-face {
-  width: 30px; height: 28px;
-  margin-top: 1px;
-  background: linear-gradient(180deg, #ffffff, var(--primary-soft));
-  border: 2px solid var(--primary);
-  border-radius: 10px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 3px;
-}
-.bot-eyes { display: flex; gap: 7px; }
-.bot-eye {
-  width: 4px; height: 7px;
-  background: var(--primary-dark);
-  border-radius: 3px;
-  animation: bot-blink 4.2s infinite;
-}
-.bot-smile {
-  width: 10px; height: 5px;
-  border: 2px solid var(--primary-dark);
-  border-top: none;
-  border-radius: 0 0 10px 10px;
-}
-@keyframes bot-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-@keyframes bot-blink {
-  0%, 93%, 100% { transform: scaleY(1); }
-  95.5%, 97% { transform: scaleY(.12); }
-}
-@keyframes bot-glow {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(251,113,133,.45); }
-  50% { opacity: .6; box-shadow: 0 0 0 5px rgba(251,113,133,0); }
+@media (prefers-reduced-motion: reduce) {
+  .bot3d { animation: none; }
 }
 .advice-title { display: flex; align-items: center; gap: 8px; }
-
-/* the bot has moods too. sad droops, sleepy dozes off. */
-.bot-sad .bot-smile {
-  border-top: 2px solid var(--primary-dark);
-  border-bottom: none;
-  border-radius: 10px 10px 0 0;
-  height: 5px;
-  margin-top: 5px;
-}
-.bot-sad .bot-eye { height: 5px; }
-.bot-sleepy .bot-eye { height: 2px; border-radius: 2px; animation: none; }
-.bot-sleepy .bot-face { transform: rotate(-8deg); }
-
-/* chunkier version for the greeting card */
-.bot-big { width: 46px; }
-.bot-big .bot-antenna { height: 9px; }
-.bot-big .bot-face { width: 42px; height: 38px; border-radius: 13px; }
-.bot-big .bot-eyes { gap: 10px; }
-.bot-big .bot-eye { width: 6px; height: 10px; }
-.bot-big .bot-smile { width: 14px; height: 7px; }
 
 /* the morning hello. shows once a day on the home tab. */
 .bot-hello {

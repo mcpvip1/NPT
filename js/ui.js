@@ -64,6 +64,8 @@ const els = {
   setRemindLog: $('set-remind-log'),
   setRemindTime: $('set-remind-time'),
   setWellness: $('set-wellness'),
+  setBotName: $('set-bot-name'),
+  adviceTitle: $('advice-title'),
   notifDot: $('notif-dot'),
   notifStatusText: $('notif-status-text'),
   notifPermBtn: $('btn-notif-perm'),
@@ -138,6 +140,24 @@ function unlockAudio() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
   } catch (_) { /* no audio, no problem */ }
+}
+
+// the bot's little "boing!" when you tap it. synthesized, no files needed.
+function playBoing() {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+  const t0 = ctx.currentTime;
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(260, t0);
+  o.frequency.exponentialRampToValueAtTime(680, t0 + 0.12);
+  o.frequency.exponentialRampToValueAtTime(440, t0 + 0.2);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.22, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.26);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t0); o.stop(t0 + 0.28);
 }
 
 function playChime() {
@@ -293,7 +313,12 @@ function applyLang() {
 
   document.querySelectorAll('[data-lbl]').forEach(el => {
     const key = el.dataset.lbl;
-    if (T[key]) el.textContent = T[key];
+    if (T[key] && typeof T[key] !== 'function') el.textContent = T[key];
+  });
+
+  document.querySelectorAll('[data-ph]').forEach(el => {
+    const key = el.dataset.ph;
+    if (T[key] && typeof T[key] !== 'function') el.placeholder = T[key];
   });
 
   const name = state.data.userName ? state.data.userName + ' ' : 'Aura ';
@@ -335,18 +360,19 @@ function applyTheme() {
 // ---------- the little bot ----------
 // expr can be 'happy' (default), 'sad' or 'sleepy' — the face changes to match.
 // pass big=true for the chunkier greeting-card version.
+// the bot's name, renameable in settings. defaults to Aura.
+function botName() {
+  const n = (state.data.botName || '').trim();
+  return n || 'Aura';
+}
+
+// our helper bot, now a proper 3D little buddy. three moods, all cute.
+// tap it and it boings.
 function botHTML(expr, big) {
   // flipped off in settings? then no bot. simple as that.
   if (state.data.showBot === false) return '';
-  let cls = '';
-  if (expr && expr !== 'happy') cls += ` bot-${expr}`;
-  if (big) cls += ' bot-big';
-  return `<span class="bot${cls}" aria-hidden="true">` +
-    `<span class="bot-antenna"></span>` +
-    `<span class="bot-face">` +
-      `<span class="bot-eyes"><span class="bot-eye"></span><span class="bot-eye"></span></span>` +
-      `<span class="bot-smile"></span>` +
-    `</span></span>`;
+  const mood = (expr === 'sad' || expr === 'sleepy') ? expr : 'happy';
+  return `<img class="bot3d${big ? ' bot3d-big' : ''}" src="img/bot-${mood}.png" alt="${esc(botName())}" draggable="false">`;
 }
 
 // fills every placeholder with the bot (or clears them when turned off).
@@ -548,6 +574,7 @@ function adviceDetailsHTML(symptoms) {
 // reads the user's own history and puts together guidance that actually fits.
 function renderAdvicePage() {
   const T = t();
+  els.adviceTitle.textContent = T.lblAdvicePageTitle(botName());
   const list = els.adviceToday;
   list.innerHTML = '';
 
@@ -1066,6 +1093,7 @@ function fillSettingsForm() {
   els.setRemindLog.checked = !!state.data.logReminder;
   els.setRemindTime.value = state.data.logReminderTime || '21:00';
   els.setWellness.checked = state.data.wellnessNudges !== false;
+  els.setBotName.value = state.data.botName || '';
   updateNotifStatus();
 }
 
