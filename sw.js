@@ -2,7 +2,7 @@
 // No build step, no server. Keeps the app shell cached so it opens
 // instantly and still works with flaky connections.
 
-const CACHE = 'aura-v1';
+const CACHE = 'aura-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -14,7 +14,10 @@ const ASSETS = [
   './js/ui.js',
   './js/main.js',
   './manifest.json',
-  './bot-icon.svg'
+  './bot-icon.svg',
+  './img/bot-happy.png',
+  './img/bot-sad.png',
+  './img/bot-sleepy.png'
 ];
 
 self.addEventListener('install', e => {

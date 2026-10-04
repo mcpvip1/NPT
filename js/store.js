@@ -27,7 +27,8 @@ const DEFAULTS = {
   logReminder: false, // daily "hey, log today!" nudge
   logReminderTime: '21:00',
   wellnessNudges: true, // gentle contextual nudges (warm water, rest...)
-  nudgePrefs: {} // per-nudge overrides; missing = on
+  nudgePrefs: {}, // per-nudge overrides; missing = on
+  botName: 'Aura' // renameable in settings
 };
 
 const VALID_MOODS = ['great', 'good', 'okay', 'low', 'bad'];

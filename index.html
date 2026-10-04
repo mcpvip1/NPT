@@ -10,8 +10,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Aura">
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="img/bot-happy.png">
+  <link rel="apple-touch-icon" href="img/bot-happy.png">
   <title>Aura — Period Tracker</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -199,7 +199,7 @@
             <div class="advice-hero">
               <span id="advice-bot"></span>
               <div>
-                <h2 class="panel-head" data-lbl="lblAdvicePageTitle">🤖 Ask Aura</h2>
+                <h2 class="panel-head" id="advice-title">🤖 Ask Aura</h2>
                 <p class="sub-text" data-lbl="lblAdvicePageSub"></p>
               </div>
             </div>
@@ -371,6 +371,10 @@
               <div class="switch-row">
                 <span data-lbl="lblBotEnable">🤖 Show cute helper bot</span>
                 <label class="switch"><input type="checkbox" id="set-bot" checked><span class="switch-track"></span></label>
+              </div>
+              <div class="field">
+                <label for="set-bot-name" data-lbl="lblBotName">Bot name</label>
+                <input type="text" id="set-bot-name" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
               </div>
 
               <hr class="hr">

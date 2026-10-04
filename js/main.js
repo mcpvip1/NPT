@@ -150,6 +150,7 @@ function initSettings() {
     state.data.logReminder = els.setRemindLog.checked;
     state.data.logReminderTime = els.setRemindTime.value || '21:00';
     state.data.wellnessNudges = els.setWellness.checked;
+    state.data.botName = els.setBotName.value.trim().slice(0, 24) || 'Aura';
 
     if (state.data.logReminder && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
@@ -221,7 +222,8 @@ function initSettings() {
           logReminder: !!d.logReminder,
           logReminderTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(d.logReminderTime || '') ? d.logReminderTime : '21:00',
           wellnessNudges: d.wellnessNudges !== false,
-          nudgePrefs: (d.nudgePrefs && typeof d.nudgePrefs === 'object' && !Array.isArray(d.nudgePrefs)) ? d.nudgePrefs : {}
+          nudgePrefs: (d.nudgePrefs && typeof d.nudgePrefs === 'object' && !Array.isArray(d.nudgePrefs)) ? d.nudgePrefs : {},
+          botName: typeof d.botName === 'string' && d.botName.trim() ? d.botName.trim().slice(0, 24) : 'Aura'
         };
       }
       if (parsed.logs && typeof parsed.logs === 'object') {
@@ -357,6 +359,18 @@ function initAudioUnlock() {
   document.addEventListener('keydown', unlockAudio);
 }
 
+// tap the bot anywhere and it boings at you.
+function initBotTap() {
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.bot3d');
+    if (!b) return;
+    playBoing();
+    b.classList.remove('boing');
+    void b.offsetWidth; // restart the bounce
+    b.classList.add('boing');
+  });
+}
+
 function initBotHello() {
   els.botHelloClose.addEventListener('click', () => els.botHello.classList.add('hidden'));
 }
@@ -443,6 +457,7 @@ function init() {
   initInstallNudge();
   initNotifPermission();
   initAdvicePage();
+  initBotTap();
   initEscape();
 
   if (!hasSettings || !state.data.lastDate) {
