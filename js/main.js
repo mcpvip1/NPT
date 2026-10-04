@@ -45,15 +45,36 @@ function initLogModal() {
     const chip = e.target.closest('.chip');
     if (!chip) return;
     const wasActive = chip.classList.contains('active');
-    els.logFlowRow.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    if (!wasActive) chip.classList.add('active');
+    els.logFlowRow.querySelectorAll('.chip').forEach(c => {
+      c.classList.remove('active');
+      c.setAttribute('aria-pressed', 'false');
+    });
+    if (!wasActive) {
+      chip.classList.add('active');
+      chip.setAttribute('aria-pressed', 'true');
+    }
   });
 
   els.logSymRow.addEventListener('click', e => {
     const chip = e.target.closest('.chip');
     if (!chip) return;
     chip.classList.toggle('active');
+    chip.setAttribute('aria-pressed', chip.classList.contains('active'));
     refreshAdvicePreview();
+  });
+
+  els.logMoodRow.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const wasActive = chip.classList.contains('active');
+    els.logMoodRow.querySelectorAll('.chip').forEach(c => {
+      c.classList.remove('active');
+      c.setAttribute('aria-pressed', 'false');
+    });
+    if (!wasActive) {
+      chip.classList.add('active');
+      chip.setAttribute('aria-pressed', 'true');
+    }
   });
 
   els.logClose.addEventListener('click', closeLogModal);
@@ -67,14 +88,19 @@ function initLogModal() {
     const flowChip = els.logFlowRow.querySelector('.chip.active');
     const flow = flowChip ? flowChip.dataset.flow : null;
     const symptoms = [...els.logSymRow.querySelectorAll('.chip.active')].map(c => c.dataset.sym);
+    const moodChip = els.logMoodRow.querySelector('.chip.active');
+    const mood = moodChip ? moodChip.dataset.mood : null;
     const notes = els.logNotes.value.trim();
 
-    if (flow || symptoms.length || notes) {
-      state.logs[key] = { flow, symptoms, notes };
+    if (flow || symptoms.length || mood || notes) {
+      state.logs[key] = { flow, symptoms, mood, notes };
     } else {
       delete state.logs[key];
     }
-    saveLogs();
+    if (!saveLogs()) {
+      toast(t().msgSaveError || 'Save failed', 'err');
+      return;
+    }
 
     renderCalendar();
     renderHistory();
@@ -123,7 +149,10 @@ function initSettings() {
     if (state.data.notify && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
-    saveData();
+    if (!saveData()) {
+      toast(T.msgSaveError || 'Save failed', 'err');
+      return;
+    }
     applyLang();
     renderAll();
     toast(T.msgSaved, 'ok');
@@ -149,11 +178,11 @@ function initSettings() {
 
   $('btn-import').addEventListener('click', () => {
     els.importText.value = '';
-    els.importModal.classList.remove('hidden');
+    openModal(els.importModal);
   });
-  els.importClose.addEventListener('click', () => els.importModal.classList.add('hidden'));
+  els.importClose.addEventListener('click', () => closeModal(els.importModal));
   els.importModal.addEventListener('click', e => {
-    if (e.target === els.importModal) els.importModal.classList.add('hidden');
+    if (e.target === els.importModal) closeModal(els.importModal);
   });
   els.importGo.addEventListener('click', () => {
     const T = t();
@@ -161,19 +190,45 @@ function initSettings() {
     if (!raw) return;
     try {
       const parsed = JSON.parse(raw);
-      if (parsed.data) state.data = { ...DEFAULTS, ...parsed.data };
-      if (parsed.logs) {
-        state.logs = {};
+      if (!parsed || typeof parsed !== 'object') throw new Error('bad import');
+
+      // Build into temp objects first — state is only replaced when everything validates.
+      let nextData = null;
+      let nextLogs = null;
+
+      if (parsed.data && typeof parsed.data === 'object') {
+        const d = parsed.data;
+        const lastDate = typeof d.lastDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d.lastDate) && parseDate(d.lastDate) ? d.lastDate : '';
+        nextData = {
+          ...DEFAULTS,
+          userName: typeof d.userName === 'string' ? d.userName.slice(0, 60) : '',
+          lastDate,
+          cycleLength: clamp(parseInt(d.cycleLength, 10), 15, 90, 28),
+          periodLength: clamp(parseInt(d.periodLength, 10), 1, 15, 5),
+          lutealPhase: clamp(parseInt(d.lutealPhase, 10), 8, 20, 14),
+          notify: !!d.notify,
+          notifyDays: clamp(parseInt(d.notifyDays, 10), 1, 30, 2)
+        };
+      }
+      if (parsed.logs && typeof parsed.logs === 'object') {
+        nextLogs = {};
         for (const k in parsed.logs) {
-          const v = parsed.logs[k];
-          state.logs[k] = { flow: v.flow || null, symptoms: v.symptoms || [], notes: v.notes || '' };
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
+          const entry = sanitizeLogEntry(parsed.logs[k]);
+          if (entry) nextLogs[k] = entry;
         }
       }
-      saveData(); saveLogs();
+
+      if (nextData) state.data = nextData;
+      if (nextLogs) state.logs = nextLogs;
+      if (!saveData() || !saveLogs()) {
+        toast(T.msgSaveError || 'Save failed', 'err');
+        return;
+      }
       fillSettingsForm();
       applyLang();
       renderAll();
-      els.importModal.classList.add('hidden');
+      closeModal(els.importModal);
       toast(T.msgImported, 'ok');
     } catch (_) {
       toast(T.msgImportError, 'err');
@@ -193,7 +248,7 @@ function initSettings() {
     fillSettingsForm();
     applyLang();
     renderAll();
-    els.welcome.classList.remove('hidden');
+    openModal(els.welcome);
     toast(T.msgDeleted, 'ok');
   });
 }
@@ -210,7 +265,7 @@ function initWelcome() {
     state.data.notifyDays = 2;
 
     saveData();
-    els.welcome.classList.add('hidden');
+    closeModal(els.welcome);
     fillSettingsForm();
     applyLang();
     renderAll();
@@ -257,7 +312,7 @@ function initEscape() {
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if (!els.logModal.classList.contains('hidden')) closeLogModal();
-    else if (!els.importModal.classList.contains('hidden')) els.importModal.classList.add('hidden');
+    else if (!els.importModal.classList.contains('hidden')) closeModal(els.importModal);
     else if (!els.confirmModal.classList.contains('hidden')) closeConfirm(false);
   });
 }
@@ -280,7 +335,7 @@ function init() {
   initEscape();
 
   if (!hasSettings || !state.data.lastDate) {
-    els.welcome.classList.remove('hidden');
+    openModal(els.welcome);
     renderCalendar();
   } else {
     fillSettingsForm();

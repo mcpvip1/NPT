@@ -1,5 +1,5 @@
 // State + persistence.
-// Log shape: { "2026-09-29": { flow, symptoms: [], notes } }
+// Log shape: { "2026-09-29": { flow, symptoms: [], mood, notes } }
 
 const LS = {
   data: 'aura_data',
@@ -21,6 +21,9 @@ const DEFAULTS = {
   notifyDays: 2
 };
 
+const VALID_MOODS = ['great', 'good', 'okay', 'low', 'bad'];
+const LOG_KEY_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 const state = {
   data: { ...DEFAULTS },
   logs: {},
@@ -32,27 +35,46 @@ const state = {
   historySearch: ''
 };
 
+// Normalize one raw log entry. Returns null when the entry is unusable.
+// Never throws — one bad entry must not wipe the rest (see loadAll).
+function sanitizeLogEntry(v) {
+  if (!v || typeof v !== 'object') return null;
+  if (Array.isArray(v)) {
+    return {
+      flow: null,
+      symptoms: v.filter(s => typeof s === 'string'),
+      mood: null,
+      notes: ''
+    };
+  }
+  const symptoms = Array.isArray(v.symptoms)
+    ? v.symptoms.filter(s => typeof s === 'string')
+    : [];
+  const mood = typeof v.mood === 'string' && VALID_MOODS.includes(v.mood) ? v.mood : null;
+  return {
+    flow: typeof v.flow === 'string' ? v.flow : null,
+    symptoms,
+    mood,
+    notes: typeof v.notes === 'string' ? v.notes : ''
+  };
+}
+
 function loadAll() {
   const lang = localStorage.getItem(LS.lang);
-  if (lang) state.lang = lang;
+  if (lang && typeof i18n !== 'undefined' && i18n[lang]) state.lang = lang;
 
   const theme = localStorage.getItem(LS.theme);
-  if (theme) state.theme = theme;
+  if (theme === 'light' || theme === 'dark') state.theme = theme;
 
   const rawLogs = localStorage.getItem(LS.logs);
   if (rawLogs) {
     try {
       const parsed = JSON.parse(rawLogs);
-      for (const k in parsed) {
-        const v = parsed[k];
-        if (Array.isArray(v)) {
-          state.logs[k] = { flow: null, symptoms: v, notes: '' };
-        } else {
-          state.logs[k] = {
-            flow: v.flow || null,
-            symptoms: v.symptoms || [],
-            notes: v.notes || ''
-          };
+      if (parsed && typeof parsed === 'object') {
+        for (const k in parsed) {
+          if (!LOG_KEY_RE.test(k)) continue;
+          const entry = sanitizeLogEntry(parsed[k]);
+          if (entry) state.logs[k] = entry;
         }
       }
     } catch (e) { console.warn('bad logs', e); }
@@ -61,12 +83,33 @@ function loadAll() {
   const rawData = localStorage.getItem(LS.data);
   if (rawData) {
     try {
-      state.data = { ...DEFAULTS, ...JSON.parse(rawData) };
-      return true;
+      const parsed = JSON.parse(rawData);
+      if (parsed && typeof parsed === 'object') {
+        state.data = { ...DEFAULTS, ...parsed };
+        return true;
+      }
     } catch (e) { console.warn('bad data', e); }
   }
   return false;
 }
 
-function saveData() { localStorage.setItem(LS.data, JSON.stringify(state.data)); }
-function saveLogs() { localStorage.setItem(LS.logs, JSON.stringify(state.logs)); }
+// Returns true on success, false when storage failed (e.g. quota exceeded).
+function saveData() {
+  try {
+    localStorage.setItem(LS.data, JSON.stringify(state.data));
+    return true;
+  } catch (e) {
+    console.warn('saveData failed', e);
+    return false;
+  }
+}
+
+function saveLogs() {
+  try {
+    localStorage.setItem(LS.logs, JSON.stringify(state.logs));
+    return true;
+  } catch (e) {
+    console.warn('saveLogs failed', e);
+    return false;
+  }
+}

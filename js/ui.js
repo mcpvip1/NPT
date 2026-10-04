@@ -47,6 +47,8 @@ const els = {
   predictions: $('predictions'),
   symChart: $('sym-chart'),
   flowChart: $('flow-chart'),
+  moodChart: $('mood-chart'),
+  moodInsight: $('insight-mood'),
   statTotal: $('stat-total'),
   statMonth: $('stat-month'),
 
@@ -68,6 +70,7 @@ const els = {
   logPhase: $('log-phase'),
   logFlowRow: $('flow-row'),
   logSymRow: $('sym-row'),
+  logMoodRow: $('mood-row'),
   logNotes: $('log-notes'),
   logSave: $('log-save'),
   logDelete: $('log-delete'),
@@ -105,13 +108,50 @@ let confirmResolve = null;
 function askConfirm(title, msg) {
   els.confirmTitle.textContent = title;
   els.confirmMsg.textContent = msg;
-  els.confirmModal.classList.remove('hidden');
+  openModal(els.confirmModal);
   return new Promise(r => { confirmResolve = r; });
 }
 function closeConfirm(val) {
   els.confirmModal.classList.add('hidden');
+  unlockScroll();
   if (confirmResolve) confirmResolve(val);
   confirmResolve = null;
+}
+
+// ---------- modal helpers: scroll lock + focus ----------
+let lastFocused = null;
+function lockScroll() { document.body.classList.add('no-scroll'); }
+function unlockScroll() {
+  if (!document.querySelector('.modal:not(.hidden)')) {
+    document.body.classList.remove('no-scroll');
+  }
+}
+function trapTab(e, modal) {
+  if (e.key !== 'Tab') return;
+  const items = [...modal.querySelectorAll('button, input, select, textarea, [tabindex]')]
+    .filter(el => !el.disabled && el.offsetParent !== null);
+  if (!items.length) return;
+  const first = items[0], last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+function openModal(modal) {
+  lastFocused = document.activeElement;
+  modal.classList.remove('hidden');
+  lockScroll();
+  const box = modal.querySelector('.modal-box');
+  if (box) {
+    if (!box.hasAttribute('tabindex')) box.setAttribute('tabindex', '-1');
+    box.focus({ preventScroll: true });
+  }
+  modal.onkeydown = e => trapTab(e, modal);
+}
+function closeModal(modal) {
+  modal.classList.add('hidden');
+  modal.onkeydown = null;
+  unlockScroll();
+  if (lastFocused && lastFocused.focus) lastFocused.focus({ preventScroll: true });
+  lastFocused = null;
 }
 
 // ---------- language / theme ----------
@@ -138,6 +178,9 @@ function applyLang() {
   });
   els.logSymRow.querySelectorAll('.chip').forEach(c => {
     const k = c.dataset.sym; if (T.chips[k]) c.textContent = T.chips[k];
+  });
+  els.logMoodRow.querySelectorAll('.chip').forEach(c => {
+    const k = c.dataset.mood; if (T.moods[k]) c.textContent = T.moods[k];
   });
 
   els.langSelect.value = state.lang;
@@ -231,7 +274,17 @@ function renderHero() {
 function renderCards() {
   const T = t();
   const info = cycleInfoFor(today());
-  if (!info) return;
+  if (!info) {
+    els.badgePeriod.textContent = '—';
+    els.badgeFertile.textContent = '—';
+    els.badgeOvulation.textContent = '—';
+    els.badgeNext.textContent = '—';
+    els.valPeriod.textContent = '—';
+    els.valFertile.textContent = '—';
+    els.valOvulation.textContent = '—';
+    els.valNext.textContent = '—';
+    return;
+  }
 
   let pStart = info.start, pEnd = info.periodEnd;
   let fStart = info.fertileStart, fEnd = info.fertileEnd;
@@ -348,7 +401,7 @@ function renderCalendar() {
     if (isSameDay(date, today())) btn.classList.add('is-today');
 
     const entry = state.logs[key];
-    if (entry && (entry.flow || (entry.symptoms && entry.symptoms.length) || entry.notes)) {
+    if (entry && (entry.flow || (entry.symptoms && entry.symptoms.length) || entry.mood || entry.notes)) {
       const dot = document.createElement('span');
       dot.className = 'logged';
       btn.appendChild(dot);
@@ -374,6 +427,8 @@ function rebuildMonthFilter() {
     opt.textContent = `${T.months[m - 1]} ${y}`;
     els.monthFilter.appendChild(opt);
   }
+  const stillThere = [...els.monthFilter.options].some(o => o.value === state.historyMonth);
+  if (!stillThere) state.historyMonth = 'all';
   els.monthFilter.value = state.historyMonth;
 }
 
@@ -384,6 +439,7 @@ function matchesSearch(entry, q) {
 
   if (entry.notes && entry.notes.toLowerCase().includes(s)) return true;
   if (entry.flow && (T.flows[entry.flow] || '').toLowerCase().includes(s)) return true;
+  if (entry.mood && (T.moods[entry.mood] || '').toLowerCase().includes(s)) return true;
   if (entry.symptoms) {
     for (const sym of entry.symptoms) {
       if ((T.chips[sym] || '').toLowerCase().includes(s)) return true;
@@ -428,15 +484,17 @@ function renderHistory() {
     card.className = 'log-card';
 
     const flowText = entry.flow && T.flows[entry.flow] ? T.flows[entry.flow] : '';
+    const moodText = entry.mood && T.moods[entry.mood] ? T.moods[entry.mood] : '';
     const tags = (entry.symptoms || [])
-      .map(s => `<span class="tag">${T.chips[s] || s}</span>`).join('');
+      .map(s => `<span class="tag">${esc(T.chips[s] || s)}</span>`).join('');
+    const moodTag = moodText ? `<span class="tag mood-tag">${esc(moodText)}</span>` : '';
 
     card.innerHTML = `
       <div class="log-head">
         <div class="log-date">${prettyDate(date)}</div>
         ${flowText ? `<span class="flow-tag">${flowText}</span>` : ''}
       </div>
-      ${tags ? `<div class="tags">${tags}</div>` : ''}
+      ${(tags || moodTag) ? `<div class="tags">${moodTag}${tags}</div>` : ''}
       ${entry.notes ? `<div class="notes">${esc(entry.notes)}</div>` : ''}
       ${adviceDetailsHTML(entry.symptoms)}
     `;
@@ -483,13 +541,27 @@ function renderInsights() {
 
   const symCounts = {};
   const flowCounts = {};
+  const moodCounts = {};
   for (const key in state.logs) {
     const e = state.logs[key];
     (e.symptoms || []).forEach(s => symCounts[s] = (symCounts[s] || 0) + 1);
     if (e.flow) flowCounts[e.flow] = (flowCounts[e.flow] || 0) + 1;
+    if (e.mood) moodCounts[e.mood] = (moodCounts[e.mood] || 0) + 1;
   }
   drawBars(els.symChart, symCounts, k => T.chips[k] || k);
   drawBars(els.flowChart, flowCounts, k => T.flows[k] || k);
+  const moodOrder = ['great', 'good', 'okay', 'low', 'bad'];
+  const orderedMoods = {};
+  moodOrder.forEach(k => { if (moodCounts[k]) orderedMoods[k] = moodCounts[k]; });
+  Object.keys(moodCounts).forEach(k => { if (!(k in orderedMoods)) orderedMoods[k] = moodCounts[k]; });
+  if (els.moodChart) {
+    if (Object.keys(orderedMoods).length) {
+      els.moodInsight.classList.remove('hidden');
+      drawBars(els.moodChart, orderedMoods, k => T.moods[k] || k);
+    } else {
+      els.moodInsight.classList.add('hidden');
+    }
+  }
 
   const total = Object.keys(state.logs).length;
   const monthPrefix = toKey(today()).slice(0, 7);
@@ -530,26 +602,30 @@ function openLogModal(key) {
   els.logPhase.textContent = phaseLabel(phase);
   els.logPhase.classList.toggle('hidden', !phase);
 
-  const entry = state.logs[key] || { flow: null, symptoms: [], notes: '' };
+  const entry = state.logs[key] || { flow: null, symptoms: [], mood: null, notes: '' };
   const syms = entry.symptoms || [];
 
-  els.logFlowRow.querySelectorAll('.chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.flow === entry.flow);
-  });
-  els.logSymRow.querySelectorAll('.chip').forEach(c => {
-    c.classList.toggle('active', syms.includes(c.dataset.sym));
-  });
+  const syncChips = (row, isActive) => {
+    row.querySelectorAll('.chip').forEach(c => {
+      const on = isActive(c);
+      c.classList.toggle('active', on);
+      c.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  };
+  syncChips(els.logFlowRow, c => c.dataset.flow === entry.flow);
+  syncChips(els.logSymRow, c => syms.includes(c.dataset.sym));
+  syncChips(els.logMoodRow, c => c.dataset.mood === entry.mood);
   els.logNotes.value = entry.notes || '';
 
-  const hasData = !!(entry.flow || syms.length || (entry.notes && entry.notes.trim()));
+  const hasData = !!(entry.flow || syms.length || entry.mood || (entry.notes && entry.notes.trim()));
   els.logDelete.classList.toggle('hidden', !hasData);
 
   refreshAdvicePreview();
-  els.logModal.classList.remove('hidden');
+  openModal(els.logModal);
 }
 
 function closeLogModal() {
-  els.logModal.classList.add('hidden');
+  closeModal(els.logModal);
   state.selectedDate = null;
 }
 

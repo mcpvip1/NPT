@@ -46,6 +46,8 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+body.no-scroll { overflow: hidden; }
+
 body {
   font-family: 'Plus Jakarta Sans', 'Padauk', sans-serif;
   background: #f1f5f9;
@@ -486,6 +488,12 @@ input, select, textarea { font-family: inherit; }
   white-space: pre-wrap;
 }
 
+.tag.mood-tag {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+
 /* Collapsible health tips in history — keeps cards compact on mobile */
 .advice-details {
   background: var(--surface);
@@ -816,6 +824,24 @@ textarea { resize: vertical; }
 @media (max-width: 639px) {
   .history-tools { grid-template-columns: 1fr; }
   #tab-history .panel { min-width: 0; overflow: hidden; }
+
+  /* Log + import modals become bottom sheets on phones: easier thumb reach */
+  #log-modal, #import {
+    place-items: end center;
+    padding: 0;
+  }
+  #log-modal .modal-box, #import .modal-box {
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    max-height: 92dvh;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    animation: sheet-up .28s ease;
+  }
+  @keyframes sheet-up {
+    from { transform: translateY(48px); opacity: .4; }
+    to { transform: translateY(0); opacity: 1; }
+  }
 }
 
 @media (min-width: 640px) {

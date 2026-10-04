@@ -5,6 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#fb7185">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Aura">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
   <title>Aura — Period Tracker</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,8 +74,8 @@
       </nav>
 
       <div class="side-footer">
-        <button id="theme-toggle-desktop" class="side-mini" title="Theme">🌙</button>
-        <select id="lang-select-desktop" class="side-lang">
+        <button id="theme-toggle-desktop" class="side-mini" title="Theme" aria-label="Toggle theme">🌙</button>
+        <select id="lang-select-desktop" class="side-lang" aria-label="Language">
           <option value="my">မြန်မာ</option>
           <option value="en">English</option>
         </select>
@@ -88,8 +95,8 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <button id="theme-toggle" class="icon-btn">🌙</button>
-          <select id="lang-select" class="lang-select">
+          <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">🌙</button>
+          <select id="lang-select" class="lang-select" aria-label="Language">
             <option value="my">မြန်မာ</option>
             <option value="en">English</option>
           </select>
@@ -210,6 +217,11 @@
               <div class="bars" id="flow-chart"></div>
             </div>
 
+            <div class="insight hidden" id="insight-mood">
+              <h3 data-lbl="lblInsightMood">😊 Mood</h3>
+              <div class="bars" id="mood-chart"></div>
+            </div>
+
             <div class="insight">
               <h3 data-lbl="lblInsightTotals">Log Summary</h3>
               <div class="stat-grid">
@@ -233,8 +245,8 @@
             <p class="sub-text" data-lbl="lblHistorySubtext">—</p>
 
             <div class="history-tools">
-              <input type="search" id="search-input" class="inp" placeholder="Search...">
-              <select id="month-filter" class="inp"></select>
+              <input type="search" id="search-input" class="inp" placeholder="Search..." aria-label="Search logs">
+              <select id="month-filter" class="inp" aria-label="Filter by month"></select>
             </div>
 
             <div id="history-list" class="history-list"></div>
@@ -350,7 +362,7 @@
   </div>
 
   <!-- Welcome -->
-  <div id="welcome" class="modal hidden">
+  <div id="welcome" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="w-title">
     <div class="modal-box welcome-box">
       <div class="welcome-ico">🌸</div>
       <h2 id="w-title">Welcome!</h2>
@@ -381,38 +393,47 @@
   </div>
 
   <!-- Symptom modal -->
-  <div id="log-modal" class="modal hidden">
+  <div id="log-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="log-title">
     <div class="modal-box">
       <div class="modal-head">
         <div>
           <h3 id="log-title">Daily Log</h3>
           <span id="log-date" class="date-chip">—</span>
         </div>
-        <button class="icon-btn" id="log-close">×</button>
+        <button class="icon-btn" id="log-close" aria-label="Close">×</button>
       </div>
 
       <div id="log-phase" class="phase-chip"></div>
 
       <h4 class="sec-head" data-lbl="lblModalFlowHead">🩸 Flow Rate</h4>
       <div class="chip-row" id="flow-row">
-        <button type="button" class="chip" data-flow="spotting">📍 Spotting</button>
-        <button type="button" class="chip" data-flow="light">💧 Light</button>
-        <button type="button" class="chip" data-flow="medium">💧💧 Medium</button>
-        <button type="button" class="chip" data-flow="heavy">💧💧💧 Heavy</button>
+        <button type="button" class="chip" data-flow="spotting" aria-pressed="false">📍 Spotting</button>
+        <button type="button" class="chip" data-flow="light" aria-pressed="false">💧 Light</button>
+        <button type="button" class="chip" data-flow="medium" aria-pressed="false">💧💧 Medium</button>
+        <button type="button" class="chip" data-flow="heavy" aria-pressed="false">💧💧💧 Heavy</button>
       </div>
 
       <h4 class="sec-head" data-lbl="lblModalSymptomsHead">✨ Symptoms</h4>
       <div class="chip-row" id="sym-row">
-        <button type="button" class="chip" data-sym="cramps">⚡ Cramps</button>
-        <button type="button" class="chip" data-sym="bloating">🎈 Bloating</button>
-        <button type="button" class="chip" data-sym="tired">😴 Tired</button>
-        <button type="button" class="chip" data-sym="happy">😊 Happy</button>
-        <button type="button" class="chip" data-sym="moody">😭 Moody</button>
-        <button type="button" class="chip" data-sym="cravings">🍕 Cravings</button>
-        <button type="button" class="chip" data-sym="headache">💆 Headache</button>
-        <button type="button" class="chip" data-sym="acne">🌶 Acne</button>
-        <button type="button" class="chip" data-sym="backpain">🦴 Back Pain</button>
-        <button type="button" class="chip" data-sym="nausea">🤢 Nausea</button>
+        <button type="button" class="chip" data-sym="cramps" aria-pressed="false">⚡ Cramps</button>
+        <button type="button" class="chip" data-sym="bloating" aria-pressed="false">🎈 Bloating</button>
+        <button type="button" class="chip" data-sym="tired" aria-pressed="false">😴 Tired</button>
+        <button type="button" class="chip" data-sym="happy" aria-pressed="false">😊 Happy</button>
+        <button type="button" class="chip" data-sym="moody" aria-pressed="false">😭 Moody</button>
+        <button type="button" class="chip" data-sym="cravings" aria-pressed="false">🍕 Cravings</button>
+        <button type="button" class="chip" data-sym="headache" aria-pressed="false">💆 Headache</button>
+        <button type="button" class="chip" data-sym="acne" aria-pressed="false">🌶 Acne</button>
+        <button type="button" class="chip" data-sym="backpain" aria-pressed="false">🦴 Back Pain</button>
+        <button type="button" class="chip" data-sym="nausea" aria-pressed="false">🤢 Nausea</button>
+      </div>
+
+      <h4 class="sec-head" data-lbl="lblModalMoodHead">😊 Mood</h4>
+      <div class="chip-row" id="mood-row">
+        <button type="button" class="chip" data-mood="great" aria-pressed="false">😄 Great</button>
+        <button type="button" class="chip" data-mood="good" aria-pressed="false">🙂 Good</button>
+        <button type="button" class="chip" data-mood="okay" aria-pressed="false">😐 Okay</button>
+        <button type="button" class="chip" data-mood="low" aria-pressed="false">😔 Low</button>
+        <button type="button" class="chip" data-mood="bad" aria-pressed="false">😣 Bad</button>
       </div>
 
       <div class="field">
@@ -433,7 +454,7 @@
   </div>
 
   <!-- Confirm -->
-  <div id="confirm" class="modal hidden">
+  <div id="confirm" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="c-title">
     <div class="modal-box confirm-box">
       <h3 id="c-title">Confirm</h3>
       <p id="c-msg" class="sub-text"></p>
@@ -445,11 +466,11 @@
   </div>
 
   <!-- Import -->
-  <div id="import" class="modal hidden">
+  <div id="import" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="import-title">
     <div class="modal-box">
       <div class="modal-head">
-        <h3 data-lbl="importTitle">Import Data</h3>
-        <button class="icon-btn" id="import-close">×</button>
+        <h3 data-lbl="importTitle" id="import-title">Import Data</h3>
+        <button class="icon-btn" id="import-close" aria-label="Close">×</button>
       </div>
       <p class="sub-text" data-lbl="importHint">Paste exported JSON.</p>
       <textarea id="import-text" rows="8" placeholder='{"data":{},"logs":{}}'></textarea>
@@ -457,7 +478,7 @@
     </div>
   </div>
 
-  <div id="toasts" class="toasts"></div>
+  <div id="toasts" class="toasts" aria-live="polite" role="status"></div>
 
   <script src="js/utils.js"></script>
   <script src="js/i18n.js"></script>

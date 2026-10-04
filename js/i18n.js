@@ -31,6 +31,7 @@ const i18n = {
 
     lblModalFlowHead: '🩸 သွေးဆင်းပမာဏ',
     lblModalSymptomsHead: '✨ ခံစားချက်',
+    lblModalMoodHead: '😊 စိတ်အခြေအနေ',
     lblModalNotes: '📝 မှတ်စု',
     lblAdviceHeading: '💡 ကျန်းမာရေး အကြံပြုချက်',
 
@@ -43,6 +44,7 @@ const i18n = {
     lblInsightPredictions: 'နောက်လာမည့် ၃ ကြိမ်',
     lblInsightSymptoms: 'လက္ခဏာ အကြိမ်ရေ',
     lblInsightFlow: 'သွေးဆင်းပမာဏ',
+    lblInsightMood: '😊 စိတ်အခြေအနေ',
     lblInsightTotals: 'မှတ်တမ်း',
     lblStatTotalLogs: 'စုစုပေါင်း',
     lblStatMonthLogs: 'ယခုလ',
@@ -79,6 +81,7 @@ const i18n = {
     importTitle: 'ဒေတာထည့်ရန်',
     importHint: 'Export လုပ်ထားသော JSON ကို Paste လုပ်ပါ။',
     msgSaved: 'သိမ်းပြီးပါပြီ',
+    msgSaveError: 'သိမ်းဆည်း၍ မရပါ',
     msgDeleted: 'ဖျက်ပြီးပါပြီ',
     msgImported: 'ထည့်သွင်းပြီးပါပြီ',
     msgImportError: 'ဒေတာ ဖတ်မရပါ',
@@ -98,6 +101,10 @@ const i18n = {
       happy: '😊 ပျော်', moody: '😭 စိတ်ဆိုး', cravings: '🍕 အစားကြိုက်',
       headache: '💆 ခေါင်းကိုက်', acne: '🌶 ဝက်ခြံ',
       backpain: '🦴 ခါးနာ', nausea: '🤢 ပျို့'
+    },
+    moods: {
+      great: '😄 အရမ်းကောင်း', good: '🙂 ကောင်း', okay: '😐 သာမန်',
+      low: '😔 စိတ်ဓာတ်ကျ', bad: '😣 မကောင်း'
     },
     advices: {
       cramps: 'ဗိုက်ပေါ်တွင် ရေနွေးအိတ် ကပ်ပါ၊ ရေနွေးနွေး သောက်ပါ။',
@@ -145,7 +152,8 @@ const i18n = {
     btnWelcomeStart: 'Get Started ✨',
 
     lblModalFlowHead: '🩸 Flow Rate',
-    lblModalSymptomsHead: '✨ Symptoms & Mood',
+    lblModalSymptomsHead: '✨ Symptoms',
+    lblModalMoodHead: '😊 Mood',
     lblModalNotes: '📝 Notes',
     lblAdviceHeading: '💡 Health Tips',
 
@@ -158,6 +166,7 @@ const i18n = {
     lblInsightPredictions: 'Next 3 Periods',
     lblInsightSymptoms: 'Symptom Frequency',
     lblInsightFlow: 'Flow Distribution',
+    lblInsightMood: '😊 Mood',
     lblInsightTotals: 'Log Summary',
     lblStatTotalLogs: 'Total Logs',
     lblStatMonthLogs: 'This Month',
@@ -194,6 +203,7 @@ const i18n = {
     importTitle: 'Import Data',
     importHint: 'Paste your exported JSON.',
     msgSaved: 'Saved',
+    msgSaveError: 'Could not save',
     msgDeleted: 'Deleted',
     msgImported: 'Imported',
     msgImportError: 'Could not parse that JSON',
@@ -213,6 +223,10 @@ const i18n = {
       happy: '😊 Happy', moody: '😭 Moody', cravings: '🍕 Cravings',
       headache: '💆 Headache', acne: '🌶 Acne',
       backpain: '🦴 Back Pain', nausea: '🤢 Nausea'
+    },
+    moods: {
+      great: '😄 Great', good: '🙂 Good', okay: '😐 Okay',
+      low: '😔 Low', bad: '😣 Bad'
     },
     advices: {
       cramps: 'Apply a heating pad and stay warm.',
