@@ -79,6 +79,7 @@
         <div class="header-text">
           <span class="header-greet" id="header-greet">Good morning,</span>
           <h1 class="header-title" id="header-title">Han!</h1>
+          <span class="header-status" id="header-status"></span>
         </div>
         <button class="avatar-btn" data-tab="tab-settings" aria-label="Profile"><span data-icon="avatar"></span></button>
         <div class="header-tools">
@@ -125,8 +126,6 @@
             <div class="weekdays" id="weekdays"></div>
             <div class="days" id="cal-days"></div>
           </div>
-
-          <p class="hero-status" id="hm-hero-status">&mdash;</p>
 
           <div class="stats-grid">
             <button type="button" class="stat-tile" data-phase="period">
@@ -228,6 +227,20 @@
             </div>
           </div>
 
+          <!-- Narrative: what this phase means for you -->
+          <div class="card guide-card" id="guide-card">
+            <p class="guide-kicker" data-lbl="lblPhaseGuide">Right now</p>
+            <h3 class="guide-title" id="guide-title"></h3>
+            <p class="guide-body" id="guide-body"></p>
+          </div>
+
+          <!-- Cycle phase journey -->
+          <div class="card">
+            <h3 class="ins-h"><span data-icon="insights"></span><span data-lbl="lblPhaseTimeline">Cycle Phases</span></h3>
+            <div class="phase-track" id="phase-track"></div>
+            <p class="phase-cap" id="phase-cap"></p>
+          </div>
+
           <!-- 4 stat cards -->
           <div class="ins-stats">
             <div class="card ins-stat">
@@ -250,6 +263,13 @@
               <div><div class="ins-stat-val" id="stat-left">&mdash;</div>
               <div class="ins-stat-lbl" data-lbl="lblStatDaysLeft">Until Next</div></div>
             </div>
+          </div>
+
+          <!-- Cycle pattern trend -->
+          <div class="card" id="trend-card">
+            <h3 class="ins-h"><span data-icon="chart"></span><span data-lbl="lblCycleTrend">Cycle Pattern</span></h3>
+            <div class="trend-bars" id="trend-bars"></div>
+            <p class="trend-note" id="trend-note"></p>
           </div>
 
           <!-- Predictions -->
