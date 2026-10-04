@@ -94,22 +94,20 @@
     <!-- Everything else lives inside .main -->
     <div class="main">
 
-      <!-- Mobile / tablet header -->
-      <header class="topbar">
-        <div class="brand">
-          <div class="logo">🌸</div>
-          <div>
-            <h1 id="app-title">Aura</h1>
-            <p class="sub" id="app-subtitle">Cycle Tracker</p>
-          </div>
+      <!-- Blue gradient header (reference-style) -->
+      <header class="app-header">
+        <div class="header-text">
+          <span class="header-greet" id="header-greet">Good morning,</span>
+          <h1 class="header-title" id="header-title">Han!</h1>
         </div>
-        <div class="topbar-actions">
-          <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">🌙</button>
-          <select id="lang-select" class="lang-select" aria-label="Language">
+        <div class="header-actions">
+          <button id="refresh-app" class="header-pill"><span class="update-ico">↻</span><span data-lbl="btnUpdate">Update</span></button>
+          <button id="theme-toggle" class="header-icon" aria-label="Toggle theme">🌙</button>
+          <select id="lang-select" class="header-select" aria-label="Language">
             <option value="my">မြန်မာ</option>
             <option value="en">English</option>
           </select>
-          <button id="refresh-app" class="update-btn"><span class="update-ico">↻</span><span data-lbl="btnUpdate">Update</span></button>
+          <button class="avatar-btn" data-tab="tab-settings" aria-label="Profile">👤</button>
         </div>
       </header>
 
@@ -130,49 +128,67 @@
             <button class="icon-btn small" id="bot-hello-close" aria-label="Dismiss">×</button>
           </div>
 
-          <div class="hero-card" id="hero">
-            <div class="ring-wrap">
-              <svg class="ring-svg" viewBox="0 0 140 140" aria-hidden="true">
-                <circle class="ring-track" cx="70" cy="70" r="60"></circle>
-                <circle class="ring-fill" id="hero-ring" cx="70" cy="70" r="60"></circle>
-              </svg>
-              <div class="ring-center">
-                <span class="ring-pct" id="hero-pct">–</span>
-                <span class="ring-sub"><span data-lbl="lblHeroDay">Day of Cycle</span> <span id="hero-day">–</span></span>
-              </div>
+          <div class="stats-card">
+            <button type="button" class="stat" data-phase="period">
+              <span class="stat-ico">🩸</span>
+              <span class="stat-lbl" data-lbl="lblStatCycleDay">Cycle Day</span>
+              <span class="stat-val c-period" id="hm-period">—</span>
+            </button>
+            <button type="button" class="stat" data-phase="fertile">
+              <span class="stat-ico">🌱</span>
+              <span class="stat-lbl" data-lbl="lblCardFertile">Fertile</span>
+              <span class="stat-val c-fertile" id="hm-fertile">—</span>
+            </button>
+            <button type="button" class="stat" data-phase="ovulation">
+              <span class="stat-ico">⭐</span>
+              <span class="stat-lbl" data-lbl="lblCardOvulation">Ovulation</span>
+              <span class="stat-val c-ovu" id="hm-ovu">—</span>
+            </button>
+            <button type="button" class="stat" data-phase="next">
+              <span class="stat-ico">📅</span>
+              <span class="stat-lbl" data-lbl="lblCardNext">Next Period</span>
+              <span class="stat-val c-next" id="hm-next">—</span>
+            </button>
+          </div>
+
+          <button type="button" class="banner-card" data-phase="next">
+            <span class="banner-ico">🩸</span>
+            <span class="banner-text">
+              <span class="banner-kicker" data-lbl="lblCardNext">Next Period</span>
+              <span class="banner-main" id="banner-date">—</span>
+              <span class="banner-sub" id="banner-sub">—</span>
+            </span>
+            <span class="banner-go"><span data-lbl="btnViewDetails">View Details</span> ›</span>
+          </button>
+
+          <h3 class="sec-title" data-lbl="lblQuickAccess">Quick Access</h3>
+          <div class="quick-grid">
+            <button type="button" class="quick-card" id="q-log">
+              <span class="quick-ico">📝</span><span data-lbl="qLogToday">Log Today</span>
+            </button>
+            <button type="button" class="quick-card" data-tab="tab-advice">
+              <span class="quick-ico">💡</span><span data-lbl="navAdvice">Advice</span>
+            </button>
+            <button type="button" class="quick-card" data-tab="tab-insights">
+              <span class="quick-ico">📊</span><span data-lbl="navInsights">Insights</span>
+            </button>
+            <button type="button" class="quick-card" data-tab="tab-history">
+              <span class="quick-ico">📜</span><span data-lbl="navHistory">Log</span>
+            </button>
+          </div>
+
+          <div class="sec-head-row">
+            <h3 class="sec-title" data-lbl="lblCycleSummary">Cycle Summary</h3>
+            <button type="button" class="link-btn" data-tab="tab-insights" data-lbl="btnViewAll">View All</button>
+          </div>
+          <div class="panel summary-card">
+            <div class="summary-top">
+              <div class="sum"><span class="sum-val" id="sum-cycle">—</span><span class="sum-lbl" data-lbl="lblAvgCycle">Avg cycle</span></div>
+              <div class="sum"><span class="sum-val" id="sum-period">—</span><span class="sum-lbl" data-lbl="lblAvgPeriod">Avg period</span></div>
+              <div class="sum"><span class="sum-val" id="sum-logs">—</span><span class="sum-lbl" data-lbl="lblTotalLogs">Logs</span></div>
             </div>
-            <div class="hero-status" id="hero-status">—</div>
+            <div class="mini-bars" id="cycle-bars"></div>
           </div>
-
-          <div class="panel detail-card">
-            <button type="button" class="detail-row" data-phase="period">
-              <span class="row-ico ico-period">🩸</span>
-              <span class="row-text"><span class="row-lbl" data-lbl="lblCardPeriod">Period</span><span class="row-sub" id="sub-period">—</span></span>
-              <span class="row-val" id="val-period">—</span>
-              <span class="row-chev">›</span>
-            </button>
-            <button type="button" class="detail-row" data-phase="fertile">
-              <span class="row-ico ico-fertile">🌱</span>
-              <span class="row-text"><span class="row-lbl" data-lbl="lblCardFertile">Fertile</span><span class="row-sub" id="sub-fertile">—</span></span>
-              <span class="row-val" id="val-fertile">—</span>
-              <span class="row-chev">›</span>
-            </button>
-            <button type="button" class="detail-row" data-phase="ovulation">
-              <span class="row-ico ico-ovu">⭐</span>
-              <span class="row-text"><span class="row-lbl" data-lbl="lblCardOvulation">Ovulation</span><span class="row-sub" id="sub-ovulation">—</span></span>
-              <span class="row-val" id="val-ovulation">—</span>
-              <span class="row-chev">›</span>
-            </button>
-            <button type="button" class="detail-row" data-phase="next">
-              <span class="row-ico ico-next">📅</span>
-              <span class="row-text"><span class="row-lbl" data-lbl="lblCardNext">Next Period</span><span class="row-sub" id="sub-next">—</span></span>
-              <span class="row-val" id="val-next">—</span>
-              <span class="row-chev">›</span>
-            </button>
-          </div>
-
-          <button type="button" class="btn primary cta" id="cta-log"><span data-lbl="btnLogToday">＋ Log today</span></button>
-
 
           <div class="panel calendar-panel">
             <div class="cal-head">
@@ -411,14 +427,7 @@
           </svg>
           <span data-lbl="navAdvice">Advice</span>
         </button>
-        <button class="nav-btn" data-tab="tab-insights">
-          <svg viewBox="0 0 24 24">
-            <line x1="6" y1="20" x2="6" y2="12" />
-            <line x1="12" y1="20" x2="12" y2="6" />
-            <line x1="18" y1="20" x2="18" y2="14" />
-          </svg>
-          <span data-lbl="navInsights">Insights</span>
-        </button>
+        <button class="nav-fab" id="nav-log" aria-label="Log today">+</button>
         <button class="nav-btn" data-tab="tab-history">
           <svg viewBox="0 0 24 24">
             <line x1="9" y1="6" x2="20" y2="6" />
