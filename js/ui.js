@@ -19,12 +19,13 @@ const els = {
   hero: $('hero'),
   heroDay: $('hero-day'),
   heroStatus: $('hero-status'),
-  heroProgress: $('hero-progress'),
+  heroRing: $('hero-ring'),
+  heroPct: $('hero-pct'),
 
-  badgePeriod: $('badge-period'),
-  badgeFertile: $('badge-fertile'),
-  badgeOvulation: $('badge-ovulation'),
-  badgeNext: $('badge-next'),
+  subPeriod: $('sub-period'),
+  subFertile: $('sub-fertile'),
+  subOvulation: $('sub-ovulation'),
+  subNext: $('sub-next'),
   valPeriod: $('val-period'),
   valFertile: $('val-fertile'),
   valOvulation: $('val-ovulation'),
@@ -99,6 +100,7 @@ const els = {
   logMoodRow: $('mood-row'),
   logNotes: $('log-notes'),
   logSave: $('log-save'),
+  logAdvice: $('log-advice'),
   logDelete: $('log-delete'),
   logClose: $('log-close'),
   adviceBox: $('advice-box'),
@@ -578,6 +580,23 @@ function renderAdvicePage() {
   const list = els.adviceToday;
   list.innerHTML = '';
 
+  // came here straight from the log modal? show what the advice is based on.
+  const focus = state.adviceFocus;
+  if (focus) {
+    const bits = [];
+    if (focus.mood && T.moods[focus.mood]) bits.push(T.moods[focus.mood]);
+    (focus.symptoms || []).forEach(s => { if (T.chips[s]) bits.push(T.chips[s]); });
+    if (focus.flow && T.flows[focus.flow]) bits.push(T.flows[focus.flow]);
+    if (bits.length) {
+      const banner = document.createElement('div');
+      banner.className = 'advice-card advice-focus';
+      banner.innerHTML = `<div class="advice-card-kicker">${esc(T.lblAdviceJustLogged)}</div>` +
+        `<div class="focus-chips">${bits.map(b => `<span class="focus-chip">${esc(b)}</span>`).join('')}</div>`;
+      list.appendChild(banner);
+    }
+    state.adviceFocus = null;
+  }
+
   const trend = moodTrend();
   els.adviceBot.innerHTML = botHTML(trend === 'down' ? 'sad' : 'happy', true);
 
@@ -678,6 +697,7 @@ function renderAdvicePage() {
 
 // ---------- home ----------
 function renderTodayPill() {
+  if (!els.pill) return; // retired in the redesign; hero shows this now
   const T = t();
   const phase = phaseFor(today());
   if (!phase) {
@@ -692,12 +712,15 @@ function renderTodayPill() {
 }
 
 function renderHero() {
+  const RING_C = 2 * Math.PI * 60; // r=60 in the svg
   const info = cycleInfoFor(today());
 
+  els.heroRing.style.strokeDasharray = RING_C;
   if (!info) {
-    els.heroDay.textContent = '—';
-    els.heroStatus.textContent = '—';
-    els.heroProgress.style.width = '0%';
+    els.heroDay.textContent = '\u2013';
+    els.heroPct.textContent = '\u2013';
+    els.heroStatus.textContent = '\u2013';
+    els.heroRing.style.strokeDashoffset = RING_C;
     return;
   }
 
@@ -706,20 +729,21 @@ function renderHero() {
 
   const phase = phaseFor(today());
   els.heroStatus.textContent = phaseLabel(phase);
-  els.hero.className = 'cycle-card phase-' + phase;
+  els.hero.className = 'hero-card phase-' + phase;
 
-  const pct = Math.min(100, Math.max(0, ((day - 1) / state.data.cycleLength) * 100));
-  els.heroProgress.style.width = pct + '%';
+  const pct = Math.min(100, Math.max(0, (day / state.data.cycleLength) * 100));
+  els.heroPct.textContent = Math.round(pct) + '%';
+  els.heroRing.style.strokeDashoffset = RING_C * (1 - pct / 100);
 }
 
 function renderCards() {
   const T = t();
   const info = cycleInfoFor(today());
   if (!info) {
-    els.badgePeriod.textContent = '—';
-    els.badgeFertile.textContent = '—';
-    els.badgeOvulation.textContent = '—';
-    els.badgeNext.textContent = '—';
+    els.subPeriod.textContent = '—';
+    els.subFertile.textContent = '—';
+    els.subOvulation.textContent = '—';
+    els.subNext.textContent = '—';
     els.valPeriod.textContent = '—';
     els.valFertile.textContent = '—';
     els.valOvulation.textContent = '—';
@@ -743,18 +767,18 @@ function renderCards() {
     ovu = nextInfo.ovulation;
   }
 
-  els.badgePeriod.textContent = `${state.data.periodLength} ${T.daysUnit}`;
+  els.subPeriod.textContent = `${state.data.periodLength} ${T.daysUnit}`;
   els.valPeriod.textContent = `${fmtShort(pStart)} – ${fmtShort(pEnd)}`;
 
   const fDays = diffDays(fStart, fEnd) + 1;
-  els.badgeFertile.textContent = `${fDays} ${T.daysUnit}`;
+  els.subFertile.textContent = `${fDays} ${T.daysUnit}`;
   els.valFertile.textContent = `${fmtShort(fStart)} – ${fmtShort(fEnd)}`;
 
-  els.badgeOvulation.textContent = T.peak;
+  els.subOvulation.textContent = T.peak;
   els.valOvulation.textContent = fmtShort(ovu);
 
   const left = diffDays(today(), nxt);
-  els.badgeNext.textContent = T.daysLeft(left);
+  els.subNext.textContent = T.daysLeft(left);
   els.valNext.textContent = fmtShort(nxt);
 
   checkAlarm(left);
