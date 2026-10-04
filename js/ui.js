@@ -5,6 +5,7 @@ let currentTab = 'tab-home';
 const els = {
   headerGreet: $('header-greet'),
   headerTitle: $('header-title'),
+  headerStatus: $('header-status'),
   sideTitle: $('side-title'),
   sideSubtitle: $('side-subtitle'),
   langSeg: $('hdr-langseg'),
@@ -16,13 +17,9 @@ const els = {
   alarm: $('alarm-banner'),
   alarmText: $('alarm-text'),
 
-  pill: $('today-pill'),
-  pillText: $('pill-text'),
-
   hmPeriod: $('hm-period'),
   hmFertile: $('hm-fertile'),
   hmOvu: $('hm-ovu'),
-  hmHeroStatus: $('hm-hero-status'),
   sumCycle: $('sum-cycle'),
   sumPeriod: $('sum-period'),
   sumLogs: $('sum-logs'),
@@ -46,6 +43,13 @@ const els = {
   insRingDay: $('ins-ring-day'),
   insHeroSub: $('ins-hero-sub'),
   predictions: $('predictions'),
+  phaseTrack: $('phase-track'),
+  phaseCap: $('phase-cap'),
+  trendBars: $('trend-bars'),
+  trendNote: $('trend-note'),
+  guideCard: $('guide-card'),
+  guideTitle: $('guide-title'),
+  guideBody: $('guide-body'),
   symChart: $('sym-chart'),
   flowDonut: $('flow-donut'),
   flowLegend: $('flow-legend'),
@@ -731,22 +735,6 @@ function renderAdvicePage() {
   if (typeof renderRecommendations === 'function') renderRecommendations();
 }
 
-// ---------- home ----------
-function renderTodayPill() {
-  if (!els.pill) return; // retired in the redesign; hero shows this now
-  const T = t();
-  const phase = phaseFor(today());
-  if (!phase) {
-    els.pillText.textContent = `${T.todayLabel} —`;
-    els.pill.className = 'today-pill';
-    return;
-  }
-  const info = cycleInfoFor(today());
-  const day = Math.max(1, diffDays(info.start, today()) + 1);
-  els.pillText.textContent = `${T.todayLabel} · Day ${day} · ${phaseLabel(phase)}`;
-  els.pill.className = 'today-pill p-' + phase;
-}
-
 function renderHeader() {
   const T = t();
   if (currentTab === 'tab-home') {
@@ -754,8 +742,19 @@ function renderHeader() {
     els.headerGreet.textContent = h < 12 ? T.hdGreetMorning : h < 17 ? T.hdGreetAfternoon : T.hdGreetEvening;
     els.headerGreet.classList.remove('hidden');
     els.headerTitle.textContent = (state.data.userName || T.hdFallbackName) + '!';
+    // cycle status sits beside the name
+    const info = cycleInfoFor(today());
+    const phase = phaseFor(today());
+    if (els.headerStatus && info && phase) {
+      const day = Math.max(1, diffDays(info.start, today()) + 1);
+      els.headerStatus.textContent = `${T.dayOfCycle(day)} · ${phaseLabel(phase)}`;
+      els.headerStatus.classList.remove('hidden');
+    } else if (els.headerStatus) {
+      els.headerStatus.classList.add('hidden');
+    }
   } else {
     els.headerGreet.classList.add('hidden');
+    if (els.headerStatus) els.headerStatus.classList.add('hidden');
     const keys = { 'tab-advice': 'navAdvice', 'tab-insights': 'navInsights', 'tab-history': 'navHistory', 'tab-settings': 'navSettings' };
     els.headerTitle.textContent = T[keys[currentTab]] || '';
   }
@@ -794,19 +793,12 @@ function renderStats() {
     els.hmPeriod.textContent = '\u2013';
     els.hmFertile.textContent = '\u2013';
     els.hmOvu.textContent = '\u2013';
-    if (els.hmHeroStatus) els.hmHeroStatus.textContent = '';
     return;
   }
   const day = Math.max(1, diffDays(info.start, today()) + 1);
   els.hmPeriod.textContent = T.dayOfCycle(day);
   els.hmFertile.textContent = `${w.fDays} ${T.daysUnit}`;
   els.hmOvu.textContent = fmtShort(w.ovu);
-
-  // status pill under the calendar
-  if (els.hmHeroStatus) {
-    const phase = phaseFor(today());
-    els.hmHeroStatus.textContent = phase ? `${T.dayOfCycle(day)} · ${phaseLabel(phase)}` : T.dayOfCycle(day);
-  }
 
   checkAlarm(w.left);
   celebrateCycleStart(w.pStart);
@@ -1137,6 +1129,98 @@ function renderInsights() {
   const monthCount = Object.keys(state.logs).filter(k => k.startsWith(monthPrefix)).length;
   els.statTotal.textContent = total;
   els.statMonth.textContent = monthCount;
+
+  renderPhaseTimeline();
+  renderCycleTrend();
+  renderPhaseGuide();
+}
+
+// ---- cycle phase journey (Flo/Clue-style timeline) ----
+const PHASE_SEG_COLORS = {
+  menstrual: '#f43f5e',
+  follicular: '#0284c7',
+  ovulation: '#d97706',
+  luteal: '#a855f7'
+};
+
+function renderPhaseTimeline() {
+  const T = t();
+  if (!els.phaseTrack) return;
+  const info = cycleInfoFor(today());
+  if (!info) {
+    els.phaseTrack.innerHTML = '';
+    if (els.phaseCap) els.phaseCap.textContent = '';
+    return;
+  }
+  const cycLen = state.data.cycleLength || 28;
+  const pLen = Math.max(2, Math.min(state.data.periodLength || 5, cycLen - 6));
+  const ovuDay = Math.max(pLen + 2, Math.min(cycLen - 2, diffDays(info.start, info.ovulation) + 1));
+  const segs = [
+    { key: 'menstrual', from: 1, to: pLen },
+    { key: 'follicular', from: pLen + 1, to: ovuDay - 2 },
+    { key: 'ovulation', from: ovuDay - 1, to: Math.min(cycLen, ovuDay + 1) },
+    { key: 'luteal', from: Math.min(cycLen, ovuDay + 2), to: cycLen }
+  ];
+  const cur = phaseFor(today());
+  const todayDay = Math.min(cycLen, Math.max(1, diffDays(info.start, today()) + 1));
+  els.phaseTrack.innerHTML = segs.map(sg => {
+    const len = Math.max(1, sg.to - sg.from + 1);
+    const name = (T.phaseShort && T.phaseShort[sg.key]) || sg.key;
+    return `<button type="button" class="phase-seg${sg.key === cur ? ' active' : ''}" data-pkey="${sg.key}"`
+      + ` style="flex:${len} 1 0%;--seg-c:${PHASE_SEG_COLORS[sg.key]}" aria-label="${name}">`
+      + `<span class="phase-seg-name">${name}</span><span class="phase-seg-days">${sg.from}–${sg.to}</span></button>`;
+  }).join('') + `<span class="phase-today" style="left:${((todayDay - 1) / cycLen * 100).toFixed(1)}%"></span>`;
+  if (els.phaseCap) {
+    els.phaseCap.textContent = cur ? `${T.dayOfCycle(todayDay)} · ${phaseLabel(cur)}` : T.dayOfCycle(todayDay);
+  }
+}
+
+// tapping a phase segment shows its explainer (reuses the advice copy).
+document.addEventListener('click', e => {
+  const seg = e.target.closest('.phase-seg');
+  if (!seg) return;
+  const pa = t().phaseAdvice && t().phaseAdvice[seg.dataset.pkey];
+  if (pa && typeof openInfoPopup === 'function') openInfoPopup(pa.title, pa.body);
+});
+
+// ---- cycle length pattern over recent cycles ----
+function renderCycleTrend() {
+  const T = t();
+  if (!els.trendBars) return;
+  const starts = loggedPeriodStarts();
+  const lens = [];
+  for (let i = 1; i < starts.length; i++) {
+    const l = diffDays(parseDate(starts[i - 1]), parseDate(starts[i]));
+    if (l > 0 && l < 90) lens.push(l);
+  }
+  const recent = lens.slice(-6);
+  if (recent.length < 2) {
+    els.trendBars.innerHTML = '';
+    els.trendBars.style.display = 'none';
+    if (els.trendNote) els.trendNote.textContent = T.trendEmpty;
+    return;
+  }
+  els.trendBars.style.display = '';
+  const max = Math.max.apply(null, recent);
+  els.trendBars.innerHTML = recent.map((l, i) =>
+    `<div class="trend-bar${i === recent.length - 1 ? ' cur' : ''}" style="height:${Math.max(14, Math.round(l / max * 64))}px"><span>${l}</span></div>`
+  ).join('');
+  if (els.trendNote) {
+    const avg = Math.round(recent.reduce((a, b) => a + b, 0) / recent.length);
+    els.trendNote.textContent = T.trendNote(avg, Math.min.apply(null, recent), max);
+  }
+}
+
+// ---- narrative card: what the current phase means ----
+function renderPhaseGuide() {
+  const T = t();
+  if (!els.guideCard) return;
+  const phase = phaseFor(today());
+  const pa = phase && T.phaseAdvice && T.phaseAdvice[phase];
+  if (!pa) { els.guideCard.classList.add('hidden'); return; }
+  els.guideCard.classList.remove('hidden');
+  els.guideTitle.textContent = pa.title;
+  els.guideBody.textContent = pa.body;
 }
 
 // replay the insights hero ring: the arc draws itself and the day counts up.
@@ -1289,11 +1373,17 @@ function fillSettingsForm() {
 
 // ---------- master ----------
 function renderAll() {
-  renderTodayPill();
+  applyPhaseTheme();
   renderHeader();
   renderStats();
   renderSummary();
   renderCalendar();
   renderHistory();
   renderInsights();
+}
+
+// Phase-based theming: pink while on period, calm blue once the period is over.
+function applyPhaseTheme() {
+  const phase = (typeof phaseFor === 'function') ? phaseFor(today()) : null;
+  document.documentElement.dataset.phaseTheme = phase === 'menstrual' ? 'period' : 'calm';
 }
