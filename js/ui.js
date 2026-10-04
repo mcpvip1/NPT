@@ -112,6 +112,86 @@ function toast(msg, kind) {
   }, 2400);
 }
 
+// ---------- notifications ----------
+// one place for every reminder: a cute chime + an in-app card with the bot,
+// plus a real system notification (with the bot as its icon) when allowed.
+// the in-app card means it still delights even if permission was denied.
+let audioCtx = null;
+function unlockAudio() {
+  // browsers only let us make noise after the user has tapped something once
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch (_) { /* no audio, no problem */ }
+}
+
+function playChime() {
+  try {
+    if (!audioCtx) return;
+    const t0 = audioCtx.currentTime;
+    [659.25, 880].forEach((freq, i) => { // little E5 -> A5 chirp. cheerful!
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      const s = t0 + i * 0.14;
+      g.gain.setValueAtTime(0.0001, s);
+      g.gain.exponentialRampToValueAtTime(0.22, s + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, s + 0.4);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(s); o.stop(s + 0.45);
+    });
+  } catch (_) { /* silence is fine too */ }
+}
+
+function systemNotify(title, body, tag) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const payload = {
+    body,
+    icon: 'bot-icon.svg',
+    badge: 'bot-icon.svg',
+    tag: tag || 'aura',
+    vibrate: [120, 60, 120] // little buzz-buzz on phones
+  };
+  const legacy = () => { try { new Notification(title, payload); } catch (_) {} };
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(
+      reg => { try { reg.showNotification(title, payload); } catch (_) { legacy(); } },
+      legacy
+    );
+  } else {
+    legacy();
+  }
+}
+
+function botToast(title, msg) {
+  const wrap = document.createElement('div');
+  wrap.className = 'toast bot-toast show';
+  wrap.setAttribute('role', 'status');
+  wrap.innerHTML = botHTML('happy');
+  const txt = document.createElement('div');
+  txt.className = 'bot-toast-text';
+  const h = document.createElement('div');
+  h.className = 'bot-toast-title';
+  h.textContent = title;
+  const p = document.createElement('div');
+  p.textContent = msg;
+  txt.append(h, p);
+  wrap.append(txt);
+  wrap.addEventListener('click', () => wrap.remove());
+  $('toasts').appendChild(wrap);
+  setTimeout(() => {
+    wrap.classList.remove('show');
+    setTimeout(() => wrap.remove(), 350);
+  }, 5000);
+}
+
+function notifyUser(title, body, tag) {
+  playChime();
+  botToast(title, body);
+  systemNotify(title, body, tag);
+}
+
 // ---------- confirm ----------
 let confirmResolve = null;
 function askConfirm(title, msg) {
@@ -440,10 +520,8 @@ function checkAlarm(daysLeft) {
 
   const key = `${toKey(today())}-${daysLeft}`;
   if (localStorage.getItem(LS.notified) === key) return;
-  if ('Notification' in window && Notification.permission === 'granted') {
-    try { new Notification(T.alarmTitle, { body: msg }); } catch (_) { }
-  }
   localStorage.setItem(LS.notified, key);
+  notifyUser(T.alarmTitle, msg, 'aura-period');
 }
 
 function celebrateCycleStart(start) {

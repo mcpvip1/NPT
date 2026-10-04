@@ -324,22 +324,32 @@ function checkLogReminder() {
   if (!logReminder || !logReminderTime) return;
   const now = new Date();
   const hm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-  if (hm !== logReminderTime) return;
+  // "HH:MM" sorts chronologically, so >= means "the time has come (or passed)"
+  if (hm < logReminderTime) return;
   const key = toKey(now);
   if (localStorage.getItem(LS.reminded) === key) return; // already nudged today
   if (state.logs[key]) return; // already logged, nothing to nag about
   localStorage.setItem(LS.reminded, key);
 
   const T = t();
-  if ('Notification' in window && Notification.permission === 'granted') {
-    try { new Notification(T.notifLogTitle, { body: T.notifLogBody }); } catch (_) { }
-  }
-  toast(T.notifLogBody, 'ok');
+  notifyUser(T.notifLogTitle, T.notifLogBody, 'aura-reminder');
 }
 
 function initReminders() {
   checkLogReminder();
   setInterval(checkLogReminder, 60000); // close enough to the minute
+}
+
+function initServiceWorker() {
+  // needs http(s) — opening the file directly can't do workers, and that's ok
+  if (!('serviceWorker' in navigator) || !/^https?:/.test(location.protocol)) return;
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+function initAudioUnlock() {
+  // browsers want one real tap before any sound. this arms the chime.
+  document.addEventListener('pointerdown', unlockAudio);
+  document.addEventListener('keydown', unlockAudio);
 }
 
 function initBotHello() {
@@ -371,6 +381,8 @@ function init() {
   initHistoryControls();
   initQuickLog();
   initReminders();
+  initServiceWorker();
+  initAudioUnlock();
   initBotHello();
   initEscape();
 

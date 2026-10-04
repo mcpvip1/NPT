@@ -919,6 +919,19 @@ textarea { resize: vertical; }
 .toast.ok { background: #10b981; color: white; }
 .toast.err { background: #ef4444; color: white; }
 
+/* the bot delivers reminders itself: icon + text + a tap to dismiss */
+.toast.bot-toast {
+  display: flex; gap: 10px; align-items: center;
+  text-align: left;
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--primary);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+}
+.bot-toast-text { min-width: 0; font-size: .78rem; line-height: 1.4; overflow-wrap: break-word; }
+.bot-toast-title { font-weight: 800; color: var(--primary-dark); margin-bottom: 2px; }
+
 .hidden { display: none !important; }
 
 /* =========================================================
