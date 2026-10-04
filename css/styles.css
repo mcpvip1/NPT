@@ -432,7 +432,7 @@ input, select, textarea { font-family: inherit; }
 }
 .inp:focus { border-color: var(--primary); }
 
-.history-list { display: flex; flex-direction: column; gap: 10px; }
+.history-list { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 
 .log-card {
   background: var(--surface-2);
@@ -442,11 +442,14 @@ input, select, textarea { font-family: inherit; }
   display: flex; flex-direction: column; gap: 8px;
   cursor: pointer;
   transition: transform .15s;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 .log-card:hover { transform: translateX(2px); }
 
-.log-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.log-date { font-size: .85rem; font-weight: 800; color: var(--primary-dark); }
+.log-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.log-date { font-size: .85rem; font-weight: 800; color: var(--primary-dark); min-width: 0; }
 
 .flow-tag {
   padding: 3px 8px; border-radius: 12px;
@@ -455,15 +458,19 @@ input, select, textarea { font-family: inherit; }
   border: 1px solid var(--primary);
   font-size: .7rem; font-weight: 700;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
 .tag {
   padding: 3px 8px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 10px;
   font-size: .7rem; font-weight: 600;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .notes {
@@ -473,13 +480,45 @@ input, select, textarea { font-family: inherit; }
   border-radius: var(--r-sm);
   font-size: .75rem;
   font-style: italic;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
+
+/* Collapsible health tips in history — keeps cards compact on mobile */
+.advice-details {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  min-width: 0;
+}
+.advice-details summary {
+  font-size: .78rem; font-weight: 800;
+  color: var(--primary-dark);
+  cursor: pointer;
+  list-style: none;
+  display: flex; align-items: center; gap: 6px;
+  user-select: none;
+}
+.advice-details summary::-webkit-details-marker { display: none; }
+.advice-details summary::before {
+  content: "▸";
+  font-size: .7rem;
+  transition: transform .15s;
+  flex-shrink: 0;
+}
+.advice-details[open] summary::before { transform: rotate(90deg); }
+.advice-details .advice-list { margin-top: 8px; }
 
 .advice-block {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   padding: 12px 14px;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 .advice-block h4 {
   font-size: .8rem; font-weight: 800;
@@ -492,6 +531,9 @@ input, select, textarea { font-family: inherit; }
   padding-left: 18px;
   font-size: .78rem;
   line-height: 1.5;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
 }
 .advice-list li::before {
   content: "";
@@ -770,6 +812,12 @@ textarea { resize: vertical; }
    ========================================================= */
 
 /* ---- tablet (≥ 640px) ---- */
+/* History tools: stack on narrow phones so search + filter never squeeze the cards */
+@media (max-width: 639px) {
+  .history-tools { grid-template-columns: 1fr; }
+  #tab-history .panel { min-width: 0; overflow: hidden; }
+}
+
 @media (min-width: 640px) {
   .content { max-width: 720px; margin: 0 auto; width: 100%; padding: 0 24px; padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
   .topbar { max-width: 720px; margin: 0 auto; width: 100%; padding: 18px 24px; }

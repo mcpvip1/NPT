@@ -173,6 +173,25 @@ function adviceHTML(symptoms, withTitle) {
   return `<div class="advice-block"><h4>${esc(T.lblAdviceHeading)}</h4>${list}</div>`;
 }
 
+// Collapsible version for history cards — keeps cards compact on mobile.
+// The <details> is collapsed by default so long tip lists don't blow up the layout.
+function adviceDetailsHTML(symptoms) {
+  const T = t();
+  if (!symptoms || !symptoms.length) return '';
+
+  const seen = new Set();
+  const items = [];
+  for (const s of symptoms) {
+    const text = T.advices[s];
+    if (!text || seen.has(text)) continue;
+    seen.add(text);
+    items.push(`<li>${esc(text)}</li>`);
+  }
+  if (!items.length) return '';
+
+  return `<details class="advice-details"><summary>${esc(T.lblAdviceHeading)} (${items.length})</summary><ul class="advice-list">${items.join('')}</ul></details>`;
+}
+
 // ---------- home ----------
 function renderTodayPill() {
   const T = t();
@@ -419,10 +438,10 @@ function renderHistory() {
       </div>
       ${tags ? `<div class="tags">${tags}</div>` : ''}
       ${entry.notes ? `<div class="notes">${esc(entry.notes)}</div>` : ''}
-      ${adviceHTML(entry.symptoms, true)}
+      ${adviceDetailsHTML(entry.symptoms)}
     `;
 
-    card.addEventListener('click', () => openLogModal(date));
+    card.addEventListener('click', (e) => { if (e.target.closest('details')) return; openLogModal(date); });
     els.historyList.appendChild(card);
   }
 }
