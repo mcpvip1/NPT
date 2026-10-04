@@ -372,7 +372,7 @@ function botHTML(expr, big) {
   // flipped off in settings? then no bot. simple as that.
   if (state.data.showBot === false) return '';
   const mood = (expr === 'sad' || expr === 'sleepy') ? expr : 'happy';
-  return `<img class="bot3d${big ? ' bot3d-big' : ''}" src="img/bot-${mood}.png" alt="${esc(botName())}" draggable="false">`;
+  return `<img class="bot3d${big ? ' bot3d-big' : ''}" src="${BOT_IMGS[mood]}" alt="${esc(botName())}" draggable="false">`;
 }
 
 // fills every placeholder with the bot (or clears them when turned off).

@@ -11,13 +11,13 @@ const ASSETS = [
   './js/i18n.js',
   './js/store.js',
   './js/cycle.js',
+  './js/bot-img-happy.js',
+  './js/bot-img-sad.js',
+  './js/bot-img-sleepy.js',
   './js/ui.js',
   './js/main.js',
   './manifest.json',
-  './bot-icon.svg',
-  './img/bot-happy.png',
-  './img/bot-sad.png',
-  './img/bot-sleepy.png'
+  './bot-icon.svg'
 ];
 
 self.addEventListener('install', e => {
