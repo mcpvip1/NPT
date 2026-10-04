@@ -1,1 +1,80 @@
-Ly8gQXVyYSBzZXJ2aWNlIHdvcmtlciDigJQgb2ZmbGluZSBjYWNoZSArIG5vdGlmaWNhdGlvbiB0YXBzLgovLyBObyBidWlsZCBzdGVwLCBubyBzZXJ2ZXIuIEtlZXBzIHRoZSBhcHAgc2hlbGwgY2FjaGVkIHNvIGl0IG9wZW5zCi8vIGluc3RhbnRseSBhbmQgc3RpbGwgd29ya3Mgd2l0aCBmbGFreSBjb25uZWN0aW9ucy4KLy8KLy8gdjQ6IGZpeGVkIGEgY2FjaGUtcG9pc29uaW5nIGJ1ZyDigJQgdGhlIG9sZCB3b3JrZXIgY2FjaGVkIEVWRVJZVEhJTkcgaXQKLy8gZmV0Y2hlZCwgaW5jbHVkaW5nIDQwNC9lcnJvciByZXNwb25zZXMsIGFuZCBzZXJ2ZWQgdGhlbSBmb3JldmVyCi8vIChjYWNoZS1maXJzdCkuIE5vdyBvbmx5IHN1Y2Nlc3NmdWwgcmVzcG9uc2VzIGFyZSBjYWNoZWQsIGFuZCBhc3NldHMgYXJlCi8vIGNhY2hlZCBvbmUgYnkgb25lIHNvIGEgc2luZ2xlIGZhaWx1cmUgY2FuJ3QgYWJvcnQgdGhlIHdob2xlIGluc3RhbGwuCgpjb25zdCBDQUNIRSA9ICdhdXJhLXY0JzsKY29uc3QgQVNTRVRTID0gWwogICcuLycsCiAgJy4vaW5kZXguaHRtbCcsCiAgJy4vY3NzL3N0eWxlcy5jc3MnLAogICcuL2pzL3V0aWxzLmpzJywKICAnLi9qcy9pMThuLmpzJywKICAnLi9qcy9zdG9yZS5qcycsCiAgJy4vanMvY3ljbGUuanMnLAogICcuL2pzL2JvdC1pbWctaGFwcHkuanMnLAogICcuL2pzL2JvdC1pbWctc2FkLmpzJywKICAnLi9qcy9ib3QtaW1nLXNsZWVweS5qcycsCiAgJy4vanMvaWNvbnMtM2QuanMnLAogICcuL2pzL3VpLmpzJywKICAnLi9qcy9yZWNvbW1lbmQuanMnLAogICcuL2pzL21haW4uanMnLAogICcuL21hbmlmZXN0Lmpzb24nLAogICcuL2JvdC1pY29uLnN2ZycKXTsKCnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignaW5zdGFsbCcsIGUgPT4gewogIGUud2FpdFVudGlsKChhc3luYyAoKSA9PiB7CiAgICB0cnkgewogICAgICBjb25zdCBjID0gYXdhaXQgY2FjaGVzLm9wZW4oQ0FDSEUpOwogICAgICAvLyBvbmUgYnkgb25lOiBhIHNpbmdsZSBmYWlsZWQgZmlsZSBtdXN0IG5vdCBhYm9ydCB0aGUgd2hvbGUgaW5zdGFsbCwKICAgICAgLy8gYW5kIGVycm9yIHJlc3BvbnNlcyBhcmUgbmV2ZXIgY2FjaGVkCiAgICAgIGF3YWl0IFByb21pc2UuYWxsKEFTU0VUUy5tYXAoYXN5bmMgdXJsID0+IHsKICAgICAgICB0cnkgewogICAgICAgICAgY29uc3QgcmVzID0gYXdhaXQgZmV0Y2godXJsLCB7IGNhY2hlOiAnbm8tc3RvcmUnIH0pOwogICAgICAgICAgaWYgKHJlcyAmJiByZXMub2spIGF3YWl0IGMucHV0KHVybCwgcmVzKTsKICAgICAgICB9IGNhdGNoIChfKSB7IC8qIG9mZmxpbmU6IHNraXAgdGhpcyBmaWxlICovIH0KICAgICAgfSkpOwogICAgfSBjYXRjaCAoXykge30KICAgIGF3YWl0IHNlbGYuc2tpcFdhaXRpbmcoKTsKICB9KSgpKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2FjdGl2YXRlJywgZSA9PiB7CiAgZS53YWl0VW50aWwoCiAgICBjYWNoZXMua2V5cygpCiAgICAgIC50aGVuKGtleXMgPT4gUHJvbWlzZS5hbGwoa2V5cy5maWx0ZXIoayA9PiBrICE9PSBDQUNIRSkubWFwKGsgPT4gY2FjaGVzLmRlbGV0ZShrKSkpKQogICAgICAudGhlbigoKSA9PiBzZWxmLmNsaWVudHMuY2xhaW0oKSkKICApOwp9KTsKCnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignZmV0Y2gnLCBlID0+IHsKICBpZiAoZS5yZXF1ZXN0Lm1ldGhvZCAhPT0gJ0dFVCcpIHJldHVybjsKICBlLnJlc3BvbmRXaXRoKAogICAgY2FjaGVzLm1hdGNoKGUucmVxdWVzdCkudGhlbihoaXQgPT4gaGl0IHx8IGZldGNoKGUucmVxdWVzdCkudGhlbihyZXMgPT4gewogICAgICAvLyBuZXZlciBjYWNoZSBlcnJvcnM6IGEgY2FjaGVkIDQwNCB3b3VsZCBwb2lzb24gdGhlIGFwcCBmb3JldmVyCiAgICAgIGlmIChyZXMgJiYgcmVzLm9rKSB7CiAgICAgICAgY29uc3QgY29weSA9IHJlcy5jbG9uZSgpOwogICAgICAgIGNhY2hlcy5vcGVuKENBQ0hFKS50aGVuKGMgPT4gYy5wdXQoZS5yZXF1ZXN0LCBjb3B5KSkuY2F0Y2goKCkgPT4ge30pOwogICAgICB9CiAgICAgIHJldHVybiByZXM7CiAgICB9KS5jYXRjaCgoKSA9PiBjYWNoZXMubWF0Y2goJy4vaW5kZXguaHRtbCcpKSkKICApOwp9KTsKCi8vIHRhcHBpbmcgYSBub3RpZmljYXRpb24gYnJpbmdzIHRoZSBhcHAgYmFjawpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ25vdGlmaWNhdGlvbmNsaWNrJywgZSA9PiB7CiAgZS5ub3RpZmljYXRpb24uY2xvc2UoKTsKICBlLndhaXRVbnRpbCgKICAgIHNlbGYuY2xpZW50cy5tYXRjaEFsbCh7IHR5cGU6ICd3aW5kb3cnLCBpbmNsdWRlVW5jb250cm9sbGVkOiB0cnVlIH0pLnRoZW4oY2xpZW50cyA9PiB7CiAgICAgIGZvciAoY29uc3QgYyBvZiBjbGllbnRzKSB7CiAgICAgICAgaWYgKCdmb2N1cycgaW4gYykgcmV0dXJuIGMuZm9jdXMoKTsKICAgICAgfQogICAgICByZXR1cm4gc2VsZi5jbGllbnRzLm9wZW5XaW5kb3coJy4vaW5kZXguaHRtbCcpOwogICAgfSkKICApOwp9KTsK
+// Aura service worker — offline cache + notification taps.
+// No build step, no server. Keeps the app shell cached so it opens
+// instantly and still works with flaky connections.
+//
+// v4: fixed a cache-poisoning bug — the old worker cached EVERYTHING it
+// fetched, including 404/error responses, and served them forever
+// (cache-first). Now only successful responses are cached, and assets are
+// cached one by one so a single failure can't abort the whole install.
+
+const CACHE = 'aura-v4';
+const ASSETS = [
+  './',
+  './index.html',
+  './css/styles.css',
+  './js/utils.js',
+  './js/i18n.js',
+  './js/store.js',
+  './js/cycle.js',
+  './js/bot-img-happy.js',
+  './js/bot-img-sad.js',
+  './js/bot-img-sleepy.js',
+  './js/icons-3d.js',
+  './js/ui.js',
+  './js/recommend.js',
+  './js/main.js',
+  './manifest.json',
+  './bot-icon.svg'
+];
+
+self.addEventListener('install', e => {
+  e.waitUntil((async () => {
+    try {
+      const c = await caches.open(CACHE);
+      // one by one: a single failed file must not abort the whole install,
+      // and error responses are never cached
+      await Promise.all(ASSETS.map(async url => {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (res && res.ok) await c.put(url, res);
+        } catch (_) { /* offline: skip this file */ }
+      }));
+    } catch (_) {}
+    await self.skipWaiting();
+  })());
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(
+    caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
+      // never cache errors: a cached 404 would poison the app forever
+      if (res && res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+      }
+      return res;
+    }).catch(() => caches.match('./index.html')))
+  );
+});
+
+// tapping a notification brings the app back
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+      for (const c of clients) {
+        if ('focus' in c) return c.focus();
+      }
+      return self.clients.openWindow('./index.html');
+    })
+  );
+});
