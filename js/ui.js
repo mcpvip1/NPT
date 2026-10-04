@@ -42,6 +42,7 @@ const els = {
   insRingProg: $('ins-ring-prog'),
   insRingDay: $('ins-ring-day'),
   insHeroSub: $('ins-hero-sub'),
+  insPhase: $('ins-phase'),
   predictions: $('predictions'),
   phaseTrack: $('phase-track'),
   phaseCap: $('phase-cap'),
@@ -1069,6 +1070,11 @@ function renderInsights() {
     els.insRingDay.textContent = day;
     els.insRingProg.style.strokeDasharray = `${Math.min(day / cycLen, 1) * C} ${C}`;
     els.insHeroSub.textContent = `${T.dayOfCycle(day)} · ${T.daysLeft(Math.max(left, 0))}`;
+    const iphase = phaseFor(today());
+    if (els.insPhase) {
+      els.insPhase.textContent = iphase ? phaseLabel(iphase) : '';
+      els.insPhase.style.color = (iphase && PHASE_SEG_COLORS[iphase]) || '';
+    }
   } else {
     els.statDay.textContent = '—';
     els.statCycle.textContent = state.data.cycleLength;
@@ -1077,6 +1083,7 @@ function renderInsights() {
     els.insRingDay.textContent = '—';
     els.insRingProg.style.strokeDasharray = `0 ${C}`;
     els.insHeroSub.textContent = '';
+    if (els.insPhase) els.insPhase.textContent = '';
   }
 
   els.predictions.innerHTML = '';
@@ -1139,6 +1146,7 @@ function renderInsights() {
 const PHASE_SEG_COLORS = {
   menstrual: '#f43f5e',
   follicular: '#0284c7',
+  fertile: '#a855f7',
   ovulation: '#d97706',
   luteal: '#a855f7'
 };
@@ -1220,8 +1228,10 @@ function renderPhaseGuide() {
   if (!pa) { els.guideCard.classList.add('hidden'); return; }
   els.guideCard.classList.remove('hidden');
   els.guideTitle.textContent = pa.title;
-  els.guideBody.textContent = pa.body;
+  const sentences = (pa.body.match(/[^။.!?]+[။.!?]+/g) || [pa.body]).map(x => x.trim()).filter(Boolean);
+  els.guideBody.innerHTML = sentences.map(x => `<li>${x}</li>`).join('');
 }
+
 
 // replay the insights hero ring: the arc draws itself and the day counts up.
 // called every time the insights screen opens.
