@@ -620,6 +620,58 @@ input, select, textarea { font-family: inherit; }
 .install-box .btn.full { width: 100%; }
 .install-gotit { margin-top: 8px; }
 
+/* ---------- notifications section ---------- */
+.notif-status-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+}
+.notif-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--faint); flex-shrink: 0;
+}
+.notif-dot.on { background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
+.notif-dot.off { background: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,.15); }
+.notif-dot.wait { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.2); }
+.notif-status-text { flex: 1; font-size: .8rem; font-weight: 700; }
+.sub-text.tiny { font-size: .72rem; }
+
+/* ---------- advice page ---------- */
+.advice-hero { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+.perm-note {
+  display: flex; gap: 8px; align-items: center; justify-content: space-between;
+  background: var(--primary-soft); border: 1px solid var(--primary);
+  border-radius: var(--r-md); padding: 10px 12px;
+  font-size: .78rem; margin-bottom: 12px;
+}
+.advice-cards { display: flex; flex-direction: column; gap: 12px; }
+.advice-card {
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  min-width: 0; overflow-wrap: break-word;
+}
+.advice-card-head { display: flex; align-items: center; gap: 8px; }
+.advice-card-head h3 { font-size: .9rem; color: var(--primary-dark); }
+.advice-card p { font-size: .82rem; line-height: 1.6; }
+.advice-why {
+  font-size: .75rem; color: var(--muted);
+  background: var(--surface); border: 1px dashed var(--line);
+  border-radius: var(--r-sm); padding: 6px 10px;
+}
+.remind-btn { align-self: flex-start; }
+.doctor-flags {
+  margin-top: 14px; background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  padding: 12px 14px;
+}
+.doctor-flags summary {
+  font-weight: 800; font-size: .85rem;
+  color: var(--primary-dark); cursor: pointer;
+}
+.doctor-flags ul { margin-top: 8px; padding-left: 20px; }
+.doctor-flags li { font-size: .8rem; line-height: 1.55; margin-bottom: 4px; }
+.advice-disclaimer { margin-top: 12px; }
+
 /* Collapsible health tips in history — keeps cards compact on mobile */
 .advice-details {
   background: var(--surface);

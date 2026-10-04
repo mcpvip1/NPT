@@ -7,6 +7,7 @@ function switchTab(name) {
   document.querySelectorAll('[data-tab]').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === name);
   });
+  if (name === 'tab-advice') renderAdvicePage();
 }
 
 function initTabs() {
@@ -148,6 +149,7 @@ function initSettings() {
     state.data.showBot = els.setBot.checked;
     state.data.logReminder = els.setRemindLog.checked;
     state.data.logReminderTime = els.setRemindTime.value || '21:00';
+    state.data.wellnessNudges = els.setWellness.checked;
 
     if (state.data.logReminder && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
@@ -217,7 +219,9 @@ function initSettings() {
           notifyDays: clamp(parseInt(d.notifyDays, 10), 1, 30, 2),
           showBot: d.showBot !== false,
           logReminder: !!d.logReminder,
-          logReminderTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(d.logReminderTime || '') ? d.logReminderTime : '21:00'
+          logReminderTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(d.logReminderTime || '') ? d.logReminderTime : '21:00',
+          wellnessNudges: d.wellnessNudges !== false,
+          nudgePrefs: (d.nudgePrefs && typeof d.nudgePrefs === 'object' && !Array.isArray(d.nudgePrefs)) ? d.nudgePrefs : {}
         };
       }
       if (parsed.logs && typeof parsed.logs === 'object') {
@@ -357,6 +361,42 @@ function initBotHello() {
   els.botHelloClose.addEventListener('click', () => els.botHello.classList.add('hidden'));
 }
 
+function initNotifPermission() {
+  els.notifPermBtn.addEventListener('click', async () => {
+    if ('Notification' in window) {
+      try { await Notification.requestPermission(); } catch (_) {}
+    }
+    updateNotifStatus();
+    renderAdvicePage();
+  });
+}
+
+function initAdvicePage() {
+  // "remind me" on an advice card: switches that nudge on and asks for
+  // permission right there, so the link between advice and reminder is one tap.
+  els.adviceToday.addEventListener('click', async e => {
+    const btn = e.target.closest('[data-nudge-remind]');
+    if (!btn) return;
+    state.data.wellnessNudges = true;
+    state.data.nudgePrefs = { ...(state.data.nudgePrefs || {}), [btn.dataset.nudgeRemind]: true };
+    if (!saveData()) { toast(t().msgSaveError, 'err'); return; }
+    fillSettingsForm();
+    if ('Notification' in window && Notification.permission === 'default') {
+      try { await Notification.requestPermission(); } catch (_) {}
+    }
+    updateNotifStatus();
+    renderAdvicePage();
+    toast(t().msgRemindOn, 'ok');
+  });
+  els.advicePermBtn.addEventListener('click', async () => {
+    if ('Notification' in window) {
+      try { await Notification.requestPermission(); } catch (_) {}
+    }
+    updateNotifStatus();
+    renderAdvicePage();
+  });
+}
+
 function initInstallNudge() {
   els.installGotit.addEventListener('click', () => {
     localStorage.setItem(LS.installNudge, '1');
@@ -401,6 +441,8 @@ function init() {
   initAudioUnlock();
   initBotHello();
   initInstallNudge();
+  initNotifPermission();
+  initAdvicePage();
   initEscape();
 
   if (!hasSettings || !state.data.lastDate) {
@@ -411,6 +453,7 @@ function init() {
     renderAll();
     renderBotHello();
     maybeShowInstallNudge();
+    checkWellnessNudges();
   }
 }
 
