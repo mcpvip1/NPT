@@ -500,6 +500,8 @@ function initQuickLog() {
     b.addEventListener('click', () => openPhasePopup(b.dataset.phase)));
   const ql = $('q-log');
   if (ql) ql.addEventListener('click', () => openLogModal(toKey(today())));
+  const hc = $('hm-log-cta');
+  if (hc) hc.addEventListener('click', () => openLogModal(toKey(today())));
   const nl = $('nav-log');
   if (nl) nl.addEventListener('click', () => openLogModal(toKey(today())));
 
