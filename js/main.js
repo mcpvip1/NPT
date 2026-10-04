@@ -12,6 +12,10 @@ function switchTab(name) {
   if (name === 'tab-advice') {
     renderAdvicePage();
   }
+  if (name === 'tab-insights') {
+    renderInsights();
+    animateInsightsRing();
+  }
 }
 
 function initTabs() {
@@ -498,8 +502,6 @@ function initQuickLog() {
   // home: tapping a stat, the banner or a quick card explains that phase in a popup
   document.querySelectorAll('[data-phase]').forEach(b =>
     b.addEventListener('click', () => openPhasePopup(b.dataset.phase)));
-  const hc = $('hm-log-cta');
-  if (hc) hc.addEventListener('click', () => openLogModal(toKey(today())));
   const nl = $('nav-log');
   if (nl) nl.addEventListener('click', () => openLogModal(toKey(today())));
 
