@@ -18,7 +18,8 @@ const DEFAULTS = {
   periodLength: 5,
   lutealPhase: 14,
   notify: true,
-  notifyDays: 2
+  notifyDays: 2,
+  showBot: true // our little buddy next to the health tips. flippable in settings.
 };
 
 const VALID_MOODS = ['great', 'good', 'okay', 'low', 'bad'];

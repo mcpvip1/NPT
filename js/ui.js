@@ -60,6 +60,7 @@ const els = {
   setLuteal: $('set-luteal'),
   setNotify: $('set-notify'),
   setNotifyDays: $('set-notify-days'),
+  setBot: $('set-bot'),
 
   welcome: $('welcome'),
   welcomeForm: $('welcome-form'),
@@ -186,6 +187,8 @@ function applyLang() {
   els.langSelect.value = state.lang;
   els.langSelectDesktop.value = state.lang;
   document.documentElement.lang = state.lang;
+
+  refreshBotSlots();
 }
 
 function applyTheme() {
@@ -194,6 +197,24 @@ function applyTheme() {
   els.themeToggle.textContent = icon;
   els.themeToggleDesktop.textContent = icon;
   localStorage.setItem(LS.theme, state.theme);
+}
+
+// ---------- the little bot ----------
+function botHTML() {
+  // flipped off in settings? then no bot. simple as that.
+  if (state.data.showBot === false) return '';
+  return `<span class="bot" aria-hidden="true">` +
+    `<span class="bot-antenna"></span>` +
+    `<span class="bot-face">` +
+      `<span class="bot-eyes"><span class="bot-eye"></span><span class="bot-eye"></span></span>` +
+      `<span class="bot-smile"></span>` +
+    `</span></span>`;
+}
+
+// fills every placeholder with the bot (or clears them when turned off)
+function refreshBotSlots() {
+  const html = botHTML();
+  document.querySelectorAll('.bot-slot').forEach(el => { el.innerHTML = html; });
 }
 
 // ---------- advice ----------
@@ -232,7 +253,7 @@ function adviceDetailsHTML(symptoms) {
   }
   if (!items.length) return '';
 
-  return `<details class="advice-details"><summary>${esc(T.lblAdviceHeading)} (${items.length})</summary><ul class="advice-list">${items.join('')}</ul></details>`;
+  return `<details class="advice-details"><summary>${botHTML()}<span>${esc(T.lblAdviceHeading)} (${items.length})</span></summary><ul class="advice-list">${items.join('')}</ul></details>`;
 }
 
 // ---------- home ----------
@@ -650,6 +671,7 @@ function fillSettingsForm() {
   els.setLuteal.value = state.data.lutealPhase;
   els.setNotify.checked = !!state.data.notify;
   els.setNotifyDays.value = String(state.data.notifyDays);
+  els.setBot.checked = state.data.showBot !== false; // old saves don't have the key yet
 }
 
 // ---------- master ----------

@@ -145,6 +145,7 @@ function initSettings() {
     state.data.lutealPhase = clamp(parseInt(els.setLuteal.value, 10), 8, 20, 14);
     state.data.notify = els.setNotify.checked;
     state.data.notifyDays = parseInt(els.setNotifyDays.value, 10);
+    state.data.showBot = els.setBot.checked;
 
     if (state.data.notify && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
@@ -207,7 +208,8 @@ function initSettings() {
           periodLength: clamp(parseInt(d.periodLength, 10), 1, 15, 5),
           lutealPhase: clamp(parseInt(d.lutealPhase, 10), 8, 20, 14),
           notify: !!d.notify,
-          notifyDays: clamp(parseInt(d.notifyDays, 10), 1, 30, 2)
+          notifyDays: clamp(parseInt(d.notifyDays, 10), 1, 30, 2),
+          showBot: d.showBot !== false
         };
       }
       if (parsed.logs && typeof parsed.logs === 'object') {

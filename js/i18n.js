@@ -20,6 +20,7 @@ const i18n = {
     lblNotifyHeading: '🔔 သတိပေးချက်',
     lblNotifyEnable: 'ရာသီနီးပါက သတိပေးရန်',
     lblNotifyDays: 'ရက်အလိုတွင်',
+    lblBotEnable: '🤖 ချစ်စရာ အကူ bot လေး ပြမယ်',
     lblDataHeading: '💾 ဒေတာ',
     btnSave: 'သိမ်းမည်',
 
@@ -142,6 +143,7 @@ const i18n = {
     lblNotifyHeading: '🔔 Period Alarm',
     lblNotifyEnable: 'Notify when period is near',
     lblNotifyDays: 'Days in advance',
+    lblBotEnable: '🤖 Show cute helper bot',
     lblDataHeading: '💾 Data',
     btnSave: 'Save',
 
