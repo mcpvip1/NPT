@@ -280,6 +280,7 @@ function initWelcome() {
     applyLang();
     renderAll();
     renderBotHello(); // greet the new user right away
+    maybeShowInstallNudge();
     toast(t().msgSaved, 'ok');
   });
 }
@@ -356,6 +357,21 @@ function initBotHello() {
   els.botHelloClose.addEventListener('click', () => els.botHello.classList.add('hidden'));
 }
 
+function initInstallNudge() {
+  els.installGotit.addEventListener('click', () => {
+    localStorage.setItem(LS.installNudge, '1');
+    closeModal(els.installNudge);
+  });
+  els.installNotifBtn.addEventListener('click', async () => {
+    if ('Notification' in window) {
+      try { await Notification.requestPermission(); } catch (_) {}
+    }
+    localStorage.setItem(LS.installNudge, '1');
+    closeModal(els.installNudge);
+    toast(t().installDone, 'ok');
+  });
+}
+
 function initEscape() {
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
@@ -384,6 +400,7 @@ function init() {
   initServiceWorker();
   initAudioUnlock();
   initBotHello();
+  initInstallNudge();
   initEscape();
 
   if (!hasSettings || !state.data.lastDate) {
@@ -393,6 +410,7 @@ function init() {
     fillSettingsForm();
     renderAll();
     renderBotHello();
+    maybeShowInstallNudge();
   }
 }
 

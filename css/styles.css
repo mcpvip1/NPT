@@ -600,6 +600,26 @@ input, select, textarea { font-family: inherit; }
 }
 .bot-hello .icon-btn { align-self: flex-start; flex-shrink: 0; }
 
+/* install nudge: the one-time "put me on your home screen" popup */
+.install-box { text-align: center; }
+.install-bot { display: flex; justify-content: center; margin-bottom: 10px; }
+.install-box h2 {
+  color: var(--primary-dark);
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+.install-box .sub-text { margin-bottom: 4px; }
+.install-steps {
+  text-align: left;
+  margin: 12px 0 16px;
+  padding-left: 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  font-size: .82rem; line-height: 1.5;
+}
+.install-steps li::marker { color: var(--primary-dark); font-weight: 800; }
+.install-box .btn.full { width: 100%; }
+.install-gotit { margin-top: 8px; }
+
 /* Collapsible health tips in history — keeps cards compact on mobile */
 .advice-details {
   background: var(--surface);
