@@ -2,25 +2,25 @@
 
 const i18n = {
   my: {
-    appSubtitle: 'သင့်ကျန်းမာရေးနှင့် ရာသီစက်ဝန်း',
+    appSubtitle: 'ရာသီစက်ဝန်း မှတ်တမ်း',
 
     lblHeroDay: 'ရက်မြောက်',
     lblCardPeriod: 'ရာသီလာရက်',
-    lblCardFertile: 'မျိုးဥထွက်ချိန်',
+    lblCardFertile: 'မျိုးအောင်ချိန်',
     lblCardOvulation: 'မျိုးဥထွက်ရက်',
-    lblCardNext: 'နောက်လာမည့်ရက်',
+    lblCardNext: 'နောက်ရာသီရက်',
     lblHistoryTitle: '📜 မှတ်တမ်း',
     lblHistorySubtext: 'ရက်စွဲအလိုက် မှတ်တမ်းများ',
-    lblSetupTitle: '⚙️ အပြင်အဆင်',
+    lblSetupTitle: '⚙️ ဆက်တင်များ',
     lblUserName: 'သင့်အမည်',
     lblLastDate: 'နောက်ဆုံးရာသီရက်',
     lblCycleLength: 'စက်ဝန်း (ရက်)',
     lblPeriodLength: 'ရာသီ (ရက်)',
-    lblLutealLength: 'Luteal (ရက်)',
+    lblLutealLength: 'လူတီရယ်အဆင့် (ရက်)',
     lblNotifyEnable: 'ရာသီနီးပါက သတိပေးရန်',
-    lblNotifyDays: 'ရက်အလိုတွင်',
-    lblBotEnable: '🤖 ချစ်စရာ အကူ bot လေး ပြမယ်',
-    lblRemindLog: '📝 နေ့စဉ် မှတ်တမ်းသတိပေးချက်',
+    lblNotifyDays: 'ကြိုတင်သတိပေးမည့်ရက်',
+    lblBotEnable: 'အကူ bot လေးပြသရန်',
+    lblRemindLog: 'နေ့စဉ် မှတ်တမ်းသတိပေးချက်',
     lblRemindTime: 'သတိပေးမည့်အချိန်',
     greetMorning: n => `မင်္ဂလာနံနက်ခင်းပါ${n ? ' ' + n : ''}! 🌤️`,
     greetAfternoon: n => `မင်္ဂလာနေ့လည်ခင်းပါ${n ? ' ' + n : ''}! ☀️`,
@@ -40,7 +40,7 @@ const i18n = {
     notifLogTitle: 'Aura',
     notifLogBody: 'ဒီနေ့ မှတ်တမ်း တင်ဖို့ အချိန်ရောက်ပါပြီ ✏️',
     installTitle: '📲 Home Screen မှာ ထည့်သွင်းပါ',
-    installWhy: 'ဒါမှ ရာသီသတိပေးချက်နဲ့ နေ့စဉ် မှတ်တမ်းသတိပေးချက်တွေ နောက်ခံမှာ မှန်မှန်အလုပ်လုပ်မှာပါ 💗',
+    installWhy: 'ဒါမှ ရာသီသတိပေးချက်နဲ့ နေ့စဉ်မှတ်တမ်းသတိပေးချက်တွေ အချိန်မှန်ရမှာပါ 💗',
     installStep1: 'Browser ရဲ့ menu (⋮) ကနေ "Add to Home Screen" ကို နှိပ်ပါ',
     installStep2: 'Home Screen က icon ကနေ app ကို ဖွင့်ပါ (browser ကနေ မဟုတ်ဘူးနော်)',
     installStep3: 'မေးလာရင် သတိပေးချက် (notifications) ခွင့်ပြုပေးပါ',
@@ -48,34 +48,34 @@ const i18n = {
     installGotIt: 'နားလည်ပြီ ✓',
     installDone: 'ပြီးပါပြီ! Home Screen က icon ကနေ ဖွင့်သုံးပါ 📲',
     navAdvice: 'အကြံဉာဏ်',
-    lblNotifHeading: '🔔 သတိပေးချက်များ',
-    lblBotHeading: '🤖 အကူ bot',
-    btnAskNotif: 'ခွင့်ပြုချက် တောင်းမယ်',
+    lblNotifHeading: 'သတိပေးချက်များ',
+    lblBotHeading: 'အကူ bot',
+    btnAskNotif: 'ခွင့်ပြုပေးပါ',
     notifGranted: 'ခွင့်ပြုထားပါတယ် ✓',
     notifDenied: 'ပိတ်ထားပါတယ်',
     notifDefault: 'မမေးရသေးပါ',
-    notifUnsupported: 'ဒီမှာ မရပါ',
+    notifUnsupported: 'ဒီဘရောက်ဇာမှာ မရပါ',
     notifDeniedHint: 'ခွင့်ပြုချက် ပိတ်ထားပါတယ်။ သတိပေးချက်ရဖို့ browser settings မှာ ဒီ site အတွက် notifications ဖွင့်ပေးပါ။',
-    lblWellnessNudges: '💧 ကျန်းမာရေး သတိပေးချက်များ',
+    lblWellnessNudges: 'ကျန်းမာရေး သတိပေးချက်များ',
     lblWellnessNudgesSub: 'ရာသီစက်ဝန်းနဲ့ လက္ခဏာတွေပေါ် မူတည်တဲ့ ညင်သာတဲ့ သတိပေးချက်များ — ရေနွေးသောက်၊ အနားယူ၊ လှုပ်ရှားမှု။',
     lblAdvicePageTitle: (name) => `🤖 ${name} ကို မေးပါ`,
     lblBotName: 'Bot နာမည်',
     phBotName: 'ဥပမာ - မိုချီ',
-    btnAdvice: '💡 အကြံဉာဏ်ရယူမယ်',
+    btnAdvice: '💡 အကြံဉာဏ်ရယူရန်',
     lblAdviceJustLogged: 'ခုနက မှတ်တမ်းတင်ထားတာအပေါ် အခြေခံပြီး',
-    btnLogToday: '＋ ယနေ့ မှတ်တမ်းတင်မယ်',
+    btnLogToday: '＋ ယနေ့ မှတ်တမ်းတင်ရန်',
     btnUpdate: 'အပ်ဒိတ်',
     hdGreetMorning: 'မင်္ဂလာနံနက်ခင်းပါ,',
     hdGreetAfternoon: 'မင်္ဂလာနေ့လည်ခင်းပါ,',
     hdGreetEvening: 'မင်္ဂလာညချမ်းပါ,',
     hdFallbackName: 'မိတ်ဆွေ',
     dayOfCycle: d => `${d} ရက်မြောက်`,
-    lblQuickAccess: 'အမြန်ရယူရန်',
+    lblQuickAccess: 'အမြန်လုပ်ဆောင်ချက်များ',
     lblCycleSummary: 'စက်ဝန်းအကျဉ်းချုပ်',
     btnViewAll: 'အားလုံးကြည့်ရန်',
     btnViewDetails: 'အသေးစိတ်ကြည့်ရန်',
-    qLogToday: 'မှတ်တမ်းတင်မယ်',
-    lblStatCycleDay: 'စက်ဝန်းရက်',
+    qLogToday: 'မှတ်တမ်းတင်ရန်',
+    lblHomeCycleDay: 'စက်ဝန်းရက်',
     lblAvgCycle: 'ပျမ်းမျှစက်ဝန်း',
     lblAvgPeriod: 'ပျမ်းမျှရာသီ',
     lblTotalLogs: 'မှတ်တမ်းများ',
@@ -85,7 +85,7 @@ const i18n = {
         tips: ['ဗိုက်နာရင် ရေနွေးအိတ်ကပ်ပြီး အနားယူပါ', 'ဟင်းနုနွယ်၊ ပဲ၊ အသားနီတို့လို သံဓာတ်ကြွယ်ဝတဲ့ အစားအစာစားပါ', 'ခန့်မှန်းချက်တိကျဖို့ သွေးဆင်းမှုကို နေ့တိုင်းမှတ်တမ်းတင်ပါ']
       },
       fertile: {
-        desc: 'မျိုးဥထွက်ချိန်က {range} ({n} ရက်) ဖြစ်ပါတယ်။ ဒီရက်တွေအတွင်း ကိုယ်ဝန်ရနိုင်ခြေရှိပါတယ်။',
+        desc: 'မျိုးအောင်နိုင်ချိန်က {range} ({n} ရက်) ဖြစ်ပါတယ်။ ဒီရက်တွေအတွင်း ကိုယ်ဝန်ရနိုင်ခြေရှိပါတယ်။',
         tips: ['မျိုးဥထွက်ရက်ဟာ ဒီကာလရဲ့ နောက်ဆုံးရက်တွေမှာ အဖြစ်များပါတယ်', 'အရည်ကြည်ပြီး ဆွဲဆန့်နိုင်ရင် အထွတ်အထိပ်ရောက်နေပါပြီ', 'လက္ခဏာတွေ မှတ်တမ်းတင်ထားရင် ခန့်မှန်းချက်ပိုတိကျလာမှာပါ']
       },
       ovulation: {
@@ -97,7 +97,7 @@ const i18n = {
         tips: ['ရာသီမလာခင် ရက်အနည်းငယ်မှာ PMS လက္ခဏာတွေ ပေါ်တတ်ပါတယ်', 'တစ်ရက် နှစ်ရက်အလိုကတည်းက လိုအပ်တာတွေ အဆင်သင့်ပြင်ထားပါ', 'တကယ်စလာတဲ့ရက်ကို မှတ်တမ်းတင်ရင် ခန့်မှန်းချက်အလိုအလျောက် ပြင်ပေးမှာပါ']
       }
     },
-    lblAdvicePageSub: 'သင့်မှတ်တမ်းကို ဖတ်ပြီး ပေးတဲ့ ပုဂ္ဂိုလ်ရေး အကြံပြုချက်',
+    lblAdvicePageSub: 'သင့်မှတ်တမ်းပေါ်အခြေခံတဲ့ ကိုယ်ပိုင်အကြံပြုချက်',
     lblAdviceToday: 'ဒီနေ့အတွက် အကြံပြုချက်',
     lblAdvicePermNote: '🔔 အကြံ: သတိပေးချက် ခွင့်ပြုထားရင် ဒါတွေကို နောက်ခံမှာ သတိပေးနိုင်ပါတယ်။',
     lblAdviceWhy: 'ဘာကြောင့် သင့်နဲ့ ကိုက်ညီလဲ',
@@ -105,8 +105,8 @@ const i18n = {
     msgRemindOn: 'ဟုတ်ကဲ့ — ဒါနဲ့ ပတ်သက်ပြီး သတိပေးပါမယ် 💗',
     lblDoctorFlags: '🚩 ဒီလိုတွေခံစားနေရပါက ဆရာဝန်နဲ့ ဆွေးနွေးတိုင်ပင်ပါ',
     lblAdviceDisclaimer: 'Aura က ယေဘုယျ ကျန်းမာရေး အသိပေးချက်သာ မျှဝေတာပါ — ဆေးပညာ အကြံဉာဏ် ဒါမှမဟုတ် ရောဂါရှာဖွေမှု မဟုတ်ပါ။ စိုးရိမ်စရာရှိရင် ဆရာဝန်နဲ့ ပြသပါ။',
-    reasonPhase: (d, phase) => `ရက်မြောက် ${d} · ${phase}`,
-    reasonSymptom: (sym, n) => `"${sym}" ကို ${n} ရက်အလိုက မှတ်ထားတယ်`,
+    reasonPhase: (d, phase) => `${d} ရက်မြောက် · ${phase}`,
+    reasonSymptom: (sym, n) => `"${sym}" ကို လွန်ခဲ့တဲ့ ${n} ရက်က မှတ်ထားတယ်`,
     reasonMood: 'မကြာသေးခင်က စိတ်အခြေအနေတွေအရ',
     doctorFlags: [
       'နာရီတိုင်း pad လဲရလောက်အောင် နာရီပေါင်းများစွာ သွေးဆင်းများတာ',
@@ -122,7 +122,7 @@ const i18n = {
         body: 'ဒီအချိန်မှာ အပူက အကောင်းဆုံး မိတ်ဆွေပါ — ဗိုက်အောက်ပိုင်းမှာ ရေနွေးအိတ် ၁၅–၂၀ မိနစ် ကပ်တာဟာ အကိုက်အခဲပျောက်ဆေးနီးပါး ထိရောက်တယ်လို့ လေ့လာမှုတွေက ဆိုပါတယ်။ ရေနွေးနွေး မကြာခဏသောက်ပါ၊ သွေးဆင်းများရင် ပဲ၊ ဟင်းနုနွယ်၊ အသား စတဲ့ သံဓာတ်ပါတဲ့ အစားအစာတွေ စားပါ။ ၁၀–၂၀ မိနစ် ပေါ့ပေါ့ပါးပါး လမ်းလျှောက်တာက ကိုက်ခဲတာ သက်သာစေနိုင်ပါတယ်။ အကိုက်အခဲပျောက်ဆေး သောက်မယ်ဆိုရင် ကိုက်ခဲစကတည်းက စောစောသောက်တာ အထိရောက်ဆုံးပါ။ ကဖင်းနဲ့ အရက်ကို လျှော့ပါ။'
       },
       follicular: {
-        title: '🌱 Follicular အဆင့် — အားပြန်ဖြည့်ပြီး လှုပ်ရှားပါ',
+        title: '🌱 ဖောလီကူလာ အဆင့် — အားပြန်ဖြည့်ပြီး လှုပ်ရှားပါ',
         body: 'အီစထရိုဂျင် တက်လာပြီ၊ အားအင်လည်း ပြန်လာပါပြီ — လေ့ကျင့်ခန်း လုပ်ဖို့ အကောင်းဆုံး အချိန်ပါ။ တစ်ပတ် ၃ ကြိမ်၊ ၄၅–၆၀ မိနစ် လေ့ကျင့်ခန်းက ရာသီနာကျင်မှုကို သိသိသာသာ လျှော့ချပေးတယ်လို့ သုတေသနတွေက ဆိုပါတယ်။ ဆုံးရှုံးသွားတဲ့ သံဓာတ်နဲ့ ပရိုတင်းကို အစားအစာနဲ့ ပြန်ဖြည့်ပါ၊ ရေများများ သောက်ပါ။'
       },
       fertile: {
@@ -134,7 +134,7 @@ const i18n = {
         body: 'ဗိုက်တစ်ဖက်မှာ နည်းနည်း စူးခနဲ ခံစားရတာ ပုံမှန်ပါပဲ၊ စိုးရိမ်စရာ မရှိပါ။ အားအင်ကောင်းနေတဲ့ အချိန်မို့ အသုံးချပါ။ ရေဘူး အနားမှာ ထားပြီး အစာမရှောင်ပါနဲ့ — သွေးတွင်းသကြားဓာတ် ကျတာ ဟော်မုန်းပြောင်းချိန်မှာ ပိုခံစားရပါတယ်။'
       },
       luteal: {
-        title: '🌙 Luteal အဆင့် — တည်ငြိမ်အောင် ဂရုစိုက်ပါ',
+        title: '🌙 လူတီရယ် အဆင့် — တည်ငြိမ်အောင် ဂရုစိုက်ပါ',
         body: 'PMS အချိန်ပါ — အစားချဉ်ချင်းတပ်တာ၊ ဗိုက်ကယ်တာ၊ စိတ်ကျတာ အားလုံး ဟော်မုန်းကြောင့်ပါ။ ဆား၊ သကြား၊ ကဖင်းကို လျှော့ပါ — ဒါတွေက လက္ခဏာတွေ ပိုဆိုးစေတယ်လို့ လေ့လာမှုတွေက ဆိုပါတယ်။ အိပ်ချိန်မှန်အောင် ဂရုစိုက်ပါ၊ မနက်ပိုင်း နေရောင်ထိပါ။ အခွံမာသီး၊ ငှက်ပျောသီး၊ ချောကလက်ခါး စတဲ့ မဂ္ဂနီဆီယမ်ပါတဲ့ အစားအစာတွေ အဆင်ပြေပါတယ်။ စိတ်ဓာတ်ကျတာ ရာသီပြီးတဲ့အထိ ကြာနေရင် ယုံကြည်ရသူ ဒါမှမဟုတ် ဆရာဝန်နဲ့ တိုင်ပင်ပါ။'
       }
     },
@@ -164,8 +164,18 @@ const i18n = {
         body: 'ခေါင်းကိုက်နေလား? အရင်ဆုံး ရေတစ်ခွက် အပြည့်သောက်ကြည့်ပါ။'
       }
     },
-    lblDataHeading: '💾 ဒေတာ',
-    btnSave: 'သိမ်းမည်',
+    lblDataHeading: 'ဒေတာ',
+    lblCycleGroup: 'စက်ဝန်း',
+    lblAppearance: 'အပြင်အဆင်',
+    lblTheme: 'အသွင်အပြင်',
+    lblLanguage: 'ဘာသာစကား',
+    lblAbout: 'အကြောင်း',
+    lblAppTagline: 'ရာသီစက်ဝန်း မှတ်တမ်း',
+    lblIconCredit: '3D အိုင်ကွန်များ — Icons8',
+    btnExport: 'ထုတ်ယူမယ်',
+    btnImport: 'ထည့်သွင်းမယ်',
+    btnReset: 'ပြန်စမယ်',
+    btnSave: 'သိမ်းမယ်',
 
     lblWelcomeName: 'သင့်အမည်',
     lblWelcomeLastDate: 'နောက်ဆုံးရာသီရက်',
@@ -179,7 +189,7 @@ const i18n = {
     lblModalNotes: '📝 မှတ်စု',
     lblAdviceHeading: '💡 ကျန်းမာရေး အကြံပြုချက်',
 
-    lblInsightsTitle: '📊 ခွဲခြမ်း',
+    lblInsightsTitle: '📊 သုံးသပ်ချက်',
     lblInsightCycle: 'စက်ဝန်း ခြုံငုံ',
     lblStatCycleDay: 'လက်ရှိရက်',
     lblStatCycleLen: 'စက်ဝန်း',
@@ -194,18 +204,18 @@ const i18n = {
     lblStatMonthLogs: 'ယခုလ',
 
     navHome: 'ပင်မ',
-    navInsights: 'ခွဲခြမ်း',
+    navInsights: 'သုံးသပ်ချက်',
     navHistory: 'မှတ်တမ်း',
-    navSettings: 'ပြင်ဆင်',
+    navSettings: 'ဆက်တင်',
 
     legPeriod: 'ရာသီ',
-    legFertile: 'မျိုးဥနိုင်',
+    legFertile: 'မျိုးအောင်နိုင်',
     legOvulation: 'မျိုးဥထွက်',
-    legNext: 'လာမည့်ရက်',
+    legNext: 'ခန့်မှန်းရက်',
 
     phaseMenstrual: 'ရာသီလာချိန်',
     phaseFollicular: 'ဖောလီကူလာ',
-    phaseFertile: 'မျိုးဥထွက်နိုင်ချိန်',
+    phaseFertile: 'မျိုးအောင်နိုင်ချိန်',
     phaseOvulation: 'မျိုးဥထွက်ရက်',
     phaseLuteal: 'လူတီရယ်',
 
@@ -218,12 +228,12 @@ const i18n = {
     allMonths: 'အားလုံး',
     confirm: 'အတည်ပြု',
     cancel: 'မလုပ်တော့',
-    confirmResetTitle: 'ဒေတာဖျက်မည်',
-    confirmResetMsg: 'မှတ်တမ်းများ အားလုံး ပျက်မည်။',
-    confirmDeleteTitle: 'မှတ်တမ်းဖျက်မည်',
-    confirmDeleteMsg: 'ဤရက်စွဲ၏ မှတ်တမ်းကို ဖျက်မည်လား?',
+    confirmResetTitle: 'ဒေတာဖျက်မယ်',
+    confirmResetMsg: 'မှတ်တမ်းအားလုံး ပျက်သွားမယ်။',
+    confirmDeleteTitle: 'မှတ်တမ်းဖျက်မယ်',
+    confirmDeleteMsg: 'ဒီရက်စွဲရဲ့ မှတ်တမ်းကို ဖျက်မလား?',
     importTitle: 'ဒေတာထည့်ရန်',
-    importHint: 'Export လုပ်ထားသော JSON ကို Paste လုပ်ပါ။',
+    importHint: 'အရန်သိမ်းထားတဲ့ JSON ကို ဒီမှာ ကပ်ထည့်ပါ။',
     msgSaved: 'သိမ်းပြီးပါပြီ',
     msgSaveError: 'သိမ်းဆည်း၍ မရပါ',
     msgDeleted: 'ဖျက်ပြီးပါပြီ',
@@ -232,7 +242,7 @@ const i18n = {
     msgExported: 'ထုတ်ယူပြီးပါပြီ',
     msgCycleStart: '🌸 ရာသီစက်ဝန်း အသစ် စတင်ပါပြီ',
     alarmTitle: 'Aura',
-    alarmText: d => `နောက်ရာသီရက် ${d} ရက်သာ လိုပါတော့သည်။`,
+    alarmText: d => `နောက်ရာသီလာဖို့ ${d} ရက်ပဲ လိုတော့တယ်။`,
     daysLeft: d => d <= 0 ? 'ယနေ့' : `${d} ရက်ကျန်`,
     predDays: d => d <= 0 ? 'ယနေ့' : `${d} ရက်`,
 
@@ -242,13 +252,13 @@ const i18n = {
     },
     chips: {
       cramps: '⚡ ကိုက်ခဲ', bloating: '🎈 ဗိုက်ကယ်', tired: '😴 နွမ်း',
-      happy: '😊 ပျော်', moody: '😭 စိတ်ဆိုး', cravings: '🍕 အစားကြိုက်',
-      headache: '💆 ခေါင်းကိုက်', acne: '🌶 ဝက်ခြံ',
-      backpain: '🦴 ခါးနာ', nausea: '🤢 ပျို့'
+      happy: '😊 ပျော်', moody: '🎭 စိတ်အတက်အကျ', cravings: '🍩 အစားချဉ်ချင်း',
+      headache: '💆 ခေါင်းကိုက်', acne: '🔴 ဝက်ခြံ',
+      backpain: '🦴 ခါးနာ', nausea: '🤢 ပျို့အန်'
     },
     moods: {
       great: '😄 အရမ်းကောင်း', good: '🙂 ကောင်း', okay: '😐 သာမန်',
-      low: '😔 စိတ်ဓာတ်ကျ', bad: '😣 မကောင်း'
+      low: '😔 စိတ်ညစ်', bad: '😣 မကောင်း'
     },
     advices: {
       cramps: 'ဗိုက်ပေါ်တွင် ရေနွေးအိတ် ကပ်ပါ၊ ရေနွေးနွေး သောက်ပါ။',
@@ -314,8 +324,8 @@ const i18n = {
     installGotIt: 'Got it ✓',
     installDone: 'All set! Open it from your home screen 📲',
     navAdvice: 'Advice',
-    lblNotifHeading: '🔔 Notifications',
-    lblBotHeading: '🤖 Helper bot',
+    lblNotifHeading: 'Notifications',
+    lblBotHeading: 'Helper bot',
     btnAskNotif: 'Ask permission',
     notifGranted: 'Allowed ✓',
     notifDenied: 'Blocked',
@@ -341,7 +351,6 @@ const i18n = {
     btnViewAll: 'View All',
     btnViewDetails: 'View Details',
     qLogToday: 'Log Today',
-    lblStatCycleDay: 'Cycle Day',
     lblAvgCycle: 'Avg cycle',
     lblAvgPeriod: 'Avg period',
     lblTotalLogs: 'Logs',
@@ -430,7 +439,18 @@ const i18n = {
         body: 'Headache knocking? Drink a full glass of water before anything else.'
       }
     },
-    lblDataHeading: '💾 Data',
+    lblDataHeading: 'Data',
+    lblCycleGroup: 'Cycle',
+    lblAppearance: 'Appearance',
+    lblTheme: 'Theme',
+    lblLanguage: 'Language',
+    lblAbout: 'About',
+    lblAppTagline: 'Cycle Tracker',
+    lblIconCredit: '3D icons by Icons8',
+    btnExport: 'Export',
+    btnImport: 'Import',
+    btnReset: 'Reset',
+    lblHomeCycleDay: 'Cycle Day',
     btnSave: 'Save',
 
     lblWelcomeName: 'Your Name',
