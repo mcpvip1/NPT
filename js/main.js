@@ -83,9 +83,10 @@ function initLogModal() {
     if (e.target === els.logModal) closeLogModal();
   });
 
-  els.logSave.addEventListener('click', () => {
+  // read the modal, persist it, re-render. returns the entry (or null on failure).
+  function persistLogModal() {
     const key = state.selectedDate;
-    if (!key) return;
+    if (!key) return null;
     const flowChip = els.logFlowRow.querySelector('.chip.active');
     const flow = flowChip ? flowChip.dataset.flow : null;
     const symptoms = [...els.logSymRow.querySelectorAll('.chip.active')].map(c => c.dataset.sym);
@@ -93,6 +94,7 @@ function initLogModal() {
     const mood = moodChip ? moodChip.dataset.mood : null;
     const notes = els.logNotes.value.trim();
 
+    const entry = { key, flow, symptoms, mood, notes };
     if (flow || symptoms.length || mood || notes) {
       state.logs[key] = { flow, symptoms, mood, notes };
     } else {
@@ -100,14 +102,28 @@ function initLogModal() {
     }
     if (!saveLogs()) {
       toast(t().msgSaveError || 'Save failed', 'err');
-      return;
+      return null;
     }
 
     renderCalendar();
     renderHistory();
     renderInsights();
+    return entry;
+  }
+
+  els.logSave.addEventListener('click', () => {
+    if (!persistLogModal()) return;
     closeLogModal();
     toast(t().msgSaved, 'ok');
+  });
+
+  // save, then jump to the advice tab with advice based on this exact entry.
+  els.logAdvice.addEventListener('click', () => {
+    const entry = persistLogModal();
+    if (!entry) return;
+    closeLogModal();
+    state.adviceFocus = entry;
+    switchTab('tab-advice');
   });
 
   els.logDelete.addEventListener('click', async () => {
@@ -323,7 +339,11 @@ function initHistoryControls() {
 }
 
 function initQuickLog() {
-  $('fab').addEventListener('click', () => openLogModal(toKey(today())));
+  // home: detail rows + big CTA open today's log
+  document.querySelectorAll('[data-goto-log]').forEach(b =>
+    b.addEventListener('click', () => openLogModal(toKey(today()))));
+  const cta = $('cta-log');
+  if (cta) cta.addEventListener('click', () => openLogModal(toKey(today())));
 }
 
 function checkLogReminder() {
