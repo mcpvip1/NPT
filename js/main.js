@@ -9,7 +9,10 @@ function switchTab(name) {
   });
   currentTab = name;
   renderHeader();
-  if (name === 'tab-advice') renderAdvicePage();
+  if (name === 'tab-advice') {
+    renderAdvicePage();
+    if (typeof maybeOfflineNotice === 'function') maybeOfflineNotice();
+  }
 }
 
 function initTabs() {
@@ -170,6 +173,9 @@ function initSettings() {
     state.data.logReminderTime = els.setRemindTime.value || '21:00';
     state.data.wellnessNudges = els.setWellness.checked;
     state.data.botName = els.setBotName.value.trim().slice(0, 24) || 'Aura';
+    state.data.age = numOrNull(els.setAge.value, 9, 100);
+    state.data.weightKg = numOrNull(els.setWeight.value, 20, 300);
+    state.data.heightCm = numOrNull(els.setHeight.value, 80, 250);
 
     if (state.data.logReminder && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
@@ -242,7 +248,11 @@ function initSettings() {
           logReminderTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(d.logReminderTime || '') ? d.logReminderTime : '21:00',
           wellnessNudges: d.wellnessNudges !== false,
           nudgePrefs: (d.nudgePrefs && typeof d.nudgePrefs === 'object' && !Array.isArray(d.nudgePrefs)) ? d.nudgePrefs : {},
-          botName: typeof d.botName === 'string' && d.botName.trim() ? d.botName.trim().slice(0, 24) : 'Aura'
+          botName: typeof d.botName === 'string' && d.botName.trim() ? d.botName.trim().slice(0, 24) : 'Aura',
+          age: numOrNull(d.age, 9, 100),
+          weightKg: numOrNull(d.weightKg, 20, 300),
+          heightCm: numOrNull(d.heightCm, 80, 250),
+          country: d.country === 'th' ? 'th' : 'mm'
         };
       }
       if (parsed.logs && typeof parsed.logs === 'object') {
@@ -298,6 +308,9 @@ function initWelcome() {
     state.data.lutealPhase = 14;
     state.data.notify = true;
     state.data.notifyDays = 2;
+    state.data.age = numOrNull($('w-age').value, 9, 100);
+    state.data.weightKg = numOrNull($('w-weight').value, 20, 300);
+    state.data.heightCm = numOrNull($('w-height').value, 80, 250);
 
     saveData();
     closeModal(els.welcome);
@@ -311,14 +324,14 @@ function initWelcome() {
 }
 
 function initLanguage() {
-  document.querySelectorAll('#lang-seg [data-lang-val]').forEach(b =>
+  document.querySelectorAll('#hdr-langseg [data-lang-val]').forEach(b =>
     b.addEventListener('click', () => setLang(b.dataset.langVal)));
   els.langSelectDesktop.addEventListener('change', e => setLang(e.target.value));
 }
 
 function initTheme() {
-  document.querySelectorAll('#theme-seg [data-theme-val]').forEach(b =>
-    b.addEventListener('click', () => setTheme(b.dataset.themeVal)));
+  els.hdrTheme.addEventListener('click', () =>
+    setTheme(state.theme === 'dark' ? 'light' : 'dark'));
   els.themeToggleDesktop.addEventListener('click', () =>
     setTheme(state.theme === 'dark' ? 'light' : 'dark'));
 }
@@ -343,20 +356,10 @@ function initQuickLog() {
   const nl = $('nav-log');
   if (nl) nl.addEventListener('click', () => openLogModal(toKey(today())));
 
-  // Update button in the topbar: reload every part of the UI so any
-  // change (settings, logs, language) is reflected everywhere at once.
-  const upd = $('refresh-app');
-  if (upd) upd.addEventListener('click', () => {
-    upd.classList.remove('spinning');
-    void upd.offsetWidth;
-    upd.classList.add('spinning');
-    applyLang();
-    renderAll();
-    renderBotHello();
-    refreshBotSlots();
-    if (document.getElementById('tab-advice').classList.contains('active')) renderAdvicePage();
-    setTimeout(() => upd.classList.remove('spinning'), 750);
-  });
+  // Update button in the header: checks GitHub for a newer app version,
+  // applies it, shows a message, then refreshes the software.
+  const upd = els.hdrUpdate;
+  if (upd) upd.addEventListener('click', checkAppUpdate);
 
   // phase explainer popup close
   els.phaseClose.addEventListener('click', closePhasePopup);
@@ -475,8 +478,74 @@ function initEscape() {
   });
 }
 
+// ---- in-app updater ------------------------------------------------------
+// The Update button checks the GitHub repo for a newer app version. It
+// needs the internet (a popup says so when offline). After a successful
+// update it shows a message and refreshes the software.
+const APP_VERSION = '98dd0822'; // commit this copy was built from
+const UPDATE_REPO = 'mcpvip1/NPT';
+
+function seedAppVersion() {
+  try {
+    if (!localStorage.getItem('aura_app_ver'))
+      localStorage.setItem('aura_app_ver', APP_VERSION);
+  } catch (e) {}
+}
+
+async function checkAppUpdate() {
+  const T = t();
+  const info = (typeof openInfoPopup === 'function') ? openInfoPopup : (a, b) => alert(a + '\n' + b);
+  const btn = els.hdrUpdate;
+  if (btn) btn.classList.add('spinning');
+  try {
+    const online = (typeof hasInternet === 'function') ? await hasInternet() : navigator.onLine !== false;
+    if (!online) {
+      info(T.updNeedInternetTitle, T.updNeedInternetMsg);
+      return;
+    }
+    const r = await fetch('https://api.github.com/repos/' + UPDATE_REPO + '/commits/main', { cache: 'no-store' });
+    if (!r.ok) throw new Error('github api ' + r.status);
+    const j = await r.json();
+    const sha = String(j.sha || '').slice(0, 8);
+    const msg = String((j.commit && j.commit.message) || '').split('\n')[0].slice(0, 140);
+    let stored = APP_VERSION;
+    try { stored = localStorage.getItem('aura_app_ver') || APP_VERSION; } catch (e) {}
+    if (!sha || sha === stored) {
+      info(T.updUpToDateTitle, T.updUpToDateMsg(stored));
+      return;
+    }
+    await applyAppUpdate(sha, msg, info);
+  } catch (e) {
+    info(T.updFailedTitle, T.updFailedMsg);
+  } finally {
+    if (btn) btn.classList.remove('spinning');
+  }
+}
+
+async function applyAppUpdate(sha, msg, info) {
+  const T = t();
+  info = info || ((typeof openInfoPopup === 'function') ? openInfoPopup : (a, b) => alert(a + '\n' + b));
+  // a local file:// copy can't pull fresh files by itself — point at GitHub
+  if (location.protocol === 'file:') {
+    try { localStorage.setItem('aura_app_ver', sha); } catch (e) {}
+    info(T.updAvailableTitle, T.updAvailableMsg + (msg ? '\n' + msg : ''));
+    return;
+  }
+  // drop the service worker + caches so the next load fetches fresh files
+  try {
+    const reg = await navigator.serviceWorker.getRegistration();
+    if (reg) await reg.unregister();
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+  } catch (e) {}
+  try { localStorage.setItem('aura_app_ver', sha); } catch (e) {}
+  info(T.updDoneTitle, T.updDoneMsg(msg), () => location.reload(), T.btnRestart);
+  setTimeout(() => { if (!$('info-popup').classList.contains('hidden')) location.reload(); }, 4000);
+}
+
 function init() {
   const hasSettings = loadAll();
+  seedAppVersion();
 
   applyTheme();
   applyLang();
@@ -498,6 +567,7 @@ function init() {
   initInstallNudge();
   initNotifPermission();
   initAdvicePage();
+  if (typeof initRecommendations === 'function') initRecommendations();
   initBotTap();
   initEscape();
 

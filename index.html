@@ -81,6 +81,14 @@
           <h1 class="header-title" id="header-title">Han!</h1>
         </div>
         <button class="avatar-btn" data-tab="tab-settings" aria-label="Profile"><span data-icon="avatar"></span></button>
+        <div class="header-tools">
+          <button type="button" id="hdr-theme" class="htool" aria-label="Toggle theme"><span data-icon="moon"></span></button>
+          <div class="htool-seg" id="hdr-langseg" role="group" aria-label="Language">
+            <button type="button" data-lang-val="my">မြန်မာ</button>
+            <button type="button" data-lang-val="en">EN</button>
+          </div>
+          <button type="button" id="hdr-update" class="htool"><span data-icon="refresh"></span><span data-lbl="btnUpdate">Update</span></button>
+        </div>
       </header>
 
       <div id="alarm-banner" class="alarm hidden">
@@ -197,6 +205,18 @@
             </div>
             <h3 class="sec-head" data-lbl="lblAdviceToday"></h3>
             <div id="advice-today" class="advice-cards"></div>
+            <div class="rec-sec">
+              <div class="rec-head">
+                <h3 class="sec-head rec-title"><span data-icon="shopping-bag"></span><span data-lbl="lblRecTitle">Recommended for you</span></h3>
+                <div class="seg small" id="country-seg" role="group" aria-label="Country">
+                  <button type="button" data-country-val="mm">🇲🇲 <span data-lbl="lblCountryMM">မြန်မာ</span></button>
+                  <button type="button" data-country-val="th">🇹🇭 <span data-lbl="lblCountryTH">ထိုင်း</span></button>
+                </div>
+              </div>
+              <p class="sub-text tiny" data-lbl="lblRecSub"></p>
+              <div id="rec-list" class="rec-list"></div>
+              <p class="sub-text tiny advice-disclaimer" data-lbl="lblRecDisclaimer"></p>
+            </div>
             <details class="doctor-flags">
               <summary data-lbl="lblDoctorFlags"></summary>
               <ul id="doctor-flags-list" class="advice-list"></ul>
@@ -327,6 +347,19 @@
                 <label for="set-bot-name" data-lbl="lblBotName">Bot name</label>
                 <input type="text" id="set-bot-name" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
               </div>
+              <div class="field">
+                <label for="set-age" data-lbl="lblWelcomeAge">Age</label>
+                <input type="number" id="set-age" min="9" max="100" inputmode="numeric" placeholder="—">
+              </div>
+              <div class="field">
+                <label for="set-weight" data-lbl="lblWelcomeWeight">Weight (kg)</label>
+                <input type="number" id="set-weight" min="20" max="300" step="0.5" inputmode="decimal" placeholder="—">
+              </div>
+              <div class="field">
+                <label for="set-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
+                <input type="number" id="set-height" min="80" max="250" inputmode="numeric" placeholder="—">
+              </div>
+              <button type="submit" class="btn primary full set-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
             </div>
 
             <h3 class="set-group-title"><span data-icon="calendar"></span><span data-lbl="lblCycleGroup">Cycle</span></h3>
@@ -350,25 +383,6 @@
                 <input type="number" id="set-luteal" min="8" max="20" value="14" required>
               </div>
               <button type="submit" class="btn primary full"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
-            </div>
-
-            <h3 class="set-group-title"><span data-icon="sun"></span><span data-lbl="lblAppearance">Appearance</span></h3>
-            <div class="set-card">
-              <div class="set-row">
-                <span class="set-row-lbl" data-lbl="lblTheme">Theme</span>
-                <div class="seg" id="theme-seg">
-                  <button type="button" data-theme-val="light" aria-label="Light"><span data-icon="sun"></span></button>
-                  <button type="button" data-theme-val="dark" aria-label="Dark"><span data-icon="moon"></span></button>
-                </div>
-              </div>
-              <div class="set-row">
-                <span class="set-row-lbl" data-lbl="lblLanguage">Language</span>
-                <div class="seg" id="lang-seg">
-                  <button type="button" data-lang-val="my">မြန်မာ</button>
-                  <button type="button" data-lang-val="en">English</button>
-                </div>
-              </div>
-              <button type="button" id="refresh-app" class="btn ghost full"><span data-icon="refresh"></span><span data-lbl="btnUpdate">Update</span></button>
             </div>
 
             <h3 class="set-group-title"><span data-icon="bell"></span><span data-lbl="lblNotifHeading">Notifications</span></h3>
@@ -486,8 +500,32 @@
             <input type="number" id="w-period" min="1" max="15" value="5" required>
           </div>
         </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="w-age" data-lbl="lblWelcomeAge">Age</label>
+            <input type="number" id="w-age" min="9" max="100" inputmode="numeric" placeholder="—">
+          </div>
+          <div class="field">
+            <label for="w-weight" data-lbl="lblWelcomeWeight">Weight (kg)</label>
+            <input type="number" id="w-weight" min="20" max="300" step="0.5" inputmode="decimal" placeholder="—">
+          </div>
+          <div class="field">
+            <label for="w-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
+            <input type="number" id="w-height" min="80" max="250" inputmode="numeric" placeholder="—">
+          </div>
+        </div>
         <button type="submit" class="btn primary full" data-lbl="btnWelcomeStart">Get Started ✨</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Generic info popup (offline notice, update results, ...) -->
+  <div id="info-popup" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-box info-box">
+      <div class="info-ico" id="info-ico">ℹ️</div>
+      <h2 class="info-title" id="info-title"></h2>
+      <p class="sub-text" id="info-msg"></p>
+      <button type="button" class="btn primary full" id="info-ok">OK</button>
     </div>
   </div>
 
@@ -622,6 +660,7 @@
   <script src="js/bot-img-sleepy.js"></script>
   <script src="js/icons-3d.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/recommend.js"></script>
   <script src="js/main.js"></script>
 </body>
 
