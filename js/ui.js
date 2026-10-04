@@ -63,6 +63,17 @@ const els = {
   setBot: $('set-bot'),
   setRemindLog: $('set-remind-log'),
   setRemindTime: $('set-remind-time'),
+  setWellness: $('set-wellness'),
+  notifDot: $('notif-dot'),
+  notifStatusText: $('notif-status-text'),
+  notifPermBtn: $('btn-notif-perm'),
+  notifDeniedHint: $('notif-denied-hint'),
+
+  adviceBot: $('advice-bot'),
+  advicePermNote: $('advice-perm-note'),
+  advicePermBtn: $('advice-perm-btn'),
+  adviceToday: $('advice-today'),
+  doctorFlagsList: $('doctor-flags-list'),
 
   botHello: $('bot-hello'),
   botHelloBot: $('bot-hello-bot'),
@@ -196,6 +207,35 @@ function notifyUser(title, body, tag) {
   systemNotify(title, body, tag);
 }
 
+// shows whether reminders can actually reach the user, right in settings
+function updateNotifStatus() {
+  const T = t();
+  if (!('Notification' in window)) {
+    els.notifStatusText.textContent = T.notifUnsupported;
+    els.notifDot.className = 'notif-dot off';
+    els.notifPermBtn.classList.add('hidden');
+    els.notifDeniedHint.classList.add('hidden');
+    return;
+  }
+  const perm = Notification.permission;
+  if (perm === 'granted') {
+    els.notifStatusText.textContent = T.notifGranted;
+    els.notifDot.className = 'notif-dot on';
+    els.notifPermBtn.classList.add('hidden');
+    els.notifDeniedHint.classList.add('hidden');
+  } else if (perm === 'denied') {
+    els.notifStatusText.textContent = T.notifDenied;
+    els.notifDot.className = 'notif-dot off';
+    els.notifPermBtn.classList.add('hidden');
+    els.notifDeniedHint.classList.remove('hidden');
+  } else {
+    els.notifStatusText.textContent = T.notifDefault;
+    els.notifDot.className = 'notif-dot wait';
+    els.notifPermBtn.classList.remove('hidden');
+    els.notifDeniedHint.classList.add('hidden');
+  }
+}
+
 // ---------- confirm ----------
 let confirmResolve = null;
 function askConfirm(title, msg) {
@@ -281,6 +321,7 @@ function applyLang() {
   document.documentElement.lang = state.lang;
 
   refreshBotSlots();
+  if (document.getElementById('tab-advice').classList.contains('active')) renderAdvicePage();
 }
 
 function applyTheme() {
@@ -408,6 +449,62 @@ function maybeShowInstallNudge() {
   }, 1200); // let the greeting land first
 }
 
+// ---------- wellness nudges ----------
+// little contextual reminders ("did you drink warm water?").
+// each fires at most once a day, and only one per app open — no spam, promise.
+const NUDGE_DEFS = [
+  { id: 'warm-water', when: ctx => ctx.phase === 'menstrual' },
+  { id: 'heat-pad', when: ctx => ctx.recentSymptom('cramps', 2) },
+  { id: 'iron-foods', when: ctx => ctx.recentFlow('heavy', 3) },
+  { id: 'gentle-move', when: ctx => ctx.recentSymptom('bloating', 3) },
+  { id: 'sleep-well', when: ctx => ctx.recentSymptom('tired', 3) || ctx.phase === 'luteal' },
+  { id: 'hydrate', when: ctx => ctx.recentSymptom('headache', 2) },
+];
+
+function nudgeContext() {
+  const entryOn = i => state.logs[toKey(addDays(today(), -i))];
+  return {
+    phase: phaseFor(today()),
+    recentSymptom: (s, days) => {
+      for (let i = 0; i < days; i++) {
+        const e = entryOn(i);
+        if (e && (e.symptoms || []).includes(s)) return true;
+      }
+      return false;
+    },
+    recentFlow: (f, days) => {
+      for (let i = 0; i < days; i++) {
+        const e = entryOn(i);
+        if (e && e.flow === f) return true;
+      }
+      return false;
+    }
+  };
+}
+
+function isNudgeOn(id) {
+  if (state.data.wellnessNudges === false) return false;
+  return (state.data.nudgePrefs || {})[id] !== false;
+}
+
+function checkWellnessNudges() {
+  if (state.data.wellnessNudges === false) return;
+  const key = toKey(today());
+  const ctx = nudgeContext();
+  const T = t();
+  for (const def of NUDGE_DEFS) {
+    if (!isNudgeOn(def.id)) continue;
+    if (localStorage.getItem(LS.nudge + def.id) === key) continue;
+    let match = false;
+    try { match = def.when(ctx); } catch (_) { match = false; }
+    if (!match) continue;
+    localStorage.setItem(LS.nudge + def.id, key);
+    const n = T.nudges[def.id];
+    if (n) notifyUser(n.title, n.body, 'aura-nudge-' + def.id);
+    break;
+  }
+}
+
 // ---------- advice ----------
 function adviceHTML(symptoms, withTitle) {
   const T = t();
@@ -445,6 +542,111 @@ function adviceDetailsHTML(symptoms) {
   if (!items.length) return '';
 
   return `<details class="advice-details"><summary>${botHTML()}<span>${esc(T.lblAdviceHeading)} (${items.length})</span></summary><ul class="advice-list">${items.join('')}</ul></details>`;
+}
+
+// ---------- advice page ----------
+// reads the user's own history and puts together guidance that actually fits.
+function renderAdvicePage() {
+  const T = t();
+  const list = els.adviceToday;
+  list.innerHTML = '';
+
+  const trend = moodTrend();
+  els.adviceBot.innerHTML = botHTML(trend === 'down' ? 'sad' : 'happy', true);
+
+  const perm = ('Notification' in window) ? Notification.permission : 'denied';
+  els.advicePermNote.classList.toggle('hidden', perm === 'granted');
+
+  const cards = [];
+  const info = cycleInfoFor(today());
+  const phase = phaseFor(today());
+
+  // phase card — always relevant, grounded in what research actually says
+  if (phase && T.phaseAdvice && T.phaseAdvice[phase]) {
+    const pa = T.phaseAdvice[phase];
+    const day = info ? Math.max(1, diffDays(info.start, today()) + 1) : null;
+    cards.push({
+      title: pa.title,
+      body: pa.body,
+      why: day ? T.reasonPhase(day, phaseLabel(phase)) : '',
+      nudge: phase === 'menstrual' ? 'warm-water' : null
+    });
+  }
+
+  // mood card — trend-aware
+  const mood = latestMood();
+  if (mood && T.moodTips[mood]) {
+    let body = T.moodTips[mood];
+    if (trend === 'down') body = T.greetTrendDown + ' ' + body;
+    else if (trend === 'up') body = T.greetTrendUp + ' ' + body;
+    cards.push({ title: T.lblInsightMood, body, why: T.reasonMood, nudge: null });
+  }
+
+  // top recent symptoms (last 14 days, max 2 cards so it stays readable)
+  const counts = {};
+  const lastSeen = {};
+  for (let i = 0; i < 14; i++) {
+    const k = toKey(addDays(today(), -i));
+    const e = state.logs[k];
+    ((e && e.symptoms) || []).forEach(s => {
+      counts[s] = (counts[s] || 0) + 1;
+      if (!(s in lastSeen)) lastSeen[s] = i;
+    });
+  }
+  const nudgeMap = { cramps: 'heat-pad', headache: 'hydrate', bloating: 'gentle-move', tired: 'sleep-well' };
+  Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 2).forEach(([s]) => {
+    const tip = T.advices[s];
+    if (!tip) return;
+    cards.push({
+      title: T.chips[s] || s,
+      body: tip,
+      why: T.reasonSymptom(T.chips[s] || s, lastSeen[s]),
+      nudge: nudgeMap[s] || null
+    });
+  });
+
+  if (!cards.length) {
+    list.innerHTML = `<div class="empty-state"><div class="ico">🌸</div><div>${T.noData}</div></div>`;
+  } else {
+    for (const c of cards) {
+      const card = document.createElement('div');
+      card.className = 'advice-card';
+
+      const head = document.createElement('div');
+      head.className = 'advice-card-head';
+      head.innerHTML = botHTML('happy');
+      const h3 = document.createElement('h3');
+      h3.textContent = c.title;
+      head.appendChild(h3);
+      card.appendChild(head);
+
+      const p = document.createElement('p');
+      p.textContent = c.body;
+      card.appendChild(p);
+
+      if (c.why) {
+        const w = document.createElement('div');
+        w.className = 'advice-why';
+        const b = document.createElement('b');
+        b.textContent = T.lblAdviceWhy + ': ';
+        w.append(b, document.createTextNode(c.why));
+        card.appendChild(w);
+      }
+
+      if (c.nudge && isNudgeOn(c.nudge)) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn ghost small remind-btn';
+        btn.dataset.nudgeRemind = c.nudge;
+        btn.textContent = T.btnRemindMe;
+        card.appendChild(btn);
+      }
+
+      list.appendChild(card);
+    }
+  }
+
+  els.doctorFlagsList.innerHTML = (T.doctorFlags || []).map(f => `<li>${esc(f)}</li>`).join('');
 }
 
 // ---------- home ----------
@@ -863,6 +1065,8 @@ function fillSettingsForm() {
   els.setBot.checked = state.data.showBot !== false; // old saves don't have the key yet
   els.setRemindLog.checked = !!state.data.logReminder;
   els.setRemindTime.value = state.data.logReminderTime || '21:00';
+  els.setWellness.checked = state.data.wellnessNudges !== false;
+  updateNotifStatus();
 }
 
 // ---------- master ----------
