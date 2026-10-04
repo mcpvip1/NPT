@@ -22,12 +22,9 @@ const els = {
   hmPeriod: $('hm-period'),
   hmFertile: $('hm-fertile'),
   hmOvu: $('hm-ovu'),
-  hmNext: $('hm-next'),
   hmRingDay: $('hm-ring-day'),
   hmRingProg: $('hm-ring-prog'),
   hmHeroStatus: $('hm-hero-status'),
-  bannerDate: $('banner-date'),
-  bannerSub: $('banner-sub'),
   sumCycle: $('sum-cycle'),
   sumPeriod: $('sum-period'),
   sumLogs: $('sum-logs'),
@@ -800,9 +797,6 @@ function renderStats() {
     els.hmPeriod.textContent = '\u2013';
     els.hmFertile.textContent = '\u2013';
     els.hmOvu.textContent = '\u2013';
-    els.hmNext.textContent = '\u2013';
-    els.bannerDate.textContent = '\u2013';
-    els.bannerSub.textContent = '';
     if (els.hmRingDay) els.hmRingDay.textContent = '\u2013';
     if (els.hmHeroStatus) els.hmHeroStatus.textContent = '';
     return;
@@ -812,7 +806,6 @@ function renderStats() {
   els.hmPeriod.textContent = T.dayOfCycle(day);
   els.hmFertile.textContent = `${w.fDays} ${T.daysUnit}`;
   els.hmOvu.textContent = fmtShort(w.ovu);
-  els.hmNext.textContent = fmtShort(w.nxt);
 
   // home hero ring, like the reference's progress ring
   if (els.hmRingDay) els.hmRingDay.textContent = day;
@@ -821,9 +814,6 @@ function renderStats() {
     const phase = phaseFor(today());
     els.hmHeroStatus.textContent = phase ? `${T.dayOfCycle(day)} · ${phaseLabel(phase)}` : T.dayOfCycle(day);
   }
-
-  els.bannerDate.textContent = fmtShort(w.nxt);
-  els.bannerSub.textContent = T.daysLeft(w.left);
 
   checkAlarm(w.left);
   celebrateCycleStart(w.pStart);
