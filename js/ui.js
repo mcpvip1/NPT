@@ -23,6 +23,9 @@ const els = {
   hmFertile: $('hm-fertile'),
   hmOvu: $('hm-ovu'),
   hmNext: $('hm-next'),
+  hmRingDay: $('hm-ring-day'),
+  hmRingProg: $('hm-ring-prog'),
+  hmHeroStatus: $('hm-hero-status'),
   bannerDate: $('banner-date'),
   bannerSub: $('banner-sub'),
   sumCycle: $('sum-cycle'),
@@ -792,6 +795,7 @@ function renderStats() {
   const T = t();
   const w = cycleWindows();
   const info = cycleInfoFor(today());
+  const C = 2 * Math.PI * 60; // home hero ring circumference
   if (!w || !info) {
     els.hmPeriod.textContent = '\u2013';
     els.hmFertile.textContent = '\u2013';
@@ -799,13 +803,24 @@ function renderStats() {
     els.hmNext.textContent = '\u2013';
     els.bannerDate.textContent = '\u2013';
     els.bannerSub.textContent = '';
+    if (els.hmRingDay) els.hmRingDay.textContent = '\u2013';
+    if (els.hmHeroStatus) els.hmHeroStatus.textContent = '';
     return;
   }
   const day = Math.max(1, diffDays(info.start, today()) + 1);
+  const cycLen = state.data.cycleLength || 28;
   els.hmPeriod.textContent = T.dayOfCycle(day);
   els.hmFertile.textContent = `${w.fDays} ${T.daysUnit}`;
   els.hmOvu.textContent = fmtShort(w.ovu);
   els.hmNext.textContent = fmtShort(w.nxt);
+
+  // home hero ring, like the reference's progress ring
+  if (els.hmRingDay) els.hmRingDay.textContent = day;
+  if (els.hmRingProg) els.hmRingProg.style.strokeDasharray = `${Math.min(day / cycLen, 1) * C} ${C}`;
+  if (els.hmHeroStatus) {
+    const phase = phaseFor(today());
+    els.hmHeroStatus.textContent = phase ? `${T.dayOfCycle(day)} · ${phaseLabel(phase)}` : T.dayOfCycle(day);
+  }
 
   els.bannerDate.textContent = fmtShort(w.nxt);
   els.bannerSub.textContent = T.daysLeft(w.left);
