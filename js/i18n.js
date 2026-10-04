@@ -17,7 +17,6 @@ const i18n = {
     lblCycleLength: 'စက်ဝန်း (ရက်)',
     lblPeriodLength: 'ရာသီ (ရက်)',
     lblLutealLength: 'Luteal (ရက်)',
-    lblNotifyHeading: '🔔 သတိပေးချက်',
     lblNotifyEnable: 'ရာသီနီးပါက သတိပေးရန်',
     lblNotifyDays: 'ရက်အလိုတွင်',
     lblBotEnable: '🤖 ချစ်စရာ အကူ bot လေး ပြမယ်',
@@ -48,6 +47,85 @@ const i18n = {
     installEnableNotif: '🔔 သတိပေးချက် ဖွင့်မယ်',
     installGotIt: 'နားလည်ပြီ ✓',
     installDone: 'ပြီးပါပြီ! Home Screen က icon ကနေ ဖွင့်သုံးပါ 📲',
+    navAdvice: 'အကြံဉာဏ်',
+    lblNotifHeading: '🔔 သတိပေးချက်များ',
+    lblBotHeading: '🤖 အကူ bot',
+    btnAskNotif: 'ခွင့်ပြုချက် တောင်းမယ်',
+    notifGranted: 'ခွင့်ပြုထားပါတယ် ✓',
+    notifDenied: 'ပိတ်ထားပါတယ်',
+    notifDefault: 'မမေးရသေးပါ',
+    notifUnsupported: 'ဒီမှာ မရပါ',
+    notifDeniedHint: 'ခွင့်ပြုချက် ပိတ်ထားပါတယ်။ သတိပေးချက်ရဖို့ browser settings မှာ ဒီ site အတွက် notifications ဖွင့်ပေးပါ။',
+    lblWellnessNudges: '💧 ကျန်းမာရေး သတိပေးချက်များ',
+    lblWellnessNudgesSub: 'ရာသီစက်ဝန်းနဲ့ လက္ခဏာတွေပေါ် မူတည်တဲ့ ညင်သာတဲ့ သတိပေးချက်များ — ရေနွေးသောက်၊ အနားယူ၊ လှုပ်ရှားမှု။',
+    lblAdvicePageTitle: '🤖 Aura ကို မေးပါ',
+    lblAdvicePageSub: 'သင့်မှတ်တမ်းကို ဖတ်ပြီး ပေးတဲ့ ပုဂ္ဂိုလ်ရေး အကြံပြုချက်',
+    lblAdviceToday: 'ဒီနေ့အတွက် အကြံပြုချက်',
+    lblAdvicePermNote: '🔔 အကြံ: သတိပေးချက် ခွင့်ပြုထားရင် ဒါတွေကို နောက်ခံမှာ သတိပေးနိုင်ပါတယ်။',
+    lblAdviceWhy: 'ဘာကြောင့် သင့်နဲ့ ကိုက်ညီလဲ',
+    btnRemindMe: '🔔 သတိပေးပါ',
+    msgRemindOn: 'ဟုတ်ကဲ့ — ဒါနဲ့ ပတ်သက်ပြီး သတိပေးပါမယ် 💗',
+    lblDoctorFlags: '🚩 ဆရာဝန်နဲ့ ပြသင့်တဲ့အခါ',
+    lblAdviceDisclaimer: 'Aura က ယေဘုယျ ကျန်းမာရေး အသိပေးချက်သာ မျှဝေတာပါ — ဆေးပညာ အကြံဉာဏ် ဒါမှမဟုတ် ရောဂါရှာဖွေမှု မဟုတ်ပါ။ စိုးရိမ်စရာရှိရင် ဆရာဝန်နဲ့ ပြသပါ။',
+    reasonPhase: (d, phase) => `ရက်မြောက် ${d} · ${phase}`,
+    reasonSymptom: (sym, n) => `"${sym}" ကို ${n} ရက်အလိုက မှတ်ထားတယ်`,
+    reasonMood: 'မကြာသေးခင်က စိတ်အခြေအနေတွေအရ',
+    doctorFlags: [
+      'နာရီတိုင်း pad လဲရလောက်အောင် နာရီပေါင်းများစွာ သွေးဆင်းများတာ',
+      'အပူကပ်တာ၊ အနားယူတာ၊ ပုံမှန်ဆေးတွေနဲ့မှ မသက်သာတဲ့ ပြင်းထန်တဲ့ ကိုက်ခဲမှု',
+      '၂၁ ရက်ထက် စောတာ၊ ၃၅ ရက်ထက် နောက်ကျတာ၊ ဒါမှမဟုတ် လအတော်ကြာ မလာတာ',
+      'ရာသီမလာတဲ့ ကြားကာလမှာ သွေးဆင်းတာ',
+      'ရာသီလာနေတုန်း ဖျားတာ၊ မူးတာ၊ သတိလစ်တာ',
+      'ရာသီမလာချိန်မှာ တင်ပါးဆုံတွင်း နာတာ'
+    ],
+    phaseAdvice: {
+      menstrual: {
+        title: '🩸 ရာသီလာရက်များ — အနားယူပါ၊ နွေးနွေးထွေးထွေး နေပါ',
+        body: 'ဒီအချိန်မှာ အပူက အကောင်းဆုံး မိတ်ဆွေပါ — ဗိုက်အောက်ပိုင်းမှာ ရေနွေးအိတ် ၁၅–၂၀ မိနစ် ကပ်တာဟာ အကိုက်အခဲပျောက်ဆေးနီးပါး ထိရောက်တယ်လို့ လေ့လာမှုတွေက ဆိုပါတယ်။ ရေနွေးနွေး မကြာခဏသောက်ပါ၊ သွေးဆင်းများရင် ပဲ၊ ဟင်းနုနွယ်၊ အသား စတဲ့ သံဓာတ်ပါတဲ့ အစားအစာတွေ စားပါ။ ၁၀–၂၀ မိနစ် ပေါ့ပေါ့ပါးပါး လမ်းလျှောက်တာက ကိုက်ခဲတာ သက်သာစေနိုင်ပါတယ်။ အကိုက်အခဲပျောက်ဆေး သောက်မယ်ဆိုရင် ကိုက်ခဲစကတည်းက စောစောသောက်တာ အထိရောက်ဆုံးပါ။ ကဖင်းနဲ့ အရက်ကို လျှော့ပါ။'
+      },
+      follicular: {
+        title: '🌱 Follicular အဆင့် — အားပြန်ဖြည့်ပြီး လှုပ်ရှားပါ',
+        body: 'အီစထရိုဂျင် တက်လာပြီ၊ အားအင်လည်း ပြန်လာပါပြီ — လေ့ကျင့်ခန်း လုပ်ဖို့ အကောင်းဆုံး အချိန်ပါ။ တစ်ပတ် ၃ ကြိမ်၊ ၄၅–၆၀ မိနစ် လေ့ကျင့်ခန်းက ရာသီနာကျင်မှုကို သိသိသာသာ လျှော့ချပေးတယ်လို့ သုတေသနတွေက ဆိုပါတယ်။ ဆုံးရှုံးသွားတဲ့ သံဓာတ်နဲ့ ပရိုတင်းကို အစားအစာနဲ့ ပြန်ဖြည့်ပါ၊ ရေများများ သောက်ပါ။'
+      },
+      fertile: {
+        title: '🌟 မျိုးဥထွက်နိုင်တဲ့ ရက်များ — အားအင်အပြည့်ဝ',
+        body: 'ခန္ဓာကိုယ်က အကောင်းဆုံး အခြေအနေမှာ ရှိပါတယ် — လေ့ကျင့်ခန်း၊ အလုပ်တွေ လုပ်ဖို့ အကောင်းဆုံးရက်တွေပါ။ အဖြူဆင်းများတာ သတိထားမိနိုင်ပါတယ်၊ ပုံမှန်ပါပဲ။ ကိုယ်ဝန်မလိုချင်ရင် ဒီရက်တွေမှာ သတိထားပါ။ ရေဓာတ်ပြည့်အောင် နေပြီး အိပ်ချိန်မှန်အောင် ဂရုစိုက်ပါ။'
+      },
+      ovulation: {
+        title: '⭐ မျိုးဥထွက်တဲ့နေ့',
+        body: 'ဗိုက်တစ်ဖက်မှာ နည်းနည်း စူးခနဲ ခံစားရတာ ပုံမှန်ပါပဲ၊ စိုးရိမ်စရာ မရှိပါ။ အားအင်ကောင်းနေတဲ့ အချိန်မို့ အသုံးချပါ။ ရေဘူး အနားမှာ ထားပြီး အစာမရှောင်ပါနဲ့ — သွေးတွင်းသကြားဓာတ် ကျတာ ဟော်မုန်းပြောင်းချိန်မှာ ပိုခံစားရပါတယ်။'
+      },
+      luteal: {
+        title: '🌙 Luteal အဆင့် — တည်ငြိမ်အောင် ဂရုစိုက်ပါ',
+        body: 'PMS အချိန်ပါ — အစားချဉ်ချင်းတပ်တာ၊ ဗိုက်ကယ်တာ၊ စိတ်ကျတာ အားလုံး ဟော်မုန်းကြောင့်ပါ။ ဆား၊ သကြား၊ ကဖင်းကို လျှော့ပါ — ဒါတွေက လက္ခဏာတွေ ပိုဆိုးစေတယ်လို့ လေ့လာမှုတွေက ဆိုပါတယ်။ အိပ်ချိန်မှန်အောင် ဂရုစိုက်ပါ၊ မနက်ပိုင်း နေရောင်ထိပါ။ အခွံမာသီး၊ ငှက်ပျောသီး၊ ချောကလက်ခါး စတဲ့ မဂ္ဂနီဆီယမ်ပါတဲ့ အစားအစာတွေ အဆင်ပြေပါတယ်။ စိတ်ဓာတ်ကျတာ ရာသီပြီးတဲ့အထိ ကြာနေရင် ယုံကြည်ရသူ ဒါမှမဟုတ် ဆရာဝန်နဲ့ တိုင်ပင်ပါ။'
+      }
+    },
+    nudges: {
+      'warm-water': {
+        title: '💧 ဒီနေ့ ရေနွေးသောက်ပြီးပြီလား?',
+        body: 'ရေနွေးနွေးက ကိုက်ခဲတာနဲ့ ဗိုက်ကယ်တာ သက်သာစေပါတယ်။ ရေနွေးအိုးတည်လိုက်ပါ 💗'
+      },
+      'heat-pad': {
+        title: '🔥 ရေနွေးအိတ် ကပ်ရအောင်?',
+        body: 'ဗိုက်အောက်ပိုင်းမှာ ၁၅–၂၀ မိနစ် ကပ်တာ ကိုက်ခဲတာ သက်သာစေပါတယ်။'
+      },
+      'iron-foods': {
+        title: '🥬 သံဓာတ် ပြန်ဖြည့်ရအောင်',
+        body: 'သွေးဆင်းများရင် သံဓာတ်ကုန်ပါတယ်။ ဒီနေ့ ပဲ၊ ဟင်းနုနွယ်၊ အသား ဒါမှမဟုတ် ကြက်ဥ စားပါ။'
+      },
+      'gentle-move': {
+        title: '🚶 ၁၀ မိနစ် လမ်းလျှောက်ရအောင်?',
+        body: 'ပေါ့ပေါ့ပါးပါး လမ်းလျှောက်တာ သွေးလည်ပတ်မှုကောင်းပြီး ဗိုက်ကယ်တာ သက်သာစေပါတယ်။'
+      },
+      'sleep-well': {
+        title: '😴 ဒီည စောစောအနားယူပါ',
+        body: 'အိပ်ရေးမဝရင် နာကျင်မှု ပိုခံစားရပါတယ်။ အိပ်ချိန်မှန်၊ မီးမှိန်၊ ဖုန်းဝေး။'
+      },
+      'hydrate': {
+        title: '💧 အရင် ရေသောက်',
+        body: 'ခေါင်းကိုက်နေလား? အရင်ဆုံး ရေတစ်ခွက် အပြည့်သောက်ကြည့်ပါ။'
+      }
+    },
     lblDataHeading: '💾 ဒေတာ',
     btnSave: 'သိမ်းမည်',
 
@@ -167,7 +245,6 @@ const i18n = {
     lblCycleLength: 'Cycle (days)',
     lblPeriodLength: 'Period (days)',
     lblLutealLength: 'Luteal (days)',
-    lblNotifyHeading: '🔔 Period Alarm',
     lblNotifyEnable: 'Notify when period is near',
     lblNotifyDays: 'Days in advance',
     lblBotEnable: '🤖 Show cute helper bot',
@@ -198,6 +275,85 @@ const i18n = {
     installEnableNotif: '🔔 Enable notifications',
     installGotIt: 'Got it ✓',
     installDone: 'All set! Open it from your home screen 📲',
+    navAdvice: 'Advice',
+    lblNotifHeading: '🔔 Notifications',
+    lblBotHeading: '🤖 Helper bot',
+    btnAskNotif: 'Ask permission',
+    notifGranted: 'Allowed ✓',
+    notifDenied: 'Blocked',
+    notifDefault: 'Not asked yet',
+    notifUnsupported: 'Not supported here',
+    notifDeniedHint: 'Permission was blocked. Enable notifications for this site in your browser settings to get reminders.',
+    lblWellnessNudges: '💧 Wellness nudges',
+    lblWellnessNudgesSub: 'Gentle contextual reminders — warm water, rest, movement — based on your cycle and symptoms.',
+    lblAdvicePageTitle: '🤖 Ask Aura',
+    lblAdvicePageSub: 'Personal guidance, read from your own history',
+    lblAdviceToday: "Today's guidance",
+    lblAdvicePermNote: '🔔 Tip: allow notifications and I can nudge you about these in the background.',
+    lblAdviceWhy: 'Why this fits you',
+    btnRemindMe: '🔔 Remind me',
+    msgRemindOn: "On it — I'll nudge you about this 💗",
+    lblDoctorFlags: '🚩 When to see a doctor',
+    lblAdviceDisclaimer: 'Aura shares general wellness information, not medical advice or diagnosis. If anything worries you, please see a clinician — that is always the right call.',
+    reasonPhase: (d, phase) => `Day ${d} · ${phase}`,
+    reasonSymptom: (sym, n) => `"${sym}" logged ${n} day${n === 1 ? '' : 's'} ago`,
+    reasonMood: 'From your recent moods',
+    doctorFlags: [
+      'Soaking through a pad or tampon every hour for several hours in a row',
+      'Severe cramps that do not ease with heat, rest, or your usual pain relief',
+      'Periods coming more often than every 21 days, less often than every 35 days, or stopping for months',
+      'Bleeding between periods',
+      'Fever, dizziness, or fainting with your period',
+      'Pelvic pain outside your period'
+    ],
+    phaseAdvice: {
+      menstrual: {
+        title: '🩸 Period days — rest, warmth, iron',
+        body: 'Heat is your best friend right now — studies found a heating pad on the lower belly for 15–20 minutes works about as well as ibuprofen for cramps. Sip warm fluids through the day, and favor iron-rich foods (lentils, spinach, meat, eggs) if your flow is heavy. A gentle 10–20 minute walk can ease cramping, but rest whenever your body asks. If you use painkillers, they work best taken early, at the first sign of cramps. Go easy on caffeine and alcohol.'
+      },
+      follicular: {
+        title: '🌱 Follicular phase — rebuild and move',
+        body: 'Estrogen is rising and energy usually follows — the best window for stronger workouts. Research links 45–60 minutes of exercise, 3+ times a week, with noticeably less period pain over time. Replenish what your period took: protein and iron-rich meals, plenty of water.'
+      },
+      fertile: {
+        title: '🌟 Fertile window — peak energy',
+        body: "You're likely at your physical peak — great days for exercise and getting things done. You may notice more cervical fluid; that's normal. If pregnancy is not planned, this is the window to be careful. Stay hydrated and keep sleep regular as hormones shift."
+      },
+      ovulation: {
+        title: '⭐ Ovulation day',
+        body: 'A mild one-sided twinge today (mittelschmerz) is common and harmless. Energy is high — use it. Keep water nearby and don\'t skip meals; blood sugar dips hit harder around hormonal shifts.'
+      },
+      luteal: {
+        title: '🌙 Luteal phase — steady and soothe',
+        body: 'PMS territory: cravings, bloating, mood dips are hormonal, not personal failings. Cut back on salt, sugar, and caffeine — studies tie them to worse symptoms. Prioritize sleep (same bedtime helps more than you\'d think), get morning daylight, and keep movement gentle. Magnesium-rich foods (nuts, bananas, dark chocolate) are a sensible comfort. If low mood lingers beyond your period, talk to someone you trust — or a clinician.'
+      }
+    },
+    nudges: {
+      'warm-water': {
+        title: '💧 Did you drink warm water today?',
+        body: 'Warm fluids can ease cramps and bloating. Put the kettle on — your belly will thank you.'
+      },
+      'heat-pad': {
+        title: '🔥 Heating pad time?',
+        body: '15–20 minutes on your lower belly works about as well as ibuprofen for cramps, per studies.'
+      },
+      'iron-foods': {
+        title: '🥬 Iron check',
+        body: 'Heavy flow drains iron. Lentils, spinach, red meat, or eggs today will help you bounce back.'
+      },
+      'gentle-move': {
+        title: '🚶 10-minute walk?',
+        body: 'Gentle movement gets blood flowing and can ease bloating and cramps. No marathon needed.'
+      },
+      'sleep-well': {
+        title: '😴 Wind down early tonight',
+        body: "Poor sleep turns up pain sensitivity. Same bedtime, dim lights, phone away."
+      },
+      'hydrate': {
+        title: '💧 Water first',
+        body: 'Headache knocking? Drink a full glass of water before anything else.'
+      }
+    },
     lblDataHeading: '💾 Data',
     btnSave: 'Save',
 
