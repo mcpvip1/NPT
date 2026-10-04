@@ -502,6 +502,22 @@
     </div>
   </div>
 
+  <!-- Install nudge: shown once, so reminders can work in the background -->
+  <div id="install-nudge" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="install-nudge-title">
+    <div class="modal-box install-box">
+      <div class="install-bot"><span class="bot-slot" data-big aria-hidden="true"></span></div>
+      <h2 id="install-nudge-title" data-lbl="installTitle">📲 Home Screen မှာ ထည့်သွင်းပါ</h2>
+      <p class="sub-text" data-lbl="installWhy"></p>
+      <ol class="install-steps">
+        <li data-lbl="installStep1"></li>
+        <li data-lbl="installStep2"></li>
+        <li data-lbl="installStep3"></li>
+      </ol>
+      <button id="install-notif-btn" class="btn primary full" data-lbl="installEnableNotif"></button>
+      <button id="install-gotit" class="btn ghost full install-gotit" data-lbl="installGotIt"></button>
+    </div>
+  </div>
+
   <div id="toasts" class="toasts" aria-live="polite" role="status"></div>
 
   <script src="js/utils.js"></script>
