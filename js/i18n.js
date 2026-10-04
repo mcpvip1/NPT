@@ -64,13 +64,31 @@ const i18n = {
     btnAdvice: '💡 အကြံဉာဏ်ရယူမယ်',
     lblAdviceJustLogged: 'ခုနက မှတ်တမ်းတင်ထားတာအပေါ် အခြေခံပြီး',
     btnLogToday: '＋ ယနေ့ မှတ်တမ်းတင်မယ်',
+    phasePopup: {
+      period: {
+        desc: 'ရာသီလာမယ့်ရက်က {range} ဖြစ်ပြီး {n} ရက်ခန့်ကြာမှာပါ။ သွေးစဆင်းတဲ့ရက်ဟာ စက်ဝန်းအသစ်ရဲ့ ပထမဆုံးရက်ဖြစ်ပါတယ်။',
+        tips: ['ဗိုက်နာရင် ရေနွေးအိတ်ကပ်ပြီး အနားယူပါ', 'ဟင်းနုနွယ်၊ ပဲ၊ အသားနီတို့လို သံဓာတ်ကြွယ်ဝတဲ့ အစားအစာစားပါ', 'ခန့်မှန်းချက်တိကျဖို့ သွေးဆင်းမှုကို နေ့တိုင်းမှတ်တမ်းတင်ပါ']
+      },
+      fertile: {
+        desc: 'မျိုးဥထွက်ချိန်က {range} ({n} ရက်) ဖြစ်ပါတယ်။ ဒီရက်တွေအတွင်း ကိုယ်ဝန်ရနိုင်ခြေရှိပါတယ်။',
+        tips: ['မျိုးဥထွက်ရက်ဟာ ဒီကာလရဲ့ နောက်ဆုံးရက်တွေမှာ အဖြစ်များပါတယ်', 'အရည်ကြည်ပြီး ဆွဲဆန့်နိုင်ရင် အထွတ်အထိပ်ရောက်နေပါပြီ', 'လက္ခဏာတွေ မှတ်တမ်းတင်ထားရင် ခန့်မှန်းချက်ပိုတိကျလာမှာပါ']
+      },
+      ovulation: {
+        desc: 'မျိုးဥထွက်ရက် — ကိုယ်ဝန်ရနိုင်ခြေအများဆုံးရက် — က {date} လို့ ခန့်မှန်းထားပါတယ်။ ရင့်ကျက်တဲ့မျိုးဥ ထွက်လာပြီး ၁၂–၂၄ နာရီအတွင်း မျိုးအောင်နိုင်ပါတယ်။',
+        tips: ['တချို့က ဝမ်းဗိုက်တစ်ဖက်မှာ နည်းနည်းနာတာကို ခံစားရတတ်ပါတယ်', 'မျိုးဥထွက်ပြီးနောက် ကိုယ်အပူချိန် နည်းနည်းတက်လာတတ်ပါတယ်', 'ဒီရက်ဟာ မျိုးဥထွက်ချိန်ရဲ့ အထွတ်အထိပ်ရက်ဖြစ်ပါတယ်']
+      },
+      next: {
+        desc: 'နောက်ရာသီလာမယ့်ရက်က {date} ({left}) လို့ ခန့်မှန်းထားပါတယ်။ စက်ဝန်းတွေ များများမှတ်တမ်းတင်လေ ခန့်မှန်းချက်တိကျလေဖြစ်မှာပါ။',
+        tips: ['ရာသီမလာခင် ရက်အနည်းငယ်မှာ PMS လက္ခဏာတွေ ပေါ်တတ်ပါတယ်', 'တစ်ရက် နှစ်ရက်အလိုကတည်းက လိုအပ်တာတွေ အဆင်သင့်ပြင်ထားပါ', 'တကယ်စလာတဲ့ရက်ကို မှတ်တမ်းတင်ရင် ခန့်မှန်းချက်အလိုအလျောက် ပြင်ပေးမှာပါ']
+      }
+    },
     lblAdvicePageSub: 'သင့်မှတ်တမ်းကို ဖတ်ပြီး ပေးတဲ့ ပုဂ္ဂိုလ်ရေး အကြံပြုချက်',
     lblAdviceToday: 'ဒီနေ့အတွက် အကြံပြုချက်',
     lblAdvicePermNote: '🔔 အကြံ: သတိပေးချက် ခွင့်ပြုထားရင် ဒါတွေကို နောက်ခံမှာ သတိပေးနိုင်ပါတယ်။',
     lblAdviceWhy: 'ဘာကြောင့် သင့်နဲ့ ကိုက်ညီလဲ',
     btnRemindMe: '🔔 သတိပေးပါ',
     msgRemindOn: 'ဟုတ်ကဲ့ — ဒါနဲ့ ပတ်သက်ပြီး သတိပေးပါမယ် 💗',
-    lblDoctorFlags: '🚩 ဆရာဝန်နဲ့ ပြသင့်တဲ့အခါ',
+    lblDoctorFlags: '🚩 ဒီလိုတွေခံစားနေရပါက ဆရာဝန်နဲ့ ဆွေးနွေးတိုင်ပင်ပါ',
     lblAdviceDisclaimer: 'Aura က ယေဘုယျ ကျန်းမာရေး အသိပေးချက်သာ မျှဝေတာပါ — ဆေးပညာ အကြံဉာဏ် ဒါမှမဟုတ် ရောဂါရှာဖွေမှု မဟုတ်ပါ။ စိုးရိမ်စရာရှိရင် ဆရာဝန်နဲ့ ပြသပါ။',
     reasonPhase: (d, phase) => `ရက်မြောက် ${d} · ${phase}`,
     reasonSymptom: (sym, n) => `"${sym}" ကို ${n} ရက်အလိုက မှတ်ထားတယ်`,
@@ -297,6 +315,24 @@ const i18n = {
     btnAdvice: '💡 Give me advice',
     lblAdviceJustLogged: 'Based on what you just logged',
     btnLogToday: '＋ Log today',
+    phasePopup: {
+      period: {
+        desc: 'Your period is expected {range} — about {n} days. The first day of bleeding is day 1 of your cycle.',
+        tips: ['Rest and use a heat pad when cramps hit', 'Eat iron-rich foods like spinach, beans and red meat', 'Log your flow daily to keep predictions sharp']
+      },
+      fertile: {
+        desc: 'Your fertile window runs {range} ({n} days). These are the days pregnancy is possible.',
+        tips: ['Ovulation most often happens near the end of this window', 'Clear, stretchy mucus means peak fertility', 'Logging symptoms makes future predictions more accurate']
+      },
+      ovulation: {
+        desc: 'Ovulation day — your most fertile day — is predicted on {date}. A mature egg is released and can be fertilized for 12–24 hours.',
+        tips: ['Some feel a light twinge on one side (mittelschmerz)', 'A small temperature rise usually follows ovulation', 'This is the peak day of your fertile window']
+      },
+      next: {
+        desc: 'Your next period is predicted on {date} ({left}). The more cycles you log, the more accurate predictions become.',
+        tips: ['PMS symptoms often show up a few days before', 'Keep supplies ready a day or two early', 'Logging the real start date auto-corrects the forecast']
+      }
+    },
     lblAdvicePageSub: 'Personal guidance, read from your own history',
     lblAdviceToday: "Today's guidance",
     lblAdvicePermNote: '🔔 Tip: allow notifications and I can nudge you about these in the background.',
