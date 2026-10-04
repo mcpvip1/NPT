@@ -63,6 +63,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: clip; /* never let a stray element widen the page on phones */
 }
 
 button { font-family: inherit; cursor: pointer; }
@@ -161,32 +162,6 @@ input, select, textarea { font-family: inherit; }
 .header-greet { font-size: .8rem; font-weight: 600; color: var(--primary-dark); opacity: .9; }
 .header-title { font-size: 1.7rem; font-weight: 800; margin-top: 2px; line-height: 1.15; color: var(--text); letter-spacing: -.01em; }
 .header-actions { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
-.header-tools {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  flex-wrap: wrap;
-}
-.header-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 8px 14px; border-radius: 999px;
-  border: 1px solid rgba(190,24,93,.18);
-  background: rgba(255,255,255,.72); color: var(--primary-dark);
-  font-size: .72rem; font-weight: 800;
-  box-shadow: 0 6px 16px -8px rgba(190,24,93,.25);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-}
-[data-theme="dark"] .header-pill { background: rgba(255,255,255,.07); border-color: var(--line); }
-.header-pill:active { transform: scale(.95); }
-.header-pill .update-ico { display: inline-block; font-size: .9rem; line-height: 1; }
-.header-pill.spinning .update-ico { animation: spin-once .7s ease; }
-.header-icon {
-  width: 34px; height: 34px; border-radius: 50%;
-  border: 1px solid rgba(190,24,93,.18); background: rgba(255,255,255,.72); color: var(--primary-dark);
-  font-size: .95rem; display: grid; place-items: center;
-  box-shadow: 0 6px 16px -8px rgba(190,24,93,.25);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-}
-[data-theme="dark"] .header-icon { background: rgba(255,255,255,.07); border-color: var(--line); }
-.header-icon:active { transform: scale(.94); }
 .header-select {
   padding: 7px 6px; border-radius: 10px;
   border: 1px solid rgba(255,255,255,.65); background: rgba(255,255,255,.55); color: var(--primary-dark);
@@ -1452,30 +1427,39 @@ textarea { resize: vertical; }
 .phase-top .ic3d { width: 34px; height: 34px; }
 
 /* ---------- header tools: theme / language / update ---------- */
-.app-header { display: flex; flex-wrap: wrap; align-items: center; }
-.header-text { flex: 1 1 auto; min-width: 0; }
 .header-tools {
-  flex: 1 1 100%; display: flex; align-items: center; justify-content: flex-end;
-  gap: 8px; margin-top: 10px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; flex-wrap: wrap; max-width: 100%;
 }
 .htool {
   display: inline-flex; align-items: center; gap: 6px;
-  height: 32px; padding: 0 10px; border: 0; border-radius: 999px;
-  background: rgba(255,255,255,.22); color: #fff;
-  font-size: .8rem; font-weight: 700; cursor: pointer;
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  height: 34px; padding: 0 12px; border-radius: 999px;
+  border: 1px solid rgba(190,24,93,.18);
+  background: rgba(255,255,255,.72); color: var(--primary-dark);
+  font-size: .74rem; font-weight: 800; font-family: inherit; cursor: pointer;
+  box-shadow: 0 6px 16px -8px rgba(190,24,93,.25);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
+[data-theme="dark"] .htool { background: rgba(255,255,255,.07); border-color: var(--line); }
 .htool .ic3d { width: 20px; height: 20px; }
 .htool:active { transform: scale(.94); }
 .htool-seg {
-  display: inline-flex; background: rgba(255,255,255,.22); border-radius: 999px; padding: 3px;
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: inline-flex; align-items: center; gap: 2px;
+  height: 34px; padding: 3px; border-radius: 999px;
+  border: 1px solid rgba(190,24,93,.18);
+  background: rgba(255,255,255,.72);
+  box-shadow: 0 6px 16px -8px rgba(190,24,93,.25);
 }
+[data-theme="dark"] .htool-seg { background: rgba(255,255,255,.07); border-color: var(--line); }
 .htool-seg button {
-  border: 0; background: transparent; color: #fff; font-size: .75rem; font-weight: 700;
-  padding: 4px 10px; border-radius: 999px; cursor: pointer; opacity: .75;
+  border: 0; background: transparent; color: var(--muted);
+  font-size: .74rem; font-weight: 800; font-family: inherit;
+  padding: 6px 12px; border-radius: 999px; cursor: pointer;
 }
-.htool-seg button.active { background: #fff; color: var(--primary-deep, #4c1d95); opacity: 1; }
+.htool-seg button.active {
+  background: var(--cta-grad); color: #fff;
+  box-shadow: 0 4px 10px -4px rgba(219,39,119,.5);
+}
 .htool.spinning .ic3d { animation: spin 1s linear infinite; }
 
 /* ---------- recommendations (Advice) — clean grouped cards ---------- */
