@@ -409,8 +409,31 @@ input, select, textarea { font-family: inherit; }
 .ring-prog {
   fill: none; stroke: url(#insRingGrad); stroke-width: 13; stroke-linecap: round;
   transform: rotate(-90deg); transform-origin: center;
-  filter: drop-shadow(0 4px 10px rgba(225,29,72,.35));
-  transition: stroke-dasharray .8s ease;
+  filter: drop-shadow(0 0 14px rgba(236,72,153,.55)) drop-shadow(0 4px 10px rgba(225,29,72,.3));
+  transition: stroke-dasharray .9s cubic-bezier(.22,.9,.3,1);
+}
+/* premium touches: breathing glow behind the ring + a slow orbit dash */
+.ins-hero { isolation: isolate; }
+.ins-hero::before {
+  content: ""; position: absolute; z-index: -1;
+  width: 280px; height: 280px; left: 50%; top: 44%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(244,114,182,.38), rgba(244,114,182,0) 65%);
+  filter: blur(6px); pointer-events: none;
+  animation: glowPulse 3.4s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: .55; transform: translate(-50%,-50%) scale(1); }
+  50% { opacity: .95; transform: translate(-50%,-50%) scale(1.1); }
+}
+.ring-wrap::after {
+  content: ""; position: absolute; inset: -16px; border-radius: 50%;
+  border: 2px dashed rgba(244,114,182,.4);
+  animation: spinSlow 26s linear infinite; pointer-events: none;
+}
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .ins-hero::before, .ring-wrap::after { animation: none; }
 }
 .ring-center {
   position: absolute; inset: 0;
@@ -1236,19 +1259,10 @@ textarea { resize: vertical; }
 /* =============================
    REFERENCE-STYLE HOME COMPONENTS
    ============================= */
-/* home hero — the ring floats on the gradient, like the reference */
-.home-hero {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 6px 0 2px; margin-top: -4px;
-}
-.home-ring { width: 210px; height: 210px; }
-.home-ring .ring-track { stroke: rgba(255,255,255,.8); }
-[data-theme="dark"] .home-ring .ring-track { stroke: rgba(255,255,255,.14); }
-.ring-prog.home-ring-prog { stroke: url(#hmRingGrad); }
-.home-hero .ring-day { font-size: 3rem; color: var(--text); }
-.home-hero .ring-lbl { color: var(--primary-dark); font-weight: 700; }
+/* status pill under the home calendar */
 .hero-status {
-  margin-top: 10px; font-size: .92rem; font-weight: 700; color: var(--text);
+  align-self: center;
+  margin-top: 2px; font-size: .92rem; font-weight: 700; color: var(--text);
   background: rgba(255,255,255,.55);
   border: 1px solid rgba(255,255,255,.65);
   padding: 8px 18px; border-radius: 999px;
@@ -1256,6 +1270,28 @@ textarea { resize: vertical; }
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
 [data-theme="dark"] .hero-status { background: rgba(255,255,255,.06); border-color: var(--line); }
+
+/* ---------- screen transitions: every tab glides in with a soft stagger ---------- */
+.page.active { animation: pageIn .38s cubic-bezier(.22,.9,.3,1); }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.page.active > * { animation: childIn .5s cubic-bezier(.22,.9,.3,1) backwards; }
+.page.active > *:nth-child(2) { animation-delay: .05s; }
+.page.active > *:nth-child(3) { animation-delay: .1s; }
+.page.active > *:nth-child(4) { animation-delay: .15s; }
+.page.active > *:nth-child(5) { animation-delay: .2s; }
+.page.active > *:nth-child(6) { animation-delay: .25s; }
+.page.active > *:nth-child(7) { animation-delay: .3s; }
+.page.active > *:nth-child(n+8) { animation-delay: .35s; }
+@keyframes childIn {
+  from { opacity: 0; transform: translateY(20px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page.active, .page.active > * { animation: none; }
+}
 
 /* stat tiles: quick-card style grid (icon tile, label, value) */
 .stats-grid {
