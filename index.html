@@ -39,45 +39,23 @@
 
       <nav class="side-nav">
         <button class="side-link active" data-tab="tab-home">
-          <svg viewBox="0 0 24 24">
-            <path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9.5z" />
-          </svg>
+          <span class="nav-ico"><span data-icon="home"></span></span>
           <span data-lbl="navHome">Home</span>
         </button>
         <button class="side-link" data-tab="tab-advice">
-          <svg viewBox="0 0 24 24">
-            <path d="M21 11.5a8.5 8.5 0 01-8.5 8.5c-1.5 0-3-.4-4.2-1L3 20l1.1-4.3A8.5 8.5 0 1121 11.5z" />
-            <circle cx="9" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
-            <circle cx="13" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
-            <circle cx="17" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
-          </svg>
+          <span class="nav-ico"><span data-icon="advice"></span></span>
           <span data-lbl="navAdvice">Advice</span>
         </button>
         <button class="side-link" data-tab="tab-insights">
-          <svg viewBox="0 0 24 24">
-            <line x1="6" y1="20" x2="6" y2="12" />
-            <line x1="12" y1="20" x2="12" y2="6" />
-            <line x1="18" y1="20" x2="18" y2="14" />
-          </svg>
+          <span class="nav-ico"><span data-icon="insights"></span></span>
           <span data-lbl="navInsights">Insights</span>
         </button>
         <button class="side-link" data-tab="tab-history">
-          <svg viewBox="0 0 24 24">
-            <line x1="9" y1="6" x2="20" y2="6" />
-            <line x1="9" y1="12" x2="20" y2="12" />
-            <line x1="9" y1="18" x2="20" y2="18" />
-            <circle cx="4.5" cy="6" r="1.2" />
-            <circle cx="4.5" cy="12" r="1.2" />
-            <circle cx="4.5" cy="18" r="1.2" />
-          </svg>
+          <span class="nav-ico"><span data-icon="history"></span></span>
           <span data-lbl="navHistory">Log</span>
         </button>
         <button class="side-link" data-tab="tab-settings">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="3" />
-            <path
-              d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" />
-          </svg>
+          <span class="nav-ico"><span data-icon="settings"></span></span>
           <span data-lbl="navSettings">Settings</span>
         </button>
       </nav>
@@ -96,23 +74,17 @@
 
       <!-- Blue gradient header (reference-style) -->
       <header class="app-header">
+        <div class="header-blob b1"></div>
+        <div class="header-blob b2"></div>
         <div class="header-text">
           <span class="header-greet" id="header-greet">Good morning,</span>
           <h1 class="header-title" id="header-title">Han!</h1>
         </div>
-        <div class="header-actions">
-          <button id="refresh-app" class="header-pill"><span class="update-ico">↻</span><span data-lbl="btnUpdate">Update</span></button>
-          <button id="theme-toggle" class="header-icon" aria-label="Toggle theme">🌙</button>
-          <select id="lang-select" class="header-select" aria-label="Language">
-            <option value="my">မြန်မာ</option>
-            <option value="en">English</option>
-          </select>
-          <button class="avatar-btn" data-tab="tab-settings" aria-label="Profile">👤</button>
-        </div>
+        <button class="avatar-btn" data-tab="tab-settings" aria-label="Profile"><span data-icon="avatar"></span></button>
       </header>
 
       <div id="alarm-banner" class="alarm hidden">
-        <span>🔔</span><span id="alarm-text"></span>
+        <span data-icon="bell"></span><span id="alarm-text"></span>
       </div>
 
       <main class="content">
@@ -130,29 +102,29 @@
 
           <div class="stats-card">
             <button type="button" class="stat" data-phase="period">
-              <span class="stat-ico">🩸</span>
-              <span class="stat-lbl" data-lbl="lblStatCycleDay">Cycle Day</span>
+              <span class="stat-ico"><span data-icon="period" data-cls="tint-red"></span></span>
+              <span class="stat-lbl" data-lbl="lblHomeCycleDay">Cycle Day</span>
               <span class="stat-val c-period" id="hm-period">—</span>
             </button>
             <button type="button" class="stat" data-phase="fertile">
-              <span class="stat-ico">🌱</span>
+              <span class="stat-ico"><span data-icon="fertile"></span></span>
               <span class="stat-lbl" data-lbl="lblCardFertile">Fertile</span>
               <span class="stat-val c-fertile" id="hm-fertile">—</span>
             </button>
             <button type="button" class="stat" data-phase="ovulation">
-              <span class="stat-ico">⭐</span>
+              <span class="stat-ico"><span data-icon="ovulation"></span></span>
               <span class="stat-lbl" data-lbl="lblCardOvulation">Ovulation</span>
               <span class="stat-val c-ovu" id="hm-ovu">—</span>
             </button>
             <button type="button" class="stat" data-phase="next">
-              <span class="stat-ico">📅</span>
+              <span class="stat-ico"><span data-icon="calendar"></span></span>
               <span class="stat-lbl" data-lbl="lblCardNext">Next Period</span>
               <span class="stat-val c-next" id="hm-next">—</span>
             </button>
           </div>
 
           <button type="button" class="banner-card" data-phase="next">
-            <span class="banner-ico">🩸</span>
+            <span class="banner-ico"><span data-icon="period" data-cls="tint-red"></span></span>
             <span class="banner-text">
               <span class="banner-kicker" data-lbl="lblCardNext">Next Period</span>
               <span class="banner-main" id="banner-date">—</span>
@@ -164,16 +136,16 @@
           <h3 class="sec-title" data-lbl="lblQuickAccess">Quick Access</h3>
           <div class="quick-grid">
             <button type="button" class="quick-card" id="q-log">
-              <span class="quick-ico">📝</span><span data-lbl="qLogToday">Log Today</span>
+              <span class="quick-ico"><span data-icon="log"></span></span><span data-lbl="qLogToday">Log Today</span>
             </button>
             <button type="button" class="quick-card" data-tab="tab-advice">
-              <span class="quick-ico">💡</span><span data-lbl="navAdvice">Advice</span>
+              <span class="quick-ico"><span data-icon="advice"></span></span><span data-lbl="navAdvice">Advice</span>
             </button>
             <button type="button" class="quick-card" data-tab="tab-insights">
-              <span class="quick-ico">📊</span><span data-lbl="navInsights">Insights</span>
+              <span class="quick-ico"><span data-icon="insights"></span></span><span data-lbl="navInsights">Insights</span>
             </button>
             <button type="button" class="quick-card" data-tab="tab-history">
-              <span class="quick-ico">📜</span><span data-lbl="navHistory">Log</span>
+              <span class="quick-ico"><span data-icon="history"></span></span><span data-lbl="navHistory">Log</span>
             </button>
           </div>
 
@@ -313,20 +285,25 @@
 
         <!-- SETTINGS -->
         <section id="tab-settings" class="page">
-          <div class="panel">
-            <h2 class="panel-head" data-lbl="lblSetupTitle">⚙️ Settings</h2>
-
-            <form id="settings-form">
+          <form id="settings-form">
+            <div class="set-card profile-card">
+              <span class="set-avatar"><span data-icon="avatar"></span></span>
               <div class="field">
                 <label for="set-name" data-lbl="lblUserName">Name</label>
                 <input type="text" id="set-name" required>
               </div>
+              <div class="field">
+                <label for="set-bot-name" data-lbl="lblBotName">Bot name</label>
+                <input type="text" id="set-bot-name" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
+              </div>
+            </div>
 
+            <h3 class="set-group-title"><span data-icon="calendar"></span><span data-lbl="lblCycleGroup">Cycle</span></h3>
+            <div class="set-card">
               <div class="field">
                 <label for="set-last" data-lbl="lblLastDate">Last Period Date</label>
                 <input type="date" id="set-last" required>
               </div>
-
               <div class="field-row">
                 <div class="field">
                   <label for="set-cycle" data-lbl="lblCycleLength">Cycle (days)</label>
@@ -337,22 +314,40 @@
                   <input type="number" id="set-period" min="1" max="15" value="5" required>
                 </div>
               </div>
-
               <div class="field">
                 <label for="set-luteal" data-lbl="lblLutealLength">Luteal Phase (days)</label>
                 <input type="number" id="set-luteal" min="8" max="20" value="14" required>
               </div>
+              <button type="submit" class="btn primary full"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
+            </div>
 
-              <hr class="hr">
+            <h3 class="set-group-title"><span data-icon="sun"></span><span data-lbl="lblAppearance">Appearance</span></h3>
+            <div class="set-card">
+              <div class="set-row">
+                <span class="set-row-lbl" data-lbl="lblTheme">Theme</span>
+                <div class="seg" id="theme-seg">
+                  <button type="button" data-theme-val="light" aria-label="Light"><span data-icon="sun"></span></button>
+                  <button type="button" data-theme-val="dark" aria-label="Dark"><span data-icon="moon"></span></button>
+                </div>
+              </div>
+              <div class="set-row">
+                <span class="set-row-lbl" data-lbl="lblLanguage">Language</span>
+                <div class="seg" id="lang-seg">
+                  <button type="button" data-lang-val="my">မြန်မာ</button>
+                  <button type="button" data-lang-val="en">English</button>
+                </div>
+              </div>
+              <button type="button" id="refresh-app" class="btn ghost full"><span data-icon="refresh"></span><span data-lbl="btnUpdate">Update</span></button>
+            </div>
 
-              <h3 class="sec-head" data-lbl="lblNotifHeading">🔔 Notifications</h3>
+            <h3 class="set-group-title"><span data-icon="bell"></span><span data-lbl="lblNotifHeading">Notifications</span></h3>
+            <div class="set-card">
               <div class="notif-status-row">
                 <span class="notif-dot" id="notif-dot"></span>
                 <span class="notif-status-text" id="notif-status-text"></span>
                 <button type="button" id="btn-notif-perm" class="btn ghost small" data-lbl="btnAskNotif">Ask permission</button>
               </div>
               <p class="sub-text tiny hidden" id="notif-denied-hint" data-lbl="notifDeniedHint"></p>
-
               <div class="switch-row">
                 <span data-lbl="lblNotifyEnable">Notify when period is near</span>
                 <label class="switch"><input type="checkbox" id="set-notify"><span class="switch-track"></span></label>
@@ -368,7 +363,7 @@
                 </select>
               </div>
               <div class="switch-row">
-                <span data-lbl="lblRemindLog">📝 Daily log reminder</span>
+                <span data-lbl="lblRemindLog">Daily log reminder</span>
                 <label class="switch"><input type="checkbox" id="set-remind-log"><span class="switch-track"></span></label>
               </div>
               <div class="field">
@@ -376,35 +371,35 @@
                 <input type="time" id="set-remind-time" value="21:00">
               </div>
               <div class="switch-row">
-                <span data-lbl="lblWellnessNudges">💧 Wellness nudges</span>
+                <span data-lbl="lblWellnessNudges">Wellness nudges</span>
                 <label class="switch"><input type="checkbox" id="set-wellness" checked><span class="switch-track"></span></label>
               </div>
               <p class="sub-text tiny" data-lbl="lblWellnessNudgesSub"></p>
+            </div>
 
-              <hr class="hr">
-
-              <h3 class="sec-head" data-lbl="lblBotHeading">🤖 Helper bot</h3>
+            <h3 class="set-group-title"><span data-icon="settings"></span><span data-lbl="lblBotHeading">Helper bot</span></h3>
+            <div class="set-card">
               <div class="switch-row">
-                <span data-lbl="lblBotEnable">🤖 Show cute helper bot</span>
+                <span data-lbl="lblBotEnable">Show cute helper bot</span>
                 <label class="switch"><input type="checkbox" id="set-bot" checked><span class="switch-track"></span></label>
               </div>
-              <div class="field">
-                <label for="set-bot-name" data-lbl="lblBotName">Bot name</label>
-                <input type="text" id="set-bot-name" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
-              </div>
+            </div>
 
-              <hr class="hr">
-
-              <h3 class="sec-head" data-lbl="lblDataHeading">💾 Data</h3>
+            <h3 class="set-group-title"><span data-icon="save"></span><span data-lbl="lblDataHeading">Data</span></h3>
+            <div class="set-card">
               <div class="btn-row">
-                <button type="button" id="btn-export" class="btn ghost">Export</button>
-                <button type="button" id="btn-import" class="btn ghost">Import</button>
-                <button type="button" id="btn-reset" class="btn danger">Reset</button>
+                <button type="button" id="btn-export" class="btn ghost"><span data-icon="export"></span><span data-lbl="btnExport">Export</span></button>
+                <button type="button" id="btn-import" class="btn ghost"><span data-icon="import"></span><span data-lbl="btnImport">Import</span></button>
+                <button type="button" id="btn-reset" class="btn danger"><span data-icon="delete"></span><span data-lbl="btnReset">Reset</span></button>
               </div>
+            </div>
 
-              <button type="submit" class="btn primary full" data-lbl="btnSave">Save</button>
-            </form>
-          </div>
+            <h3 class="set-group-title"><span data-icon="advice"></span><span data-lbl="lblAbout">About</span></h3>
+            <div class="set-card about-card">
+              <p class="about-line"><strong>Aura</strong> · <span data-lbl="lblAppTagline">Cycle Tracker</span></p>
+              <p class="sub-text tiny" data-lbl="lblIconCredit">3D icons by Icons8</p>
+            </div>
+          </form>
         </section>
 
       </main>
@@ -413,38 +408,20 @@
       <!-- Flat bottom tab bar (mobile & tablet) -->
       <nav class="bottom-nav">
         <button class="nav-btn active" data-tab="tab-home">
-          <svg viewBox="0 0 24 24">
-            <path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9.5z" />
-          </svg>
+          <span class="nav-ico"><span data-icon="home"></span></span>
           <span data-lbl="navHome">Home</span>
         </button>
         <button class="nav-btn" data-tab="tab-advice">
-          <svg viewBox="0 0 24 24">
-            <path d="M21 11.5a8.5 8.5 0 01-8.5 8.5c-1.5 0-3-.4-4.2-1L3 20l1.1-4.3A8.5 8.5 0 1121 11.5z" />
-            <circle cx="9" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
-            <circle cx="13" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
-            <circle cx="17" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
-          </svg>
+          <span class="nav-ico"><span data-icon="advice"></span></span>
           <span data-lbl="navAdvice">Advice</span>
         </button>
         <button class="nav-fab" id="nav-log" aria-label="Log today">+</button>
         <button class="nav-btn" data-tab="tab-history">
-          <svg viewBox="0 0 24 24">
-            <line x1="9" y1="6" x2="20" y2="6" />
-            <line x1="9" y1="12" x2="20" y2="12" />
-            <line x1="9" y1="18" x2="20" y2="18" />
-            <circle cx="4.5" cy="6" r="1.2" />
-            <circle cx="4.5" cy="12" r="1.2" />
-            <circle cx="4.5" cy="18" r="1.2" />
-          </svg>
+          <span class="nav-ico"><span data-icon="history"></span></span>
           <span data-lbl="navHistory">Log</span>
         </button>
         <button class="nav-btn" data-tab="tab-settings">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="3" />
-            <path
-              d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" />
-          </svg>
+          <span class="nav-ico"><span data-icon="settings"></span></span>
           <span data-lbl="navSettings">Settings</span>
         </button>
       </nav>
@@ -612,6 +589,7 @@
   <script src="js/bot-img-happy.js"></script>
   <script src="js/bot-img-sad.js"></script>
   <script src="js/bot-img-sleepy.js"></script>
+  <script src="js/icons-3d.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/main.js"></script>
 </body>
