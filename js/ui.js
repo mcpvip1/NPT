@@ -43,9 +43,13 @@ const els = {
   statCycle: $('stat-cycle'),
   statPeriod: $('stat-period'),
   statLeft: $('stat-left'),
+  insRingProg: $('ins-ring-prog'),
+  insRingDay: $('ins-ring-day'),
+  insHeroSub: $('ins-hero-sub'),
   predictions: $('predictions'),
   symChart: $('sym-chart'),
-  flowChart: $('flow-chart'),
+  flowDonut: $('flow-donut'),
+  flowLegend: $('flow-legend'),
   moodChart: $('mood-chart'),
   moodInsight: $('insight-mood'),
   statTotal: $('stat-total'),
@@ -1053,34 +1057,46 @@ function renderHistory() {
 function renderInsights() {
   const T = t();
   const info = cycleInfoFor(today());
+  const C = 2 * Math.PI * 60; // hero ring circumference
 
   if (info) {
     const day = Math.max(1, diffDays(info.start, today()) + 1);
     const left = diffDays(today(), info.nextStart);
+    const cycLen = state.data.cycleLength || 28;
     els.statDay.textContent = day;
-    els.statCycle.textContent = state.data.cycleLength;
+    els.statCycle.textContent = cycLen;
     els.statPeriod.textContent = state.data.periodLength;
     els.statLeft.textContent = left <= 0 ? T.daysLeft(0) : left;
+    // hero ring
+    els.insRingDay.textContent = day;
+    els.insRingProg.style.strokeDasharray = `${Math.min(day / cycLen, 1) * C} ${C}`;
+    els.insHeroSub.textContent = `${T.dayOfCycle(day)} · ${T.daysLeft(Math.max(left, 0))}`;
   } else {
     els.statDay.textContent = '—';
     els.statCycle.textContent = state.data.cycleLength;
     els.statPeriod.textContent = state.data.periodLength;
     els.statLeft.textContent = '—';
+    els.insRingDay.textContent = '—';
+    els.insRingProg.style.strokeDasharray = `0 ${C}`;
+    els.insHeroSub.textContent = '';
   }
 
   els.predictions.innerHTML = '';
   const preds = upcomingPeriods(today(), 3);
   if (!preds.length) {
-    els.predictions.innerHTML = `<li style="border-left-color:var(--faint)">${T.noData}</li>`;
+    els.predictions.innerHTML = `<div class="card pred-card"><div class="sub-text">${T.noData}</div></div>`;
   } else {
-    preds.forEach((p, i) => {
+    preds.forEach(p => {
       const away = diffDays(today(), p);
-      const li = document.createElement('li');
-      li.className = 'c' + (i + 1);
-      li.innerHTML = `
-        <span>${fmtShort(p)}</span>
-        <span class="p-in">${T.predDays(away)}</span>`;
-      els.predictions.appendChild(li);
+      const card = document.createElement('div');
+      card.className = 'card pred-card';
+      card.innerHTML = `
+        <span class="tile t-blue">${icon3d('calendar')}</span>
+        <div class="pred-info">
+          <div class="pred-date">${fmtShort(p)}</div>
+          <div class="pred-in">${T.predDays(away)}</div>
+        </div>`;
+      els.predictions.appendChild(card);
     });
   }
 
@@ -1094,7 +1110,9 @@ function renderInsights() {
     if (e.mood) moodCounts[e.mood] = (moodCounts[e.mood] || 0) + 1;
   }
   drawBars(els.symChart, symCounts, k => T.chips[k] || k);
-  drawBars(els.flowChart, flowCounts, k => T.flows[k] || k);
+  drawDonut(els.flowDonut, els.flowLegend, flowCounts, k => T.flows[k] || k, {
+    spotting: '#cbd5e1', light: '#f9a8d4', medium: '#f472b6', heavy: '#e11d48'
+  });
   const moodOrder = ['great', 'good', 'okay', 'low', 'bad'];
   const orderedMoods = {};
   moodOrder.forEach(k => { if (moodCounts[k]) orderedMoods[k] = moodCounts[k]; });
@@ -1132,6 +1150,37 @@ function drawBars(container, counts, labelFn) {
       <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>`;
     container.appendChild(row);
   }
+}
+
+// premium donut chart: colored ring segments + total in the middle + legend
+function drawDonut(svg, legendEl, counts, labelFn, colorMap) {
+  const T = t();
+  const entries = Object.entries(counts).filter(([, n]) => n > 0)
+    .sort((a, b) => b[1] - a[1]);
+  const total = entries.reduce((s, [, n]) => s + n, 0);
+  if (!total) {
+    svg.innerHTML = '';
+    legendEl.innerHTML = `<div class="sub-text">${T.noData}</div>`;
+    return;
+  }
+  const R = 46, CX = 60, CY = 60, C = 2 * Math.PI * R;
+  let acc = 0;
+  svg.innerHTML = entries.map(([k, n]) => {
+    const len = (n / total) * C;
+    const seg = `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" ` +
+      `stroke="${colorMap[k] || '#cbd5e1'}" stroke-width="20" ` +
+      `stroke-dasharray="${Math.max(len - 2.5, 1).toFixed(1)} ${C.toFixed(1)}" ` +
+      `stroke-dashoffset="${(-acc).toFixed(1)}" stroke-linecap="round" ` +
+      `transform="rotate(-90 ${CX} ${CY})"/>`;
+    acc += len;
+    return seg;
+  }).join('') +
+    `<text x="${CX}" y="${CY - 2}" text-anchor="middle" class="donut-num">${total}</text>` +
+    `<text x="${CX}" y="${CY + 18}" text-anchor="middle" class="donut-lbl">${esc(T.lblStatTotalLogs)}</text>`;
+  legendEl.innerHTML = entries.map(([k, n]) =>
+    `<div class="legend-row"><span class="dot" style="background:${colorMap[k] || '#cbd5e1'}"></span>` +
+    `<span>${esc(labelFn(k))}</span><b>${n}</b></div>`
+  ).join('');
 }
 
 // ---------- log modal ----------
