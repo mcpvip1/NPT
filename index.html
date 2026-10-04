@@ -200,28 +200,20 @@
 
         <!-- INSIGHTS -->
         <section id="tab-insights" class="page">
-          <!-- Hero: cycle progress ring -->
+          <!-- Hero: cycle progress banner -->
           <div class="card ins-hero">
-            <div class="ring-wrap">
-              <svg class="ring" viewBox="0 0 140 140" aria-hidden="true">
-                <defs>
-                  <linearGradient id="insRingGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0" stop-color="#f472b6"/>
-                    <stop offset="1" stop-color="#e11d48"/>
-                  </linearGradient>
-                </defs>
-                <circle cx="70" cy="70" r="60" class="ring-track"/>
-                <circle cx="70" cy="70" r="60" class="ring-prog" id="ins-ring-prog"/>
-              </svg>
-              <div class="ring-center">
-                <div class="ring-day" id="ins-ring-day">&mdash;</div>
-                <div class="ring-lbl" data-lbl="lblRingDay">day</div>
+            <div class="hero-deco" aria-hidden="true"></div>
+            <div class="hero-row">
+              <div>
+                <div class="hero-day"><span id="ins-hero-day">&mdash;</span><span class="hero-daylbl" data-lbl="lblRingDay">ရက်</span></div>
+                <div class="hero-phase" id="ins-phase"></div>
+              </div>
+              <div class="hero-side">
+                <div class="hero-left" id="ins-hero-left">&mdash;</div>
+                <div class="hero-llbl" data-lbl="lblStatDaysLeft">နောက်ရာသီအထိ</div>
               </div>
             </div>
-            <div class="ins-cap">
-              <div class="ins-phase" id="ins-phase"></div>
-              <p class="sub-text ins-sub" id="ins-hero-sub"></p>
-            </div>
+            <div class="hero-bar"><div class="hero-fill" id="ins-hero-fill"></div></div>
           </div>
 
           <!-- Narrative: what this phase means for you -->
