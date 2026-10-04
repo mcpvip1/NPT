@@ -339,11 +339,28 @@ function initHistoryControls() {
 }
 
 function initQuickLog() {
-  // home: detail rows + big CTA open today's log
-  document.querySelectorAll('[data-goto-log]').forEach(b =>
-    b.addEventListener('click', () => openLogModal(toKey(today()))));
+  // home: tapping a detail row explains that phase in a popup card
+  document.querySelectorAll('[data-phase]').forEach(b =>
+    b.addEventListener('click', () => openPhasePopup(b.dataset.phase)));
   const cta = $('cta-log');
   if (cta) cta.addEventListener('click', () => openLogModal(toKey(today())));
+
+  // refresh button: recalculate + re-render home
+  const ref = $('refresh-home');
+  if (ref) ref.addEventListener('click', () => {
+    ref.classList.remove('spin');
+    void ref.offsetWidth;
+    ref.classList.add('spin');
+    renderHero();
+    renderCards();
+    renderCalendar();
+  });
+
+  // phase explainer popup close
+  els.phaseClose.addEventListener('click', closePhasePopup);
+  els.phaseModal.addEventListener('click', e => {
+    if (e.target === els.phaseModal) closePhasePopup();
+  });
 }
 
 function checkLogReminder() {
@@ -450,6 +467,7 @@ function initEscape() {
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if (!els.logModal.classList.contains('hidden')) closeLogModal();
+    else if (!els.phaseModal.classList.contains('hidden')) closePhasePopup();
     else if (!els.importModal.classList.contains('hidden')) closeModal(els.importModal);
     else if (!els.confirmModal.classList.contains('hidden')) closeConfirm(false);
   });

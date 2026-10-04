@@ -101,6 +101,13 @@ const els = {
   logNotes: $('log-notes'),
   logSave: $('log-save'),
   logAdvice: $('log-advice'),
+  phaseModal: $('phase-modal'),
+  phaseIco: $('phase-ico'),
+  phaseTitle: $('phase-title'),
+  phaseDate: $('phase-date'),
+  phaseDesc: $('phase-desc'),
+  phaseTips: $('phase-tips'),
+  phaseClose: $('phase-close'),
   logDelete: $('log-delete'),
   logClose: $('log-close'),
   adviceBox: $('advice-box'),
@@ -736,10 +743,34 @@ function renderHero() {
   els.heroRing.style.strokeDashoffset = RING_C * (1 - pct / 100);
 }
 
+// the four date windows on home — shared by the cards and the popups.
+function cycleWindows() {
+  const info = cycleInfoFor(today());
+  if (!info) return null;
+  let pStart = info.start, pEnd = info.periodEnd;
+  let fStart = info.fertileStart, fEnd = info.fertileEnd;
+  let ovu = info.ovulation;
+  const nxt = info.nextStart;
+  if (today() > info.periodEnd) {
+    pStart = info.nextStart;
+    pEnd = addDays(info.nextStart, state.data.periodLength - 1);
+  }
+  if (today() > info.fertileEnd) {
+    const ni = cycleInfoFor(addDays(info.start, state.data.cycleLength));
+    fStart = ni.fertileStart; fEnd = ni.fertileEnd; ovu = ni.ovulation;
+  }
+  return {
+    pStart, pEnd, fStart, fEnd, ovu, nxt,
+    pDays: state.data.periodLength,
+    fDays: diffDays(fStart, fEnd) + 1,
+    left: diffDays(today(), nxt)
+  };
+}
+
 function renderCards() {
   const T = t();
-  const info = cycleInfoFor(today());
-  if (!info) {
+  const w = cycleWindows();
+  if (!w) {
     els.subPeriod.textContent = '—';
     els.subFertile.textContent = '—';
     els.subOvulation.textContent = '—';
@@ -751,38 +782,54 @@ function renderCards() {
     return;
   }
 
-  let pStart = info.start, pEnd = info.periodEnd;
-  let fStart = info.fertileStart, fEnd = info.fertileEnd;
-  let ovu = info.ovulation;
-  const nxt = info.nextStart;
+  els.subPeriod.textContent = `${w.pDays} ${T.daysUnit}`;
+  els.valPeriod.textContent = `${fmtShort(w.pStart)} – ${fmtShort(w.pEnd)}`;
 
-  if (today() > info.periodEnd) {
-    pStart = info.nextStart;
-    pEnd = addDays(info.nextStart, state.data.periodLength - 1);
-  }
-  if (today() > info.fertileEnd) {
-    const nextInfo = cycleInfoFor(addDays(info.start, state.data.cycleLength));
-    fStart = nextInfo.fertileStart;
-    fEnd = nextInfo.fertileEnd;
-    ovu = nextInfo.ovulation;
-  }
-
-  els.subPeriod.textContent = `${state.data.periodLength} ${T.daysUnit}`;
-  els.valPeriod.textContent = `${fmtShort(pStart)} – ${fmtShort(pEnd)}`;
-
-  const fDays = diffDays(fStart, fEnd) + 1;
-  els.subFertile.textContent = `${fDays} ${T.daysUnit}`;
-  els.valFertile.textContent = `${fmtShort(fStart)} – ${fmtShort(fEnd)}`;
+  els.subFertile.textContent = `${w.fDays} ${T.daysUnit}`;
+  els.valFertile.textContent = `${fmtShort(w.fStart)} – ${fmtShort(w.fEnd)}`;
 
   els.subOvulation.textContent = T.peak;
-  els.valOvulation.textContent = fmtShort(ovu);
+  els.valOvulation.textContent = fmtShort(w.ovu);
 
-  const left = diffDays(today(), nxt);
-  els.subNext.textContent = T.daysLeft(left);
-  els.valNext.textContent = fmtShort(nxt);
+  els.subNext.textContent = T.daysLeft(w.left);
+  els.valNext.textContent = fmtShort(w.nxt);
 
-  checkAlarm(left);
-  celebrateCycleStart(info.start);
+  checkAlarm(w.left);
+  celebrateCycleStart(w.pStart);
+}
+
+// beautiful explainer card for a tapped home row.
+function openPhasePopup(kind) {
+  const T = t();
+  const w = cycleWindows();
+  const P = T.phasePopup && T.phasePopup[kind];
+  if (!w || !P) return;
+  const conf = {
+    period:   { icon: '🩸', cls: 'ico-period',  title: T.lblCardPeriod,
+                date: `${fmtShort(w.pStart)} – ${fmtShort(w.pEnd)}`,
+                desc: P.desc.replace('{range}', `${fmtShort(w.pStart)} – ${fmtShort(w.pEnd)}`).replace('{n}', w.pDays) },
+    fertile:  { icon: '🌱', cls: 'ico-fertile', title: T.lblCardFertile,
+                date: `${fmtShort(w.fStart)} – ${fmtShort(w.fEnd)}`,
+                desc: P.desc.replace('{range}', `${fmtShort(w.fStart)} – ${fmtShort(w.fEnd)}`).replace('{n}', w.fDays) },
+    ovulation:{ icon: '⭐', cls: 'ico-ovu',     title: T.lblCardOvulation,
+                date: fmtShort(w.ovu),
+                desc: P.desc.replace('{date}', fmtShort(w.ovu)) },
+    next:     { icon: '📅', cls: 'ico-next',    title: T.lblCardNext,
+                date: fmtShort(w.nxt),
+                desc: P.desc.replace('{date}', fmtShort(w.nxt)).replace('{left}', T.daysLeft(w.left)) }
+  }[kind];
+  if (!conf) return;
+  els.phaseIco.textContent = conf.icon;
+  els.phaseIco.className = 'row-ico ' + conf.cls;
+  els.phaseTitle.textContent = conf.title;
+  els.phaseDate.textContent = conf.date;
+  els.phaseDesc.textContent = conf.desc;
+  els.phaseTips.innerHTML = (P.tips || []).map(x => `<li>${esc(x)}</li>`).join('');
+  els.phaseModal.classList.remove('hidden');
+}
+
+function closePhasePopup() {
+  els.phaseModal.classList.add('hidden');
 }
 
 function checkAlarm(daysLeft) {
