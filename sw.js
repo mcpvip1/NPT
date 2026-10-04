@@ -2,7 +2,7 @@
 // No build step, no server. Keeps the app shell cached so it opens
 // instantly and still works with flaky connections.
 
-const CACHE = 'aura-v2';
+const CACHE = 'aura-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -16,6 +16,7 @@ const ASSETS = [
   './js/bot-img-sleepy.js',
   './js/icons-3d.js',
   './js/ui.js',
+  './js/recommend.js',
   './js/main.js',
   './manifest.json',
   './bot-icon.svg'
