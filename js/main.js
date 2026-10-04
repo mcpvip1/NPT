@@ -498,8 +498,6 @@ function initQuickLog() {
   // home: tapping a stat, the banner or a quick card explains that phase in a popup
   document.querySelectorAll('[data-phase]').forEach(b =>
     b.addEventListener('click', () => openPhasePopup(b.dataset.phase)));
-  const ql = $('q-log');
-  if (ql) ql.addEventListener('click', () => openLogModal(toKey(today())));
   const hc = $('hm-log-cta');
   if (hc) hc.addEventListener('click', () => openLogModal(toKey(today())));
   const nl = $('nav-log');
