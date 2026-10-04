@@ -345,15 +345,19 @@ function initQuickLog() {
   const cta = $('cta-log');
   if (cta) cta.addEventListener('click', () => openLogModal(toKey(today())));
 
-  // refresh button: recalculate + re-render home
-  const ref = $('refresh-home');
-  if (ref) ref.addEventListener('click', () => {
-    ref.classList.remove('spin');
-    void ref.offsetWidth;
-    ref.classList.add('spin');
-    renderHero();
-    renderCards();
-    renderCalendar();
+  // Update button in the topbar: reload every part of the UI so any
+  // change (settings, logs, language) is reflected everywhere at once.
+  const upd = $('refresh-app');
+  if (upd) upd.addEventListener('click', () => {
+    upd.classList.remove('spinning');
+    void upd.offsetWidth;
+    upd.classList.add('spinning');
+    applyLang();
+    renderAll();
+    renderBotHello();
+    refreshBotSlots();
+    if (document.getElementById('tab-advice').classList.contains('active')) renderAdvicePage();
+    setTimeout(() => upd.classList.remove('spinning'), 750);
   });
 
   // phase explainer popup close
