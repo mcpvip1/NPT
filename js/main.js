@@ -7,11 +7,14 @@ function switchTab(name) {
   document.querySelectorAll('[data-tab]').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === name);
   });
+  currentTab = name;
+  renderHeader();
   if (name === 'tab-advice') renderAdvicePage();
 }
 
 function initTabs() {
-  document.querySelectorAll('.nav-btn, .side-link').forEach(btn => {
+  // one binding for every tab jump: bottom nav, sidebar, quick cards, avatar, links
+  document.querySelectorAll('[data-tab]').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 }
@@ -339,11 +342,13 @@ function initHistoryControls() {
 }
 
 function initQuickLog() {
-  // home: tapping a detail row explains that phase in a popup card
+  // home: tapping a stat, the banner or a quick card explains that phase in a popup
   document.querySelectorAll('[data-phase]').forEach(b =>
     b.addEventListener('click', () => openPhasePopup(b.dataset.phase)));
-  const cta = $('cta-log');
-  if (cta) cta.addEventListener('click', () => openLogModal(toKey(today())));
+  const ql = $('q-log');
+  if (ql) ql.addEventListener('click', () => openLogModal(toKey(today())));
+  const nl = $('nav-log');
+  if (nl) nl.addEventListener('click', () => openLogModal(toKey(today())));
 
   // Update button in the topbar: reload every part of the UI so any
   // change (settings, logs, language) is reflected everywhere at once.

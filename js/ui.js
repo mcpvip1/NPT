@@ -1,8 +1,10 @@
 // Rendering. Reads state, writes DOM. No event listeners.
 
+let currentTab = 'tab-home';
+
 const els = {
-  appTitle: $('app-title'),
-  appSubtitle: $('app-subtitle'),
+  headerGreet: $('header-greet'),
+  headerTitle: $('header-title'),
   sideTitle: $('side-title'),
   sideSubtitle: $('side-subtitle'),
   langSelect: $('lang-select'),
@@ -16,20 +18,16 @@ const els = {
   pill: $('today-pill'),
   pillText: $('pill-text'),
 
-  hero: $('hero'),
-  heroDay: $('hero-day'),
-  heroStatus: $('hero-status'),
-  heroRing: $('hero-ring'),
-  heroPct: $('hero-pct'),
-
-  subPeriod: $('sub-period'),
-  subFertile: $('sub-fertile'),
-  subOvulation: $('sub-ovulation'),
-  subNext: $('sub-next'),
-  valPeriod: $('val-period'),
-  valFertile: $('val-fertile'),
-  valOvulation: $('val-ovulation'),
-  valNext: $('val-next'),
+  hmPeriod: $('hm-period'),
+  hmFertile: $('hm-fertile'),
+  hmOvu: $('hm-ovu'),
+  hmNext: $('hm-next'),
+  bannerDate: $('banner-date'),
+  bannerSub: $('banner-sub'),
+  sumCycle: $('sum-cycle'),
+  sumPeriod: $('sum-period'),
+  sumLogs: $('sum-logs'),
+  cycleBars: $('cycle-bars'),
 
   calTitle: $('cal-title'),
   calDays: $('cal-days'),
@@ -330,11 +328,9 @@ function applyLang() {
     if (T[key] && typeof T[key] !== 'function') el.placeholder = T[key];
   });
 
-  const name = state.data.userName ? state.data.userName + ' ' : 'Aura ';
-  els.appTitle.textContent = name + (state.lang === 'my' ? 'မှတ်တမ်း' : 'Tracker');
   els.sideTitle.textContent = state.data.userName || 'Aura';
   els.sideSubtitle.textContent = T.appSubtitle;
-  els.appSubtitle.textContent = T.appSubtitle;
+  renderHeader();
 
   els.search.placeholder = T.searchPlaceholder;
 
@@ -718,32 +714,21 @@ function renderTodayPill() {
   els.pill.className = 'today-pill p-' + phase;
 }
 
-function renderHero() {
-  const RING_C = 2 * Math.PI * 60; // r=60 in the svg
-  const info = cycleInfoFor(today());
-
-  els.heroRing.style.strokeDasharray = RING_C;
-  if (!info) {
-    els.heroDay.textContent = '\u2013';
-    els.heroPct.textContent = '\u2013';
-    els.heroStatus.textContent = '\u2013';
-    els.heroRing.style.strokeDashoffset = RING_C;
-    return;
+function renderHeader() {
+  const T = t();
+  if (currentTab === 'tab-home') {
+    const h = new Date().getHours();
+    els.headerGreet.textContent = h < 12 ? T.hdGreetMorning : h < 17 ? T.hdGreetAfternoon : T.hdGreetEvening;
+    els.headerGreet.classList.remove('hidden');
+    els.headerTitle.textContent = (state.data.userName || T.hdFallbackName) + '!';
+  } else {
+    els.headerGreet.classList.add('hidden');
+    const keys = { 'tab-advice': 'navAdvice', 'tab-insights': 'navInsights', 'tab-history': 'navHistory', 'tab-settings': 'navSettings' };
+    els.headerTitle.textContent = T[keys[currentTab]] || '';
   }
-
-  const day = Math.max(1, diffDays(info.start, today()) + 1);
-  els.heroDay.textContent = day;
-
-  const phase = phaseFor(today());
-  els.heroStatus.textContent = phaseLabel(phase);
-  els.hero.className = 'hero-card phase-' + phase;
-
-  const pct = Math.min(100, Math.max(0, (day / state.data.cycleLength) * 100));
-  els.heroPct.textContent = Math.round(pct) + '%';
-  els.heroRing.style.strokeDashoffset = RING_C * (1 - pct / 100);
 }
 
-// the four date windows on home — shared by the cards and the popups.
+// the four date windows on home — shared by the stats, banner and popups.
 function cycleWindows() {
   const info = cycleInfoFor(today());
   if (!info) return null;
@@ -767,36 +752,62 @@ function cycleWindows() {
   };
 }
 
-function renderCards() {
+// the four key numbers on home — shared by the stats card, banner and popups.
+function renderStats() {
   const T = t();
   const w = cycleWindows();
-  if (!w) {
-    els.subPeriod.textContent = '—';
-    els.subFertile.textContent = '—';
-    els.subOvulation.textContent = '—';
-    els.subNext.textContent = '—';
-    els.valPeriod.textContent = '—';
-    els.valFertile.textContent = '—';
-    els.valOvulation.textContent = '—';
-    els.valNext.textContent = '—';
+  const info = cycleInfoFor(today());
+  if (!w || !info) {
+    els.hmPeriod.textContent = '\u2013';
+    els.hmFertile.textContent = '\u2013';
+    els.hmOvu.textContent = '\u2013';
+    els.hmNext.textContent = '\u2013';
+    els.bannerDate.textContent = '\u2013';
+    els.bannerSub.textContent = '';
     return;
   }
+  const day = Math.max(1, diffDays(info.start, today()) + 1);
+  els.hmPeriod.textContent = T.dayOfCycle(day);
+  els.hmFertile.textContent = `${w.fDays} ${T.daysUnit}`;
+  els.hmOvu.textContent = fmtShort(w.ovu);
+  els.hmNext.textContent = fmtShort(w.nxt);
 
-  els.subPeriod.textContent = `${w.pDays} ${T.daysUnit}`;
-  els.valPeriod.textContent = `${fmtShort(w.pStart)} – ${fmtShort(w.pEnd)}`;
-
-  els.subFertile.textContent = `${w.fDays} ${T.daysUnit}`;
-  els.valFertile.textContent = `${fmtShort(w.fStart)} – ${fmtShort(w.fEnd)}`;
-
-  els.subOvulation.textContent = T.peak;
-  els.valOvulation.textContent = fmtShort(w.ovu);
-
-  els.subNext.textContent = T.daysLeft(w.left);
-  els.valNext.textContent = fmtShort(w.nxt);
+  els.bannerDate.textContent = fmtShort(w.nxt);
+  els.bannerSub.textContent = T.daysLeft(w.left);
 
   checkAlarm(w.left);
   celebrateCycleStart(w.pStart);
 }
+
+// period starts detected from logged flow entries (a flow day after a gap)
+function loggedPeriodStarts() {
+  const keys = Object.keys(state.logs || {}).filter(k => state.logs[k] && state.logs[k].flow).sort();
+  const starts = [];
+  keys.forEach(k => {
+    const prev = toKey(addDays(parseDate(k), -1));
+    if (!(state.logs[prev] && state.logs[prev].flow)) starts.push(k);
+  });
+  return starts;
+}
+
+function renderSummary() {
+  els.sumCycle.textContent = state.data.cycleLength || '\u2013';
+  els.sumPeriod.textContent = state.data.periodLength || '\u2013';
+  els.sumLogs.textContent = Object.keys(state.logs || {}).length;
+
+  const starts = loggedPeriodStarts().slice(-7); // up to 7 starts -> 6 lengths
+  const lens = [];
+  for (let i = 1; i < starts.length; i++) lens.push(diffDays(parseDate(starts[i - 1]), parseDate(starts[i])));
+  const recent = lens.slice(-6).filter(l => l > 0 && l < 90);
+  if (recent.length < 2) { els.cycleBars.innerHTML = ''; els.cycleBars.classList.add('hidden'); return; }
+  els.cycleBars.classList.remove('hidden');
+  const max = Math.max.apply(null, recent);
+  els.cycleBars.innerHTML = recent.map(l => {
+    const h = Math.max(14, Math.round((l / max) * 62));
+    return `<div class="mini-bar" style="height:${h}px"><span>${l}</span></div>`;
+  }).join('');
+}
+
 
 // beautiful explainer card for a tapped home row.
 function openPhasePopup(kind) {
@@ -1171,8 +1182,9 @@ function fillSettingsForm() {
 // ---------- master ----------
 function renderAll() {
   renderTodayPill();
-  renderHero();
-  renderCards();
+  renderHeader();
+  renderStats();
+  renderSummary();
   renderCalendar();
   renderHistory();
   renderInsights();
