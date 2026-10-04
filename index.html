@@ -129,6 +129,10 @@
             <button class="icon-btn small" id="bot-hello-close" aria-label="Dismiss">×</button>
           </div>
 
+          <div class="home-top">
+            <button type="button" id="refresh-home" class="icon-btn refresh-btn" aria-label="Refresh">↻</button>
+          </div>
+
           <div class="hero-card" id="hero">
             <div class="ring-wrap">
               <svg class="ring-svg" viewBox="0 0 140 140" aria-hidden="true">
@@ -144,25 +148,25 @@
           </div>
 
           <div class="panel detail-card">
-            <button type="button" class="detail-row" data-goto-log>
+            <button type="button" class="detail-row" data-phase="period">
               <span class="row-ico ico-period">🩸</span>
               <span class="row-text"><span class="row-lbl" data-lbl="lblCardPeriod">Period</span><span class="row-sub" id="sub-period">—</span></span>
               <span class="row-val" id="val-period">—</span>
               <span class="row-chev">›</span>
             </button>
-            <button type="button" class="detail-row" data-goto-log>
+            <button type="button" class="detail-row" data-phase="fertile">
               <span class="row-ico ico-fertile">🌱</span>
               <span class="row-text"><span class="row-lbl" data-lbl="lblCardFertile">Fertile</span><span class="row-sub" id="sub-fertile">—</span></span>
               <span class="row-val" id="val-fertile">—</span>
               <span class="row-chev">›</span>
             </button>
-            <button type="button" class="detail-row" data-goto-log>
+            <button type="button" class="detail-row" data-phase="ovulation">
               <span class="row-ico ico-ovu">⭐</span>
               <span class="row-text"><span class="row-lbl" data-lbl="lblCardOvulation">Ovulation</span><span class="row-sub" id="sub-ovulation">—</span></span>
               <span class="row-val" id="val-ovulation">—</span>
               <span class="row-chev">›</span>
             </button>
-            <button type="button" class="detail-row" data-goto-log>
+            <button type="button" class="detail-row" data-phase="next">
               <span class="row-ico ico-next">📅</span>
               <span class="row-text"><span class="row-lbl" data-lbl="lblCardNext">Next Period</span><span class="row-sub" id="sub-next">—</span></span>
               <span class="row-val" id="val-next">—</span>
@@ -532,6 +536,23 @@
         <button id="log-advice" class="btn secondary" data-lbl="btnAdvice">💡 Give me advice</button>
         <button id="log-save" class="btn primary" data-lbl="btnSave">Save</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Phase explainer -->
+  <div id="phase-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="phase-title">
+    <div class="modal-box phase-box">
+      <div class="phase-grab"></div>
+      <div class="phase-top">
+        <span class="row-ico" id="phase-ico">🩸</span>
+        <div class="phase-head-text">
+          <h3 id="phase-title">—</h3>
+          <div class="phase-date" id="phase-date">—</div>
+        </div>
+        <button class="icon-btn" id="phase-close" aria-label="Close">×</button>
+      </div>
+      <p class="phase-desc" id="phase-desc"></p>
+      <ul class="phase-tips" id="phase-tips"></ul>
     </div>
   </div>
 
