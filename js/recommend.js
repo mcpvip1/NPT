@@ -1,1 +1,203 @@
-Ly8gQXVyYSBwcm9kdWN0IHJlY29tbWVuZGF0aW9ucyDigJQgdGhlIGJlc3QgcGljayBmb3IgdGhlIHVzZXIncyBvd24gbG9nZ2VkCi8vIGNvbmRpdGlvbiAoZmxvdywgc3ltcHRvbXMsIG1vb2QpLCB2ZXR0ZWQgcGVyIGNvdW50cnkgb2YgcmVzaWRlbmNlLgovLwovLyBUaGUgY2F0YWxvZyBhbmQgcHJpY2UgaGludHMgbGl2ZSBpbiB0aGUgYXBwIChvZmZsaW5lLWZpcnN0KS4gUHJpY2VzIGFyZQovLyAi4omIIiBzdHJlZXQgZXN0aW1hdGVzLCBuZXZlciBsaXZlIHF1b3Rlcy4gQnJhbmQgbmFtZXMgYXJlIGNvbW1vbiBleGFtcGxlcywKLy8gbm90IGVuZG9yc2VtZW50cyBhbmQgbm90IHZlcmlmaWVkIHN0b2NrLiBNZWRpY2luZSBjYXJkcyBhbHdheXMgcG9pbnQgYXQKLy8gdGhlIHBoYXJtYWNpc3Qg4oCUIG5ldmVyIGEgcHJlc2NyaXB0aW9uLgoKLy8gLS0tLSBjb25uZWN0aXZpdHkgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQovLyBRdWljayAiaXMgdGhlIGludGVybmV0IGFjdHVhbGx5IHJlYWNoYWJsZT8iIGNoZWNrLiBuYXZpZ2F0b3Iub25MaW5lIGFsb25lCi8vIGxpZXMgb24gc29tZSBuZXR3b3Jrcywgc28gd2UgYmFjayBpdCB3aXRoIGEgdGlueSBuby1jb3JzIHByb2JlLgovLyAoU2hhcmVkIHdpdGggdGhlIHVwZGF0ZXIgaW4gbWFpbi5qcy4pCmFzeW5jIGZ1bmN0aW9uIGhhc0ludGVybmV0KHRpbWVvdXRNcykgewogIGlmIChuYXZpZ2F0b3Iub25MaW5lID09PSBmYWxzZSkgcmV0dXJuIGZhbHNlOwogIHRyeSB7CiAgICBjb25zdCBjID0gbmV3IEFib3J0Q29udHJvbGxlcigpOwogICAgY29uc3QgdCA9IHNldFRpbWVvdXQoKCkgPT4gYy5hYm9ydCgpLCB0aW1lb3V0TXMgfHwgMzUwMCk7CiAgICBhd2FpdCBmZXRjaCgnaHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS9nZW5lcmF0ZV8yMDQnLCB7CiAgICAgIG1vZGU6ICduby1jb3JzJywgY2FjaGU6ICduby1zdG9yZScsIHNpZ25hbDogYy5zaWduYWwKICAgIH0pOwogICAgY2xlYXJUaW1lb3V0KHQpOwogICAgcmV0dXJuIHRydWU7CiAgfSBjYXRjaCAoZSkgewogICAgcmV0dXJuIGZhbHNlOwogIH0KfQoKLy8gLS0tLSBnZW5lcmljIGluZm8gcG9wdXAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gKGFsc28gdXNlZCBieSB0aGUgdXBkYXRlciBpbiBtYWluLmpzKQpsZXQgX2luZm9Pa0NiID0gbnVsbDsKZnVuY3Rpb24gb3BlbkluZm9Qb3B1cCh0aXRsZSwgbXNnLCBva0NiLCBva0xhYmVsKSB7CiAgY29uc3QgVCA9IHQoKTsKICAkKCdpbmZvLXRpdGxlJykudGV4dENvbnRlbnQgPSB0aXRsZTsKICAkKCdpbmZvLW1zZycpLnRleHRDb250ZW50ID0gbXNnOwogICQoJ2luZm8tb2snKS50ZXh0Q29udGVudCA9IG9rTGFiZWwgfHwgVC5pbmZvT2sgfHwgJ09LJzsKICBfaW5mb09rQ2IgPSBva0NiIHx8IG51bGw7CiAgb3Blbk1vZGFsKCQoJ2luZm8tcG9wdXAnKSk7Cn0KZnVuY3Rpb24gY2xvc2VJbmZvUG9wdXAoKSB7CiAgY2xvc2VNb2RhbCgkKCdpbmZvLXBvcHVwJykpOwogIGNvbnN0IGNiID0gX2luZm9Pa0NiOwogIF9pbmZvT2tDYiA9IG51bGw7CiAgaWYgKGNiKSBjYigpOwp9CgovLyAtLS0tIGNhdGFsb2cgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQovLyBuYW1lID0gdGhlIGNvbmNyZXRlIHByb2R1Y3QgdG8gbG9vayBmb3IsIHBlciBjb3VudHJ5LgovLyB0aXAgID0gb25lIGV4dHJhIGhvbmVzdCBsaW5lIChleGFtcGxlIGJyYW5kcyAvIHdoZXJlIHRvIGZpbmQgaXQpLgovLyBiZW5lZml0cyBsaXZlIGluIGkxOG4gYXMgcmVjQmVuXzxpZD4gc28gYm90aCBsYW5ndWFnZXMgc3RheSBpbiBzeW5jLgpjb25zdCBQUk9EVUNUUyA9IHsKICBwYWRzX2RheTogewogICAgaWNvbjogJ3BlcmlvZCcsIHRpbnQ6ICd0LXBpbmsnLCBjYXQ6ICdwYWRzJywKICAgIG5hbWU6IHsgbW06ICdTb2Z5IC8gTGF1cmllciDigJQg4YCU4YCx4YC34YCe4YCv4YC24YC4JywgdGg6ICdTb2Z5IC8gTGF1cmllciAvIFdoaXNwZXIgKOC4geC4peC4suC4h+C4p+C4seC4mSknIH0sCiAgICBwcmljZTogeyBtbTogJ+KJiCA0LDAwMCBLcycsIHRoOiAn4omIIOC4vzc5JyB9LAogICAgdGlwOiB7IG1tOiBudWxsLCB0aDogbnVsbCB9CiAgfSwKICBwYWRzX25pZ2h0OiB7CiAgICBpY29uOiAncGVyaW9kJywgdGludDogJ3QtcGluaycsIGNhdDogJ3BhZHMnLAogICAgbmFtZTogeyBtbTogJ1NvZnkgLyBMYXVyaWVyIOKAlCDhgIrhgJ7hgK/hgLbhgLgnLCB0aDogJ1NvZnkgLyBMYXVyaWVyICjguIHguKXguLLguIfguITguLfguJkpJyB9LAogICAgcHJpY2U6IHsgbW06ICfiiYggNyw1MDAgS3MnLCB0aDogJ+KJiCDguL8xMTUnIH0sCiAgICB0aXA6IHsgbW06IG51bGwsIHRoOiBudWxsIH0KICB9LAogIGxpbmVyczogewogICAgaWNvbjogJ3BlcmlvZCcsIHRpbnQ6ICd0LXBpbmsnLCBjYXQ6ICdwYWRzJywKICAgIG5hbWU6IHsgbW06ICdTb2Z5IC8gTGF1cmllciDigJQgcGFudHkgbGluZXInLCB0aDogJ1NvZnkgLyBMYXVyaWVyIOKAlCDguYHguJzguYjguJnguK3guJnguLLguKHguLHguKInIH0sCiAgICBwcmljZTogeyBtbTogJ+KJiCAzLDAwMCBLcycsIHRoOiAn4omIIOC4vzU5JyB9LAogICAgdGlwOiB7IG1tOiBudWxsLCB0aDogbnVsbCB9CiAgfSwKICBwZXJpb2RfdW5kZXJ3ZWFyOiB7CiAgICBpY29uOiAncGVyaW9kJywgdGludDogJ3QtcGluaycsIGNhdDogJ3BhZHMnLAogICAgbmFtZTogeyBtbTogJ1BlcmlvZCB1bmRlcndlYXIgKOGAoeGAveGAlOGAuuGAnOGAreGAr+GAhOGAuuGAuOGAhuGAreGAr+GAhOGAuiknLCB0aDogJ1BlcmlvZCB1bmRlcndlYXIgKOC4reC4reC4meC5hOC4peC4meC5jCknIH0sCiAgICBwcmljZTogeyBtbTogJ+KJiCAxNSwwMDAgS3MnLCB0aDogJ+KJiCDguL8yOTknIH0sCiAgICB0aXA6IHsgbW06IG51bGwsIHRoOiBudWxsIH0KICB9LAogIGhlYXRfcGF0Y2g6IHsKICAgIGljb246ICdzdW4nLCB0aW50OiAndC1hbWJlcicsIGNhdDogJ3JlbGllZicsCiAgICBuYW1lOiB7IG1tOiAn4YCb4YCx4YCU4YC94YCx4YC44YCh4YCt4YCQ4YC6IChIb3Qgd2F0ZXIgYmFnKScsIHRoOiAnVGhlcm1hUGxhc3Qg4oCUIOC5geC4nOC5iOC4meC4m+C4o+C4sOC4hOC4muC4o+C5ieC4reC4mScgfSwKICAgIHByaWNlOiB7IG1tOiAn4omIIDQsMDAwIEtzJywgdGg6ICfiiYgg4Li/MzUnIH0sCiAgICB0aXA6IHsgbW06ICfwn5ONIOGAhuGAseGAuOGAhuGAreGAr+GAhOGAuiDCtyDhgIXhgLDhgJXhgKvhgJnhgKzhgLjhgIDhgJDhgLrhgJDhgL3hgLHhgJnhgL7hgKwg4YCb4YCU4YCt4YCv4YCE4YC64YCV4YCr4YCQ4YCa4YC6JywgdGg6ICfwn5ONIDctRWxldmVuIMK3IFdhdHNvbnMgwrcgQm9vdHMnIH0KICB9LAogIHBhaW5fcmVsaWVmOiB7CiAgICBpY29uOiAncGlsbHMnLCB0aW50OiAndC1ibHVlJywgY2F0OiAncmVsaWVmJywKICAgIG5hbWU6IHsgbW06ICdQYXJhY2V0YW1vbCA1MDBtZyDCtyBJYnVwcm9mZW4gNDAwbWcnLCB0aDogJ1BhcmFjZXRhbW9sIDUwMG1nIMK3IElidXByb2ZlbiA0MDBtZycgfSwKICAgIHByaWNlOiB7IG1tOiAn4omIIDEsNTAwIEtzJywgdGg6ICfiiYgg4Li/MzUnIH0sCiAgICB0aXA6IHsgbW06ICfwn4+377iPIOGApeGAleGAmeGArCDigJQgQmlvZ2VzaWMsIEJydWZlbiwgUG9uc3RhbicsIHRoOiAn8J+Pt++4jyBlLmcuIOKAlCBTYXJhLCBHb2ZlbiwgUG9uc3RhbicgfQogIH0sCiAgZ2luZ2VyX3RlYTogewogICAgaWNvbjogJ3RlYScsIHRpbnQ6ICd0LWdyZWVuJywgY2F0OiAncmVsaWVmJywKICAgIG5hbWU6IHsgbW06ICfhgILhgLvhgIThgLrhgLjhgJzhgIDhgLrhgJbhgIDhgLrhgJvhgIrhgLog4YCh4YCR4YCv4YCV4YC6JywgdGg6ICfguIrguLLguILguLTguIfguIvguK3guIcnIH0sCiAgICBwcmljZTogeyBtbTogJ+KJiCAyLDAwMCBLcycsIHRoOiAn4omIIOC4vzQwJyB9LAogICAgdGlwOiB7IG1tOiBudWxsLCB0aDogbnVsbCB9CiAgfQp9OwoKLy8gLS0tLSBlbmdpbmUgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gQ29uc2VydmF0aXZlIHJ1bGVzIGZyb20gdGhlIGxhc3QgNjAgZGF5cyBvZiBsb2dzLiBQYWRzIGZvbGxvdyBmbG93LAovLyBtZWRpY2luZSBmb2xsb3dzIHN5bXB0b21zLCB0ZWEgZm9sbG93cyBsb3cgbW9vZCAvIG5hdXNlYSAvIGJsb2F0aW5nLgovLyBNZWRpY2luZSBpcyBhbHdheXMgZnJhbWVkIGFzICJhc2sgeW91ciBwaGFybWFjaXN0IiDigJQgbmV2ZXIgYSBwcmVzY3JpcHRpb24uCmZ1bmN0aW9uIGJ1aWxkUmVjb21tZW5kYXRpb25zKCkgewogIGNvbnN0IEYgPSB7fSwgUyA9IHt9LCBNID0ge307CiAgY29uc3QgY3V0b2ZmID0gdG9LZXkoYWRkRGF5cyh0b2RheSgpLCAtNjApKTsKICBjb25zdCBsb2dzID0gc3RhdGUubG9ncyB8fCB7fTsKICBPYmplY3Qua2V5cyhsb2dzKS5mb3JFYWNoKGsgPT4gewogICAgaWYgKGsgPCBjdXRvZmYpIHJldHVybjsKICAgIGNvbnN0IGxvZyA9IGxvZ3Nba107CiAgICBpZiAobG9nLmZsb3cpIEZbbG9nLmZsb3ddID0gKEZbbG9nLmZsb3ddIHx8IDApICsgMTsKICAgIChsb2cuc3ltcHRvbXMgfHwgW10pLmZvckVhY2gocyA9PiB7IFNbc10gPSAoU1tzXSB8fCAwKSArIDE7IH0pOwogICAgaWYgKGxvZy5tb29kKSBNW2xvZy5tb29kXSA9IChNW2xvZy5tb29kXSB8fCAwKSArIDE7CiAgfSk7CgogIGlmICghT2JqZWN0LmtleXMobG9ncykubGVuZ3RoKSB7CiAgICByZXR1cm4gWwogICAgICB7IGlkOiAncGFkc19kYXknLCByZWFzb246ICdyZWNSZWFzb25TdGFydGVyJyB9LAogICAgICB7IGlkOiAnbGluZXJzJywgICByZWFzb246ICdyZWNSZWFzb25TdGFydGVyJyB9CiAgICBdOwogIH0KCiAgY29uc3QgcmVjcyA9IFt7IGlkOiAncGFkc19kYXknLCByZWFzb246ICdyZWNSZWFzb25EYWlseScgfV07CiAgaWYgKChGLmhlYXZ5IHx8IDApID49IDEpICAgIHJlY3MucHVzaCh7IGlkOiAncGFkc19uaWdodCcsIHJlYXNvbjogJ3JlY1JlYXNvbkhlYXZ5JyB9KTsKICBpZiAoKEYuc3BvdHRpbmcgfHwgMCkgPj0gMSB8fCAoRi5saWdodCB8fCAwKSA+PSAyKQogICAgcmVjcy5wdXNoKHsgaWQ6ICdsaW5lcnMnLCByZWFzb246ICdyZWNSZWFzb25TcG90dGluZycgfSk7CiAgaWYgKChGLmhlYXZ5IHx8IDApID49IDIpICAgIHJlY3MucHVzaCh7IGlkOiAncGVyaW9kX3VuZGVyd2VhcicsIHJlYXNvbjogJ3JlY1JlYXNvbkhlYXZ5JyB9KTsKCiAgaWYgKChTLmNyYW1wcyB8fCAwKSA+PSAxIHx8IChTLmJhY2twYWluIHx8IDApID49IDIpIHsKICAgIHJlY3MucHVzaCh7IGlkOiAnaGVhdF9wYXRjaCcsIHJlYXNvbjogKFMuY3JhbXBzIHx8IDApID49IDEgPyAncmVjUmVhc29uQ3JhbXBzJyA6ICdyZWNSZWFzb25CYWNrcGFpbicgfSk7CiAgfQogIGlmICgoUy5jcmFtcHMgfHwgMCkgPj0gMSkgewogICAgcmVjcy5wdXNoKHsgaWQ6ICdwYWluX3JlbGllZicsIHJlYXNvbjogJ3JlY1JlYXNvbkNyYW1wcycgfSk7CiAgfSBlbHNlIGlmICgoUy5oZWFkYWNoZSB8fCAwKSA+PSAxKSB7CiAgICByZWNzLnB1c2goeyBpZDogJ3BhaW5fcmVsaWVmJywgcmVhc29uOiAncmVjUmVhc29uSGVhZGFjaGUnIH0pOwogIH0gZWxzZSBpZiAoKFMuYmFja3BhaW4gfHwgMCkgPj0gMikgewogICAgcmVjcy5wdXNoKHsgaWQ6ICdwYWluX3JlbGllZicsIHJlYXNvbjogJ3JlY1JlYXNvbkJhY2twYWluJyB9KTsKICB9CgogIGlmICgoKE0ubG93IHx8IDApICsgKE0uYmFkIHx8IDApKSA+PSAyKSB7CiAgICByZWNzLnB1c2goeyBpZDogJ2dpbmdlcl90ZWEnLCByZWFzb246ICdyZWNSZWFzb25Nb29kJyB9KTsKICB9IGVsc2UgaWYgKChTLm5hdXNlYSB8fCAwKSA+PSAyKSB7CiAgICByZWNzLnB1c2goeyBpZDogJ2dpbmdlcl90ZWEnLCByZWFzb246ICdyZWNSZWFzb25OYXVzZWEnIH0pOwogIH0gZWxzZSBpZiAoKFMuYmxvYXRpbmcgfHwgMCkgPj0gMykgewogICAgcmVjcy5wdXNoKHsgaWQ6ICdnaW5nZXJfdGVhJywgcmVhc29uOiAncmVjUmVhc29uQmxvYXRpbmcnIH0pOwogIH0KICByZXR1cm4gcmVjczsKfQoKLy8gLS0tLSByZW5kZXIgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gQ2xlYW4gaW5mb3JtYXRpb25hbCBjYXJkczogdHlwZSwgbmFtZSwgZXN0aW1hdGVkIHByaWNlLCBiZW5lZml0cywKLy8gYW5kIG9uZSBzdWJ0bGUgIndoeSB0aGlzIiBsaW5lLiBObyBzaG9wIGxpbmtzIOKAlCB0aGUgY2FyZCBpdHNlbGYgaXMgdGhlCi8vIGFuc3dlciwgdmV0dGVkIGZvciB0aGUgdXNlcidzIGNvdW50cnkuCmZ1bmN0aW9uIHJlY0NhcmRIVE1MKFQsIGNvdW50cnksIHIpIHsKICBjb25zdCBwID0gUFJPRFVDVFNbci5pZF07CiAgY29uc3QgdGlwID0gKHAudGlwIHx8IHt9KVtjb3VudHJ5XTsKICBjb25zdCBiZW5zID0gVFsncmVjQmVuXycgKyByLmlkXSB8fCBbXTsKICByZXR1cm4gJzxhcnRpY2xlIGNsYXNzPSJyZWMtY2FyZCI+JyArCiAgICAnPHNwYW4gY2xhc3M9InRpbGUgJyArIChwLnRpbnQgfHwgJ3QtcGluaycpICsgJyByZWMtaWNvIj4nICsgaWNvbjNkKHAuaWNvbikgKyAnPC9zcGFuPicgKwogICAgJzxkaXYgY2xhc3M9InJlYy1ib2R5Ij4nICsKICAgICAgJzxkaXYgY2xhc3M9InJlYy1oZWFkIj48cCBjbGFzcz0icmVjLXR5cGUiPicgKyBlc2MoVFsncmVjVHlwZV8nICsgci5pZF0gfHwgJycpICsgJzwvcD4nICsKICAgICAgJzxzcGFuIGNsYXNzPSJyZWMtcHJpY2UiPicgKyBlc2MocC5wcmljZVtjb3VudHJ5XSkgKyAnPC9zcGFuPjwvZGl2PicgKwogICAgICAnPGg0IGNsYXNzPSJyZWMtbmFtZSI+JyArIGVzYyhwLm5hbWVbY291bnRyeV0pICsgJzwvaDQ+JyArCiAgICAgICh0aXAgPyAnPHAgY2xhc3M9InJlYy10aXAiPicgKyBlc2ModGlwKSArICc8L3A+JyA6ICcnKSArCiAgICAgIChiZW5zLmxlbmd0aCA/ICc8dWwgY2xhc3M9InJlYy1iZW4iPicgKwogICAgICAgIGJlbnMubWFwKGIgPT4gJzxsaT4nICsgZXNjKGIpICsgJzwvbGk+Jykuam9pbignJykgKyAnPC91bD4nIDogJycpICsKICAgICAgJzxwIGNsYXNzPSJyZWMtd2h5Ij7wn5KhICcgKyBlc2MoVFtyLnJlYXNvbl0pICsgJzwvcD4nICsKICAgICc8L2Rpdj4nICsKICAnPC9hcnRpY2xlPic7Cn0KCmZ1bmN0aW9uIHJlbmRlclJlY29tbWVuZGF0aW9ucygpIHsKICBjb25zdCBUID0gdCgpOwogIGNvbnN0IGxpc3QgPSAkKCdyZWMtbGlzdCcpOwogIGlmICghbGlzdCkgcmV0dXJuOwogIGNvbnN0IGNvdW50cnkgPSBzdGF0ZS5kYXRhLmNvdW50cnkgPT09ICd0aCcgPyAndGgnIDogJ21tJzsKICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCcjY291bnRyeS1zZWcgW2RhdGEtY291bnRyeS12YWxdJykuZm9yRWFjaChiID0+CiAgICBiLmNsYXNzTGlzdC50b2dnbGUoJ2FjdGl2ZScsIGIuZGF0YXNldC5jb3VudHJ5VmFsID09PSBjb3VudHJ5KSk7CgogIGNvbnN0IHJlY3MgPSBidWlsZFJlY29tbWVuZGF0aW9ucygpOwogIGNvbnN0IGdyb3VwcyA9IFsKICAgIHsgY2F0OiAncGFkcycsIHRpdGxlOiBULmxibENhdFBhZHMgfSwKICAgIHsgY2F0OiAncmVsaWVmJywgdGl0bGU6IFQubGJsQ2F0UmVsaWVmIH0KICBdOwogIGxldCBodG1sID0gJyc7CiAgZ3JvdXBzLmZvckVhY2goZyA9PiB7CiAgICBjb25zdCBpdGVtcyA9IHJlY3MuZmlsdGVyKHIgPT4gUFJPRFVDVFNbci5pZF0uY2F0ID09PSBnLmNhdCk7CiAgICBpZiAoIWl0ZW1zLmxlbmd0aCkgcmV0dXJuOwogICAgaHRtbCArPSAnPGg0IGNsYXNzPSJyZWMtY2F0Ij4nICsgZXNjKGcudGl0bGUpICsgJzwvaDQ+JzsKICAgIGh0bWwgKz0gaXRlbXMubWFwKHIgPT4gcmVjQ2FyZEhUTUwoVCwgY291bnRyeSwgcikpLmpvaW4oJycpOwogIH0pOwogIGxpc3QuaW5uZXJIVE1MID0gaHRtbDsKfQoKLy8gQ291bnRyeSBzd2l0Y2gganVzdCByZS1yZW5kZXJzIHdpdGggdGhlIG90aGVyIGNvdW50cnkncyB2ZXR0ZWQgZGF0YS4KZnVuY3Rpb24gaW5pdFJlY29tbWVuZGF0aW9ucygpIHsKICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCcjY291bnRyeS1zZWcgW2RhdGEtY291bnRyeS12YWxdJykuZm9yRWFjaChiID0+CiAgICBiLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgKCkgPT4gewogICAgICBzdGF0ZS5kYXRhLmNvdW50cnkgPSBiLmRhdGFzZXQuY291bnRyeVZhbDsKICAgICAgc2F2ZURhdGEoKTsKICAgICAgcmVuZGVyUmVjb21tZW5kYXRpb25zKCk7CiAgICB9KSk7CiAgLy8gZ2VuZXJpYyBwb3B1cCBiaW5kaW5ncyAoYWxzbyB1c2VkIGJ5IHRoZSB1cGRhdGVyIGluIG1haW4uanMpCiAgJCgnaW5mby1vaycpLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgY2xvc2VJbmZvUG9wdXApOwogICQoJ2luZm8tcG9wdXAnKS5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsIGUgPT4gewogICAgaWYgKGUudGFyZ2V0ID09PSAkKCdpbmZvLXBvcHVwJykpIGNsb3NlSW5mb1BvcHVwKCk7CiAgfSk7Cn0K
+// Aura product recommendations — the best pick for the user's own logged
+// condition (flow, symptoms, mood), vetted per country of residence.
+//
+// The catalog and price hints live in the app (offline-first). Prices are
+// "≈" street estimates, never live quotes. Brand names are common examples,
+// not endorsements and not verified stock. Medicine cards always point at
+// the pharmacist — never a prescription.
+
+// ---- connectivity -------------------------------------------------------
+// Quick "is the internet actually reachable?" check. navigator.onLine alone
+// lies on some networks, so we back it with a tiny no-cors probe.
+// (Shared with the updater in main.js.)
+async function hasInternet(timeoutMs) {
+  if (navigator.onLine === false) return false;
+  try {
+    const c = new AbortController();
+    const t = setTimeout(() => c.abort(), timeoutMs || 3500);
+    await fetch('https://www.google.com/generate_204', {
+      mode: 'no-cors', cache: 'no-store', signal: c.signal
+    });
+    clearTimeout(t);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// ---- generic info popup --------------------------------------------------
+// (also used by the updater in main.js)
+let _infoOkCb = null;
+function openInfoPopup(title, msg, okCb, okLabel) {
+  const T = t();
+  $('info-title').textContent = title;
+  $('info-msg').textContent = msg;
+  $('info-ok').textContent = okLabel || T.infoOk || 'OK';
+  _infoOkCb = okCb || null;
+  openModal($('info-popup'));
+}
+function closeInfoPopup() {
+  closeModal($('info-popup'));
+  const cb = _infoOkCb;
+  _infoOkCb = null;
+  if (cb) cb();
+}
+
+// ---- catalog -------------------------------------------------------------
+// name = the concrete product to look for, per country.
+// tip  = one extra honest line (example brands / where to find it).
+// benefits live in i18n as recBen_<id> so both languages stay in sync.
+const PRODUCTS = {
+  pads_day: {
+    icon: 'period', tint: 't-pink', cat: 'pads',
+    name: { mm: 'Sofy / Laurier — နေ့သုံး', th: 'Sofy / Laurier / Whisper (กลางวัน)' },
+    price: { mm: '≈ 4,000 Ks', th: '≈ ฿79' },
+    tip: { mm: null, th: null }
+  },
+  pads_night: {
+    icon: 'period', tint: 't-pink', cat: 'pads',
+    name: { mm: 'Sofy / Laurier — ညသုံး', th: 'Sofy / Laurier (กลางคืน)' },
+    price: { mm: '≈ 7,500 Ks', th: '≈ ฿115' },
+    tip: { mm: null, th: null }
+  },
+  liners: {
+    icon: 'period', tint: 't-pink', cat: 'pads',
+    name: { mm: 'Sofy / Laurier — panty liner', th: 'Sofy / Laurier — แผ่นอนามัย' },
+    price: { mm: '≈ 3,000 Ks', th: '≈ ฿59' },
+    tip: { mm: null, th: null }
+  },
+  period_underwear: {
+    icon: 'period', tint: 't-pink', cat: 'pads',
+    name: { mm: 'Period underwear (အွန်လိုင်းဆိုင်)', th: 'Period underwear (ออนไลน์)' },
+    price: { mm: '≈ 15,000 Ks', th: '≈ ฿299' },
+    tip: { mm: null, th: null }
+  },
+  heat_patch: {
+    icon: 'sun', tint: 't-amber', cat: 'relief',
+    name: { mm: 'ရေနွေးအိတ် (Hot water bag)', th: 'ThermaPlast — แผ่นประคบร้อน' },
+    price: { mm: '≈ 4,000 Ks', th: '≈ ฿35' },
+    tip: { mm: '📍 ဆေးဆိုင် · စူပါမားကတ်တွေမှာ ရနိုင်ပါတယ်', th: '📍 7-Eleven · Watsons · Boots' }
+  },
+  pain_relief: {
+    icon: 'pills', tint: 't-blue', cat: 'relief',
+    name: { mm: 'Paracetamol 500mg · Ibuprofen 400mg', th: 'Paracetamol 500mg · Ibuprofen 400mg' },
+    price: { mm: '≈ 1,500 Ks', th: '≈ ฿35' },
+    tip: { mm: '🏷️ ဥပမာ — Biogesic, Brufen, Ponstan', th: '🏷️ e.g. — Sara, Gofen, Ponstan' }
+  },
+  ginger_tea: {
+    icon: 'tea', tint: 't-green', cat: 'relief',
+    name: { mm: 'ဂျင်းလက်ဖက်ရည် အထုပ်', th: 'ชาขิงซอง' },
+    price: { mm: '≈ 2,000 Ks', th: '≈ ฿40' },
+    tip: { mm: null, th: null }
+  }
+};
+
+// ---- engine --------------------------------------------------------------
+// Conservative rules from the last 60 days of logs. Pads follow flow,
+// medicine follows symptoms, tea follows low mood / nausea / bloating.
+// Medicine is always framed as "ask your pharmacist" — never a prescription.
+function buildRecommendations() {
+  const F = {}, S = {}, M = {};
+  const cutoff = toKey(addDays(today(), -60));
+  const logs = state.logs || {};
+  Object.keys(logs).forEach(k => {
+    if (k < cutoff) return;
+    const log = logs[k];
+    if (log.flow) F[log.flow] = (F[log.flow] || 0) + 1;
+    (log.symptoms || []).forEach(s => { S[s] = (S[s] || 0) + 1; });
+    if (log.mood) M[log.mood] = (M[log.mood] || 0) + 1;
+  });
+
+  if (!Object.keys(logs).length) {
+    return [
+      { id: 'pads_day', reason: 'recReasonStarter' },
+      { id: 'liners',   reason: 'recReasonStarter' }
+    ];
+  }
+
+  const recs = [{ id: 'pads_day', reason: 'recReasonDaily' }];
+  if ((F.heavy || 0) >= 1)    recs.push({ id: 'pads_night', reason: 'recReasonHeavy' });
+  if ((F.spotting || 0) >= 1 || (F.light || 0) >= 2)
+    recs.push({ id: 'liners', reason: 'recReasonSpotting' });
+  if ((F.heavy || 0) >= 2)    recs.push({ id: 'period_underwear', reason: 'recReasonHeavy' });
+
+  if ((S.cramps || 0) >= 1 || (S.backpain || 0) >= 2) {
+    recs.push({ id: 'heat_patch', reason: (S.cramps || 0) >= 1 ? 'recReasonCramps' : 'recReasonBackpain' });
+  }
+  if ((S.cramps || 0) >= 1) {
+    recs.push({ id: 'pain_relief', reason: 'recReasonCramps' });
+  } else if ((S.headache || 0) >= 1) {
+    recs.push({ id: 'pain_relief', reason: 'recReasonHeadache' });
+  } else if ((S.backpain || 0) >= 2) {
+    recs.push({ id: 'pain_relief', reason: 'recReasonBackpain' });
+  }
+
+  if (((M.low || 0) + (M.bad || 0)) >= 2) {
+    recs.push({ id: 'ginger_tea', reason: 'recReasonMood' });
+  } else if ((S.nausea || 0) >= 2) {
+    recs.push({ id: 'ginger_tea', reason: 'recReasonNausea' });
+  } else if ((S.bloating || 0) >= 3) {
+    recs.push({ id: 'ginger_tea', reason: 'recReasonBloating' });
+  }
+  return recs;
+}
+
+// ---- render --------------------------------------------------------------
+// Clean informational cards: type, name, estimated price, benefits,
+// and one subtle "why this" line. No shop links — the card itself is the
+// answer, vetted for the user's country.
+function recCardHTML(T, country, r) {
+  const p = PRODUCTS[r.id];
+  const tip = (p.tip || {})[country];
+  const bens = T['recBen_' + r.id] || [];
+  return '<article class="rec-card">' +
+    '<span class="tile ' + (p.tint || 't-pink') + ' rec-ico">' + icon3d(p.icon) + '</span>' +
+    '<div class="rec-body">' +
+      '<div class="rec-head"><p class="rec-type">' + esc(T['recType_' + r.id] || '') + '</p>' +
+      '<span class="rec-price">' + esc(p.price[country]) + '</span></div>' +
+      '<h4 class="rec-name">' + esc(p.name[country]) + '</h4>' +
+      (tip ? '<p class="rec-tip">' + esc(tip) + '</p>' : '') +
+      (bens.length ? '<ul class="rec-ben">' +
+        bens.map(b => '<li>' + esc(b) + '</li>').join('') + '</ul>' : '') +
+      '<p class="rec-why">💡 ' + esc(T[r.reason]) + '</p>' +
+    '</div>' +
+  '</article>';
+}
+
+function renderRecommendations() {
+  const T = t();
+  const list = $('rec-list');
+  if (!list) return;
+  const country = state.data.country === 'th' ? 'th' : 'mm';
+  document.querySelectorAll('#country-seg [data-country-val]').forEach(b =>
+    b.classList.toggle('active', b.dataset.countryVal === country));
+
+  const recs = buildRecommendations();
+  const groups = [
+    { cat: 'pads', title: T.lblCatPads },
+    { cat: 'relief', title: T.lblCatRelief }
+  ];
+  let html = '';
+  groups.forEach(g => {
+    const items = recs.filter(r => PRODUCTS[r.id].cat === g.cat);
+    if (!items.length) return;
+    html += '<h4 class="rec-cat">' + esc(g.title) + '</h4>';
+    html += items.map(r => recCardHTML(T, country, r)).join('');
+  });
+  list.innerHTML = html;
+}
+
+// Country switch just re-renders with the other country's vetted data.
+function initRecommendations() {
+  document.querySelectorAll('#country-seg [data-country-val]').forEach(b =>
+    b.addEventListener('click', () => {
+      state.data.country = b.dataset.countryVal;
+      saveData();
+      renderRecommendations();
+    }));
+  // generic popup bindings (also used by the updater in main.js)
+  $('info-ok').addEventListener('click', closeInfoPopup);
+  $('info-popup').addEventListener('click', e => {
+    if (e.target === $('info-popup')) closeInfoPopup();
+  });
+}
