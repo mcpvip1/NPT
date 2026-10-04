@@ -14,7 +14,7 @@ function switchTab(name) {
   }
   if (name === 'tab-insights') {
     renderInsights();
-    animateInsightsRing();
+    animateInsightsHero();
   }
 }
 
