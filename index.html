@@ -207,63 +207,94 @@
 
         <!-- INSIGHTS -->
         <section id="tab-insights" class="page">
-          <div class="panel">
-            <h2 class="panel-head" data-lbl="lblInsightsTitle">📊 Insights</h2>
-
-            <div class="insight">
-              <h3 data-lbl="lblInsightCycle">Cycle Overview</h3>
-              <div class="stat-grid">
-                <div class="stat">
-                  <div class="stat-val" id="stat-day">—</div>
-                  <div class="stat-lbl" data-lbl="lblStatCycleDay">Current Day</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-val" id="stat-cycle">—</div>
-                  <div class="stat-lbl" data-lbl="lblStatCycleLen">Cycle Length</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-val" id="stat-period">—</div>
-                  <div class="stat-lbl" data-lbl="lblStatPeriodLen">Period Length</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-val" id="stat-left">—</div>
-                  <div class="stat-lbl" data-lbl="lblStatDaysLeft">Until Next</div>
-                </div>
+          <!-- Hero: cycle progress ring -->
+          <div class="card ins-hero">
+            <div class="ins-hero-top">
+              <span class="tile t-purple big"><span data-icon="insights"></span></span>
+              <div>
+                <h2 data-lbl="lblInsightsTitle">Insights</h2>
+                <p class="sub-text" id="ins-hero-sub"></p>
               </div>
             </div>
-
-            <div class="insight">
-              <h3 data-lbl="lblInsightPredictions">Next 3 Periods</h3>
-              <ul class="predictions" id="predictions"></ul>
-            </div>
-
-            <div class="insight">
-              <h3 data-lbl="lblInsightSymptoms">Symptom Frequency</h3>
-              <div class="bars" id="sym-chart"></div>
-            </div>
-
-            <div class="insight">
-              <h3 data-lbl="lblInsightFlow">Flow Distribution</h3>
-              <div class="bars" id="flow-chart"></div>
-            </div>
-
-            <div class="insight hidden" id="insight-mood">
-              <h3 data-lbl="lblInsightMood">😊 Mood</h3>
-              <div class="bars" id="mood-chart"></div>
-            </div>
-
-            <div class="insight">
-              <h3 data-lbl="lblInsightTotals">Log Summary</h3>
-              <div class="stat-grid">
-                <div class="stat">
-                  <div class="stat-val" id="stat-total">0</div>
-                  <div class="stat-lbl" data-lbl="lblStatTotalLogs">Total Logs</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-val" id="stat-month">0</div>
-                  <div class="stat-lbl" data-lbl="lblStatMonthLogs">This Month</div>
-                </div>
+            <div class="ring-wrap">
+              <svg class="ring" viewBox="0 0 140 140" aria-hidden="true">
+                <defs>
+                  <linearGradient id="insRingGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#f472b6"/>
+                    <stop offset="1" stop-color="#e11d48"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="70" cy="70" r="60" class="ring-track"/>
+                <circle cx="70" cy="70" r="60" class="ring-prog" id="ins-ring-prog"/>
+              </svg>
+              <div class="ring-center">
+                <div class="ring-day" id="ins-ring-day">&mdash;</div>
+                <div class="ring-lbl" data-lbl="lblRingDay">day</div>
               </div>
+            </div>
+          </div>
+
+          <!-- 4 stat cards -->
+          <div class="ins-stats">
+            <div class="card ins-stat">
+              <span class="tile t-red"><span data-icon="period" data-cls="tint-red"></span></span>
+              <div><div class="ins-stat-val" id="stat-day">&mdash;</div>
+              <div class="ins-stat-lbl" data-lbl="lblStatCycleDay">Current Day</div></div>
+            </div>
+            <div class="card ins-stat">
+              <span class="tile t-blue"><span data-icon="chart"></span></span>
+              <div><div class="ins-stat-val" id="stat-cycle">&mdash;</div>
+              <div class="ins-stat-lbl" data-lbl="lblStatCycleLen">Cycle Length</div></div>
+            </div>
+            <div class="card ins-stat">
+              <span class="tile t-pink"><span data-icon="heart"></span></span>
+              <div><div class="ins-stat-val" id="stat-period">&mdash;</div>
+              <div class="ins-stat-lbl" data-lbl="lblStatPeriodLen">Period Length</div></div>
+            </div>
+            <div class="card ins-stat">
+              <span class="tile t-purple"><span data-icon="calendar"></span></span>
+              <div><div class="ins-stat-val" id="stat-left">&mdash;</div>
+              <div class="ins-stat-lbl" data-lbl="lblStatDaysLeft">Until Next</div></div>
+            </div>
+          </div>
+
+          <!-- Predictions -->
+          <h3 class="ins-h"><span data-icon="calendar"></span><span data-lbl="lblInsightPredictions">Next 3 Periods</span></h3>
+          <div class="pred-cards" id="predictions"></div>
+
+          <!-- Flow donut -->
+          <div class="card">
+            <h3 class="ins-h"><span data-icon="period" data-cls="tint-red"></span><span data-lbl="lblInsightFlow">Flow Distribution</span></h3>
+            <div class="donut-wrap">
+              <svg class="donut" id="flow-donut" viewBox="0 0 120 120" aria-hidden="true"></svg>
+              <div class="donut-legend" id="flow-legend"></div>
+            </div>
+          </div>
+
+          <!-- Symptoms -->
+          <div class="card">
+            <h3 class="ins-h"><span data-icon="log"></span><span data-lbl="lblInsightSymptoms">Symptom Frequency</span></h3>
+            <div class="bars" id="sym-chart"></div>
+          </div>
+
+          <!-- Mood -->
+          <div class="card hidden" id="insight-mood">
+            <h3 class="ins-h"><span data-icon="sun"></span><span data-lbl="lblInsightMood">Mood</span></h3>
+            <div class="bars" id="mood-chart"></div>
+          </div>
+
+          <!-- Totals -->
+          <h3 class="ins-h"><span data-icon="history"></span><span data-lbl="lblInsightTotals">Log Summary</span></h3>
+          <div class="ins-stats">
+            <div class="card ins-stat">
+              <span class="tile t-blue"><span data-icon="save"></span></span>
+              <div><div class="ins-stat-val" id="stat-total">0</div>
+              <div class="ins-stat-lbl" data-lbl="lblStatTotalLogs">Total Logs</div></div>
+            </div>
+            <div class="card ins-stat">
+              <span class="tile t-green"><span data-icon="log"></span></span>
+              <div><div class="ins-stat-val" id="stat-month">0</div>
+              <div class="ins-stat-lbl" data-lbl="lblStatMonthLogs">This Month</div></div>
             </div>
           </div>
         </section>
