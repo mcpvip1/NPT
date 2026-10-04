@@ -39,9 +39,9 @@ const els = {
   statCycle: $('stat-cycle'),
   statPeriod: $('stat-period'),
   statLeft: $('stat-left'),
-  insRingProg: $('ins-ring-prog'),
-  insRingDay: $('ins-ring-day'),
-  insHeroSub: $('ins-hero-sub'),
+  insHeroDay: $('ins-hero-day'),
+  insHeroFill: $('ins-hero-fill'),
+  insHeroLeft: $('ins-hero-left'),
   insPhase: $('ins-phase'),
   predictions: $('predictions'),
   phaseTrack: $('phase-track'),
@@ -1066,24 +1066,26 @@ function renderInsights() {
     els.statCycle.textContent = cycLen;
     els.statPeriod.textContent = state.data.periodLength;
     els.statLeft.textContent = left <= 0 ? T.daysLeft(0) : left;
-    // hero ring
-    els.insRingDay.textContent = day;
-    els.insRingProg.style.strokeDasharray = `${Math.min(day / cycLen, 1) * C} ${C}`;
-    els.insHeroSub.textContent = `${T.dayOfCycle(day)} · ${T.daysLeft(Math.max(left, 0))}`;
+    // hero banner
     const iphase = phaseFor(today());
-    if (els.insPhase) {
-      els.insPhase.textContent = iphase ? phaseLabel(iphase) : '';
-      els.insPhase.style.color = (iphase && PHASE_SEG_COLORS[iphase]) || '';
+    if (els.insHeroDay) els.insHeroDay.textContent = day;
+    if (els.insHeroLeft) els.insHeroLeft.textContent = left <= 0 ? 0 : left;
+    if (els.insPhase) els.insPhase.textContent = iphase ? phaseLabel(iphase) : '';
+    if (els.insHeroFill) {
+      els.insHeroFill.style.transition = 'none';
+      els.insHeroFill.style.width = `${Math.min(day / cycLen, 1) * 100}%`;
+      void els.insHeroFill.offsetWidth;
+      els.insHeroFill.style.transition = '';
     }
   } else {
     els.statDay.textContent = '—';
     els.statCycle.textContent = state.data.cycleLength;
     els.statPeriod.textContent = state.data.periodLength;
     els.statLeft.textContent = '—';
-    els.insRingDay.textContent = '—';
-    els.insRingProg.style.strokeDasharray = `0 ${C}`;
-    els.insHeroSub.textContent = '';
+    if (els.insHeroDay) els.insHeroDay.textContent = '—';
+    if (els.insHeroLeft) els.insHeroLeft.textContent = '—';
     if (els.insPhase) els.insPhase.textContent = '';
+    if (els.insHeroFill) els.insHeroFill.style.width = '0%';
   }
 
   els.predictions.innerHTML = '';
@@ -1233,30 +1235,33 @@ function renderPhaseGuide() {
 }
 
 
-// replay the insights hero ring: the arc draws itself and the day counts up.
+// replay the insights hero: the day counts up and the bar sweeps.
 // called every time the insights screen opens.
-function animateInsightsRing() {
+function animateInsightsHero() {
   const info = cycleInfoFor(today());
-  if (!info || !els.insRingProg || !els.insRingDay) return;
+  if (!info) return;
   const day = Math.max(1, diffDays(info.start, today()) + 1);
   const cycLen = state.data.cycleLength || 28;
-  const C = 2 * Math.PI * 60;
-  const target = Math.min(day / cycLen, 1) * C;
-  // restart the draw: snap to 0, then let the CSS transition sweep to target
-  els.insRingProg.style.transition = 'none';
-  els.insRingProg.style.strokeDasharray = `0 ${C}`;
-  void els.insRingProg.getBoundingClientRect();
-  els.insRingProg.style.transition = '';
-  els.insRingProg.style.strokeDasharray = `${target} ${C}`;
+  // sweep the progress bar from 0
+  if (els.insHeroFill) {
+    const target = `${Math.min(day / cycLen, 1) * 100}%`;
+    els.insHeroFill.style.width = '0%';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      els.insHeroFill.style.width = target;
+    }));
+  }
   // count the day number up
-  const el = els.insRingDay;
-  const t0 = performance.now(), dur = 900;
-  (function tick(t) {
-    const k = Math.min((t - t0) / dur, 1);
-    const e = 1 - Math.pow(1 - k, 3);
-    el.textContent = Math.max(1, Math.round(day * e));
-    if (k < 1) requestAnimationFrame(tick);
-  })(t0);
+  if (els.insHeroDay) {
+    const el = els.insHeroDay;
+    const t0 = performance.now(), dur = 750;
+    const step = now => {
+      const k = Math.min(1, (now - t0) / dur);
+      const e = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.max(1, Math.round(day * e));
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
 }
 
 function drawBars(container, counts, labelFn) {
