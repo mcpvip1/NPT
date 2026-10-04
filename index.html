@@ -44,6 +44,15 @@
           </svg>
           <span data-lbl="navHome">Home</span>
         </button>
+        <button class="side-link" data-tab="tab-advice">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 11.5a8.5 8.5 0 01-8.5 8.5c-1.5 0-3-.4-4.2-1L3 20l1.1-4.3A8.5 8.5 0 1121 11.5z" />
+            <circle cx="9" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
+            <circle cx="13" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
+            <circle cx="17" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
+          </svg>
+          <span data-lbl="navAdvice">Advice</span>
+        </button>
         <button class="side-link" data-tab="tab-insights">
           <svg viewBox="0 0 24 24">
             <line x1="6" y1="20" x2="6" y2="12" />
@@ -184,6 +193,30 @@
           </div>
         </section>
 
+        <!-- ADVICE -->
+        <section id="tab-advice" class="page">
+          <div class="panel advice-panel">
+            <div class="advice-hero">
+              <span id="advice-bot"></span>
+              <div>
+                <h2 class="panel-head" data-lbl="lblAdvicePageTitle">🤖 Ask Aura</h2>
+                <p class="sub-text" data-lbl="lblAdvicePageSub"></p>
+              </div>
+            </div>
+            <div id="advice-perm-note" class="perm-note hidden">
+              <span data-lbl="lblAdvicePermNote"></span>
+              <button type="button" id="advice-perm-btn" class="btn ghost small" data-lbl="btnAskNotif"></button>
+            </div>
+            <h3 class="sec-head" data-lbl="lblAdviceToday"></h3>
+            <div id="advice-today" class="advice-cards"></div>
+            <details class="doctor-flags">
+              <summary data-lbl="lblDoctorFlags"></summary>
+              <ul id="doctor-flags-list" class="advice-list"></ul>
+            </details>
+            <p class="sub-text tiny advice-disclaimer" data-lbl="lblAdviceDisclaimer"></p>
+          </div>
+        </section>
+
         <!-- INSIGHTS -->
         <section id="tab-insights" class="page">
           <div class="panel">
@@ -296,7 +329,14 @@
 
               <hr class="hr">
 
-              <h3 class="sec-head" data-lbl="lblNotifyHeading">🔔 Period Alarm</h3>
+              <h3 class="sec-head" data-lbl="lblNotifHeading">🔔 Notifications</h3>
+              <div class="notif-status-row">
+                <span class="notif-dot" id="notif-dot"></span>
+                <span class="notif-status-text" id="notif-status-text"></span>
+                <button type="button" id="btn-notif-perm" class="btn ghost small" data-lbl="btnAskNotif">Ask permission</button>
+              </div>
+              <p class="sub-text tiny hidden" id="notif-denied-hint" data-lbl="notifDeniedHint"></p>
+
               <div class="switch-row">
                 <span data-lbl="lblNotifyEnable">Notify when period is near</span>
                 <label class="switch"><input type="checkbox" id="set-notify"><span class="switch-track"></span></label>
@@ -312,19 +352,25 @@
                 </select>
               </div>
               <div class="switch-row">
-                <span data-lbl="lblBotEnable">🤖 Show cute helper bot</span>
-                <label class="switch"><input type="checkbox" id="set-bot" checked><span class="switch-track"></span></label>
-              </div>
-
-              <hr class="hr">
-
-              <div class="switch-row">
                 <span data-lbl="lblRemindLog">📝 Daily log reminder</span>
                 <label class="switch"><input type="checkbox" id="set-remind-log"><span class="switch-track"></span></label>
               </div>
               <div class="field">
                 <label for="set-remind-time" data-lbl="lblRemindTime">Reminder time</label>
                 <input type="time" id="set-remind-time" value="21:00">
+              </div>
+              <div class="switch-row">
+                <span data-lbl="lblWellnessNudges">💧 Wellness nudges</span>
+                <label class="switch"><input type="checkbox" id="set-wellness" checked><span class="switch-track"></span></label>
+              </div>
+              <p class="sub-text tiny" data-lbl="lblWellnessNudgesSub"></p>
+
+              <hr class="hr">
+
+              <h3 class="sec-head" data-lbl="lblBotHeading">🤖 Helper bot</h3>
+              <div class="switch-row">
+                <span data-lbl="lblBotEnable">🤖 Show cute helper bot</span>
+                <label class="switch"><input type="checkbox" id="set-bot" checked><span class="switch-track"></span></label>
               </div>
 
               <hr class="hr">
@@ -352,6 +398,15 @@
             <path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9.5z" />
           </svg>
           <span data-lbl="navHome">Home</span>
+        </button>
+        <button class="nav-btn" data-tab="tab-advice">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 11.5a8.5 8.5 0 01-8.5 8.5c-1.5 0-3-.4-4.2-1L3 20l1.1-4.3A8.5 8.5 0 1121 11.5z" />
+            <circle cx="9" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
+            <circle cx="13" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
+            <circle cx="17" cy="11.5" r="1.1" fill="currentColor" stroke="none" />
+          </svg>
+          <span data-lbl="navAdvice">Advice</span>
         </button>
         <button class="nav-btn" data-tab="tab-insights">
           <svg viewBox="0 0 24 24">

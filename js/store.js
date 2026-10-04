@@ -10,7 +10,8 @@ const LS = {
   cycleSeen: 'aura_cycle_seen',
   greeted: 'aura_greeted',
   reminded: 'aura_reminded',
-  installNudge: 'aura_install_nudge'
+  installNudge: 'aura_install_nudge',
+  nudge: 'aura_nudge_'
 };
 
 const DEFAULTS = {
@@ -24,7 +25,9 @@ const DEFAULTS = {
   notifyDays: 2,
   showBot: true, // our little buddy next to the health tips. flippable in settings.
   logReminder: false, // daily "hey, log today!" nudge
-  logReminderTime: '21:00'
+  logReminderTime: '21:00',
+  wellnessNudges: true, // gentle contextual nudges (warm water, rest...)
+  nudgePrefs: {} // per-nudge overrides; missing = on
 };
 
 const VALID_MOODS = ['great', 'good', 'okay', 'low', 'bad'];
