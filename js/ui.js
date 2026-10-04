@@ -7,9 +7,9 @@ const els = {
   headerTitle: $('header-title'),
   sideTitle: $('side-title'),
   sideSubtitle: $('side-subtitle'),
-  langSelect: $('lang-select'),
+  langSeg: $('lang-seg'),
   langSelectDesktop: $('lang-select-desktop'),
-  themeToggle: $('theme-toggle'),
+  themeSeg: $('theme-seg'),
   themeToggleDesktop: $('theme-toggle-desktop'),
 
   alarm: $('alarm-banner'),
@@ -330,6 +330,8 @@ function applyLang() {
 
   els.sideTitle.textContent = state.data.userName || 'Aura';
   els.sideSubtitle.textContent = T.appSubtitle;
+  if (els.langSeg) els.langSeg.querySelectorAll('[data-lang-val]').forEach(b =>
+    b.classList.toggle('active', b.dataset.langVal === state.lang));
   renderHeader();
 
   els.search.placeholder = T.searchPlaceholder;
@@ -346,20 +348,34 @@ function applyLang() {
     const k = c.dataset.mood; if (T.moods[k]) c.textContent = T.moods[k];
   });
 
-  els.langSelect.value = state.lang;
   els.langSelectDesktop.value = state.lang;
   document.documentElement.lang = state.lang;
 
   refreshBotSlots();
+  updateNotifStatus();
   if (document.getElementById('tab-advice').classList.contains('active')) renderAdvicePage();
 }
 
 function applyTheme() {
   document.documentElement.dataset.theme = state.theme;
   const icon = state.theme === 'dark' ? '☀️' : '🌙';
-  els.themeToggle.textContent = icon;
   els.themeToggleDesktop.textContent = icon;
+  if (els.themeSeg) els.themeSeg.querySelectorAll('[data-theme-val]').forEach(b =>
+    b.classList.toggle('active', b.dataset.themeVal === state.theme));
   localStorage.setItem(LS.theme, state.theme);
+}
+
+function setTheme(val) {
+  state.theme = val === 'dark' ? 'dark' : 'light';
+  applyTheme();
+}
+
+function setLang(val) {
+  state.lang = val === 'en' ? 'en' : 'my';
+  localStorage.setItem(LS.lang, state.lang);
+  applyLang();
+  renderAll();
+  renderBotHello(); // re-render the greeting card too if it's showing
 }
 
 // ---------- the little bot ----------
@@ -418,10 +434,16 @@ function latestMood() {
 }
 
 // the welcome card on the home tab. once a day, only when the bot is on.
+let lastGreetLang = null; // language the greeting card was last rendered in
 function renderBotHello() {
   if (state.data.showBot === false) return;
   const key = toKey(today());
-  if (localStorage.getItem(LS.greeted) === key) return; // already said hi today
+  const greetedToday = localStorage.getItem(LS.greeted) === key;
+  // already said hi today in this language → leave it alone.
+  // but if the card is still showing in the other language, re-render it translated
+  // (without resurrecting a card the user already dismissed).
+  if (greetedToday && lastGreetLang === state.lang) return;
+  if (greetedToday && els.botHello.classList.contains('hidden')) return;
 
   const T = t();
   const hour = new Date().getHours();
@@ -458,6 +480,7 @@ function renderBotHello() {
   els.botHelloMsg.textContent = msg;
   els.botHello.classList.remove('hidden');
   localStorage.setItem(LS.greeted, key);
+  lastGreetLang = state.lang;
 }
 
 // ---------- install nudge ----------
@@ -815,22 +838,23 @@ function openPhasePopup(kind) {
   const w = cycleWindows();
   const P = T.phasePopup && T.phasePopup[kind];
   if (!w || !P) return;
+  const ic = { period: 'period', fertile: 'fertile', ovulation: 'ovulation', next: 'calendar' };
   const conf = {
-    period:   { icon: '🩸', cls: 'ico-period',  title: T.lblCardPeriod,
+    period:   { icon: 'period', cls: 'ico-period',  title: T.lblCardPeriod,
                 date: `${fmtShort(w.pStart)} – ${fmtShort(w.pEnd)}`,
                 desc: P.desc.replace('{range}', `${fmtShort(w.pStart)} – ${fmtShort(w.pEnd)}`).replace('{n}', w.pDays) },
-    fertile:  { icon: '🌱', cls: 'ico-fertile', title: T.lblCardFertile,
+    fertile:  { icon: 'fertile', cls: 'ico-fertile', title: T.lblCardFertile,
                 date: `${fmtShort(w.fStart)} – ${fmtShort(w.fEnd)}`,
                 desc: P.desc.replace('{range}', `${fmtShort(w.fStart)} – ${fmtShort(w.fEnd)}`).replace('{n}', w.fDays) },
-    ovulation:{ icon: '⭐', cls: 'ico-ovu',     title: T.lblCardOvulation,
+    ovulation:{ icon: 'ovulation', cls: 'ico-ovu',     title: T.lblCardOvulation,
                 date: fmtShort(w.ovu),
                 desc: P.desc.replace('{date}', fmtShort(w.ovu)) },
-    next:     { icon: '📅', cls: 'ico-next',    title: T.lblCardNext,
+    next:     { icon: 'calendar', cls: 'ico-next',    title: T.lblCardNext,
                 date: fmtShort(w.nxt),
                 desc: P.desc.replace('{date}', fmtShort(w.nxt)).replace('{left}', T.daysLeft(w.left)) }
   }[kind];
   if (!conf) return;
-  els.phaseIco.textContent = conf.icon;
+  els.phaseIco.innerHTML = icon3d(conf.icon, conf.icon === 'period' ? 'tint-red' : '');
   els.phaseIco.className = 'row-ico ' + conf.cls;
   els.phaseTitle.textContent = conf.title;
   els.phaseDate.textContent = conf.date;

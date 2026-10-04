@@ -311,23 +311,16 @@ function initWelcome() {
 }
 
 function initLanguage() {
-  const onChange = e => {
-    state.lang = e.target.value;
-    localStorage.setItem(LS.lang, state.lang);
-    applyLang();
-    renderAll();
-  };
-  els.langSelect.addEventListener('change', onChange);
-  els.langSelectDesktop.addEventListener('change', onChange);
+  document.querySelectorAll('#lang-seg [data-lang-val]').forEach(b =>
+    b.addEventListener('click', () => setLang(b.dataset.langVal)));
+  els.langSelectDesktop.addEventListener('change', e => setLang(e.target.value));
 }
 
 function initTheme() {
-  const toggle = () => {
-    state.theme = state.theme === 'dark' ? 'light' : 'dark';
-    applyTheme();
-  };
-  els.themeToggle.addEventListener('click', toggle);
-  els.themeToggleDesktop.addEventListener('click', toggle);
+  document.querySelectorAll('#theme-seg [data-theme-val]').forEach(b =>
+    b.addEventListener('click', () => setTheme(b.dataset.themeVal)));
+  els.themeToggleDesktop.addEventListener('click', () =>
+    setTheme(state.theme === 'dark' ? 'light' : 'dark'));
 }
 
 function initHistoryControls() {
@@ -497,6 +490,7 @@ function init() {
   initTheme();
   initHistoryControls();
   initQuickLog();
+  if (typeof hydrateIcons === 'function') hydrateIcons(document);
   initReminders();
   initServiceWorker();
   initAudioUnlock();
