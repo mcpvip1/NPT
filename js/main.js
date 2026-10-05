@@ -305,10 +305,10 @@ function initSettings() {
 }
 
 // ---- welcome wizard ------------------------------------------------------
-// 5 steps: language -> country (IP auto-detected) -> profile -> what the
-// app can do -> notifications + home-screen install.
+// 6 steps: language -> country (IP auto-detected) -> profile -> what the
+// app can do -> notifications + home-screen install -> AI key (optional).
 let wizStep = 1;
-const WIZ_STEPS = 5;
+const WIZ_STEPS = 6;
 let wizCountry = 'mm';
 let wizCountryDetected = false;
 let deferredInstallPrompt = null;
@@ -391,6 +391,8 @@ function wizFinish() {
   state.data.age = numOrNull($('w-age').value, 9, 100);
   state.data.weightKg = numOrNull($('w-weight').value, 20, 300);
   state.data.heightCm = numOrNull($('w-height').value, 80, 250);
+  // optional AI key from the wizard step
+  saveAiSettings({ provider: 'auto', geminiKey: ($('w-ai-key') && $('w-ai-key').value.trim()) || '' });
 
   saveData();
   closeModal(els.welcome);
@@ -400,6 +402,22 @@ function wizFinish() {
   renderBotHello(); // greet the new user right away
   maybeShowInstallNudge();
   toast(t().msgSaved, 'ok');
+}
+
+// Paste from the clipboard into a key field. If the clipboard API is
+// unavailable/denied, focus the field so the user can long-press → paste.
+async function pasteInto(input) {
+  if (!input) return;
+  try {
+    const text = await navigator.clipboard.readText();
+    if (text && text.trim()) {
+      input.value = text.trim();
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      toast(t().msgPasted, 'ok');
+      return;
+    }
+  } catch (e) { /* fall through to manual paste */ }
+  input.focus();
 }
 
 function initWelcome() {
@@ -475,6 +493,10 @@ function initWelcome() {
     if (wizStep < WIZ_STEPS) wizShow(wizStep + 1);
     else wizFinish();
   });
+
+  // paste button on the wizard AI-key step
+  const wPaste = $('w-ai-paste');
+  if (wPaste) wPaste.addEventListener('click', () => pasteInto($('w-ai-key')));
 }
 
 function initLanguage() {
@@ -633,6 +655,8 @@ function initAiSettings() {
     try { clearAiJsonCache(); } catch (e) {}
     toast(t().msgSaved, 'ok');
   });
+  const setPaste = $('set-paste');
+  if (setPaste) setPaste.addEventListener('click', () => pasteInto(els.geminiKey));
 }
 
 function initInstallNudge() {
