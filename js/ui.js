@@ -12,6 +12,11 @@ const els = {
   langSelectDesktop: $('lang-select-desktop'),
   hdrTheme: $('hdr-theme'),
   hdrUpdate: $('hdr-update'),
+  updCard: $('update-card'),
+  updVer: $('upd-ver'),
+  updLog: $('upd-log'),
+  updNow: $('upd-now'),
+  updLater: $('upd-later'),
   themeToggleDesktop: $('theme-toggle-desktop'),
 
   alarm: $('alarm-banner'),
