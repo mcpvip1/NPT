@@ -234,7 +234,7 @@ function botToast(title, msg) {
   const wrap = document.createElement('div');
   wrap.className = 'toast bot-toast show';
   wrap.setAttribute('role', 'status');
-  wrap.innerHTML = botHTML('happy');
+  wrap.innerHTML = flowerHTML();
   const txt = document.createElement('div');
   txt.className = 'bot-toast-text';
   const h = document.createElement('div');
@@ -403,29 +403,36 @@ function setLang(val) {
   renderBotHello(); // re-render the greeting card too if it's showing
 }
 
-// ---------- the little bot ----------
-// expr can be 'happy' (default), 'sad' or 'sleepy' — the face changes to match.
-// pass big=true for the chunkier greeting-card version.
-// the bot's name, renameable in settings. defaults to Aura.
+// ---------- the flower mascot ----------
+// the robot is gone — the splash flower is our mascot everywhere now.
+// one snippet, scaled by the wrapper class. tap it and it boings.
+// the flower's name, renameable in settings. defaults to Aura.
 function botName() {
   const n = (state.data.botName || '').trim();
   return n || 'Aura';
 }
 
-// our helper bot, now a proper 3D little buddy. three moods, all cute.
-// tap it and it boings.
-function botHTML(expr, big) {
-  // flipped off in settings? then no bot. simple as that.
+const FLOWER_INNER =
+  '<div class="splash-mascot" aria-hidden="true">' +
+  '<span class="masc-spark s1">✦</span><span class="masc-spark s2">✦</span>' +
+  '<div class="masc-petals"><span></span><span></span><span></span><span></span>' +
+  '<span></span><span></span><span></span><span></span></div>' +
+  '<div class="masc-face"><span class="eye left"></span><span class="eye right"></span>' +
+  '<span class="mouth"></span><span class="blush left"></span><span class="blush right"></span></div>' +
+  '</div>';
+
+function flowerHTML(big) {
+  // flipped off in settings? then no flower. simple as that.
   if (state.data.showBot === false) return '';
-  const mood = (expr === 'sad' || expr === 'sleepy') ? expr : 'happy';
-  return `<img class="bot3d${big ? ' bot3d-big' : ''}" src="${BOT_IMGS[mood]}" alt="${esc(botName())}" draggable="false">`;
+  const cls = big ? 'flower-92' : 'flower-40';
+  return `<span class="flower flower-tap ${cls}" role="img" aria-label="${esc(botName())}"><span class="flower-scale">${FLOWER_INNER}</span></span>`;
 }
 
-// fills every placeholder with the bot (or clears them when turned off).
+// fills every placeholder with the flower (or clears them when turned off).
 // slots marked data-big get the chunkier version.
 function refreshBotSlots() {
   document.querySelectorAll('.bot-slot').forEach(el => {
-    el.innerHTML = botHTML('happy', el.hasAttribute('data-big'));
+    el.innerHTML = flowerHTML(el.hasAttribute('data-big'));
   });
 }
 
@@ -478,7 +485,6 @@ function renderBotHello() {
     : T.greetEvening(name);
 
   let msg = T.greetGeneric;
-  let expr = 'happy';
 
   const info = cycleInfoFor(today());
   const trend = moodTrend();
@@ -488,19 +494,15 @@ function renderBotHello() {
     msg = T.greetPeriodDay1; // day one. be gentle.
   } else if (trend === 'down') {
     msg = T.greetTrendDown;
-    expr = 'sad';
   } else if (trend === 'up') {
     msg = T.greetTrendUp;
   } else if (mood && T.moodTips[mood]) {
     msg = T.moodTips[mood]; // a little tip matched to how they've been feeling
-    if (mood === 'low' || mood === 'bad') expr = 'sad';
   } else if (!state.logs[key]) {
     msg = T.greetLogNudge;
   }
 
-  if (hour >= 22 || hour < 5) expr = 'sleepy'; // up late? bot gets sleepy too
-
-  els.botHelloBot.innerHTML = botHTML(expr, true);
+  els.botHelloBot.innerHTML = flowerHTML(true);
   els.botHelloTitle.textContent = title;
   els.botHelloMsg.textContent = msg;
   els.botHello.classList.remove('hidden');
@@ -620,7 +622,7 @@ function adviceDetailsHTML(symptoms) {
   }
   if (!items.length) return '';
 
-  return `<details class="advice-details"><summary>${botHTML()}<span>${esc(T.lblAdviceHeading)} (${items.length})</span></summary><ul class="advice-list">${items.join('')}</ul></details>`;
+  return `<details class="advice-details"><summary>${flowerHTML()}<span>${esc(T.lblAdviceHeading)} (${items.length})</span></summary><ul class="advice-list">${items.join('')}</ul></details>`;
 }
 
 // ---------- advice page ----------
@@ -648,8 +650,7 @@ function renderAdvicePage() {
     state.adviceFocus = null;
   }
 
-  const trend = moodTrend();
-  els.adviceBot.innerHTML = botHTML(trend === 'down' ? 'sad' : 'happy', true);
+  els.adviceBot.innerHTML = flowerHTML(true);
 
   const perm = ('Notification' in window) ? Notification.permission : 'denied';
   els.advicePermNote.classList.toggle('hidden', perm === 'granted');
@@ -711,7 +712,7 @@ function renderAdvicePage() {
 
       const head = document.createElement('div');
       head.className = 'advice-card-head';
-      head.innerHTML = botHTML('happy');
+      head.innerHTML = flowerHTML();
       const h3 = document.createElement('h3');
       h3.textContent = c.title;
       head.appendChild(h3);
