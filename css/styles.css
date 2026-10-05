@@ -1526,6 +1526,9 @@ textarea { resize: vertical; }
   padding: 9px 12px; margin: 0 0 12px; font-size: .78rem; line-height: 1.55;
 }
 .ai-privacy { margin: 10px 0 0; opacity: .75; }
+.key-row { display: flex; gap: 8px; align-items: stretch; }
+.key-row input { flex: 1; min-width: 0; }
+.key-row .btn { flex-shrink: 0; }
 .ai-setup { margin: 4px 0 14px; }
 .ai-setup summary {
   font-size: .84rem; font-weight: 700; color: var(--primary-dark);
