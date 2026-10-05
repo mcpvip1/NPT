@@ -5,12 +5,16 @@
 // available where they live.
 //
 // Providers (both free, no credit card):
-//   1. Gemini — the user pastes their own free key from Google AI Studio
-//      (best quality, generous free quota). Saved in localStorage only.
-//   2. Pollinations — keyless free tier, used when no Gemini key is set.
+//   1. Gemini — the user pastes their free key once in Settings → AI
+//      Assistant (it stays on their phone only, never in the repo).
+//   2. Pollinations — keyless free tier, fallback when no key is set.
 //
-// The AI never replaces a doctor: the prompt asks for gentle, conservative
-// guidance, and the app's own red-flag strip stays above the AI card.
+// NOTE: never embed a real API key in this file — the repo is public and
+// GitHub's secret scanning blocks pushes containing secrets (and Google
+// auto-revokes exposed keys).
+function getEffectiveKey() {
+  return (aiSettings().geminiKey || '').trim();
+}
 
 const AI_CACHE_KEY = 'aura_ai_cache';
 const AI_SETTINGS_KEY = 'aura_ai';
@@ -184,7 +188,7 @@ Only if warning signs exist; otherwise write: ${my ? 'မှတ်တမ်း�
 
 // -- providers ------------------------------------------------------------------
 async function callGemini(key, system, user) {
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(key);
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=' + encodeURIComponent(key);
   const r = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -230,9 +234,10 @@ async function askAiAdvice() {
   const ctx = buildAiContext(await detectLiveCountry());
   const { system, user } = buildAiMessages(ctx);
   const s = aiSettings();
+  const key = getEffectiveKey();
 
   const tries = [];
-  if (s.provider === 'gemini' || (s.provider === 'auto' && s.geminiKey)) tries.push('gemini');
+  if (s.provider === 'gemini' || (s.provider === 'auto' && key)) tries.push('gemini');
   if (s.provider === 'pollinations' || s.provider === 'auto') tries.push('pollinations');
   if (!tries.length) tries.push('pollinations');
 
@@ -240,8 +245,8 @@ async function askAiAdvice() {
   for (const p of tries) {
     try {
       if (p === 'gemini') {
-        if (!s.geminiKey) { const e = new Error('nokey'); e.code = 'nokey'; throw e; }
-        const text = await callGemini(s.geminiKey, system, user);
+        if (!key) { const e = new Error('nokey'); e.code = 'nokey'; throw e; }
+        const text = await callGemini(key, system, user);
         return { text, provider: 'gemini', ctx };
       }
       const text = await callPollinations(system, user);
@@ -250,6 +255,10 @@ async function askAiAdvice() {
       lastErr = e;
       if (e.code === 'nokey' || e.code === 'offline') throw e;
     }
+  }
+  // No key and the keyless fallback failed: guide the user to paste the key.
+  if (!key && s.provider !== 'pollinations') {
+    const e = new Error('nokey'); e.code = 'nokey'; throw e;
   }
   const e = new Error('failed');
   e.code = 'failed';
