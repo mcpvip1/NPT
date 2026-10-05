@@ -16,6 +16,9 @@ function switchTab(name) {
     renderInsights();
     animateInsightsHero();
   }
+  if (name === 'tab-home') {
+    animateHomeStats();
+  }
 }
 
 function initTabs() {
@@ -660,10 +663,12 @@ async function checkAppUpdate() {
     let stored = APP_VERSION;
     try { stored = localStorage.getItem('aura_app_ver') || APP_VERSION; } catch (e) {}
     if (!sha || sha === stored) {
+      clearUpdateBadge();
       info(T.updUpToDateTitle, T.updUpToDateMsg(stored));
       return;
     }
     await applyAppUpdate(sha, msg, info);
+    clearUpdateBadge();
   } catch (e) {
     info(T.updFailedTitle, T.updFailedMsg);
   } finally {
@@ -690,6 +695,41 @@ async function applyAppUpdate(sha, msg, info) {
   try { localStorage.setItem('aura_app_ver', sha); } catch (e) {}
   info(T.updDoneTitle, T.updDoneMsg(msg), () => location.reload(), T.btnRestart);
   setTimeout(() => { if (!$('info-popup').classList.contains('hidden')) location.reload(); }, 4000);
+}
+
+// ---- silent update check on launch ---------------------------------------
+// Runs once per app open, a couple of seconds after the UI settles. If a
+// newer version exists on GitHub, the Update button grows a pulsing
+// notification dot and a toast explains what to do. Never bothers the
+// user when offline, up to date, or when the check itself fails.
+let _updateCheckDone = false;
+async function silentUpdateCheck() {
+  if (_updateCheckDone) return;
+  _updateCheckDone = true;
+  try {
+    const online = (typeof hasInternet === 'function') ? await hasInternet(4000) : navigator.onLine !== false;
+    if (!online) return;
+    const r = await fetch('https://api.github.com/repos/' + UPDATE_REPO + '/commits/main', { cache: 'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    const sha = String(j.sha || '').slice(0, 8);
+    let stored = APP_VERSION;
+    try { stored = localStorage.getItem('aura_app_ver') || APP_VERSION; } catch (e) {}
+    if (!sha || sha === stored) { clearUpdateBadge(); return; }
+    showUpdateBadge();
+  } catch (e) { /* silent */ }
+}
+
+function showUpdateBadge() {
+  const btn = els.hdrUpdate;
+  if (!btn || btn.classList.contains('has-update')) return;
+  btn.classList.add('has-update');
+  toast(t().updAvailableToast);
+}
+
+function clearUpdateBadge() {
+  const btn = els.hdrUpdate;
+  if (btn) btn.classList.remove('has-update');
 }
 
 function init() {
@@ -726,9 +766,12 @@ function init() {
   } else {
     fillSettingsForm();
     renderAll();
+    animateHomeStats();
     renderBotHello();
     maybeShowInstallNudge();
     checkWellnessNudges();
+    // check for a newer app version once the UI has settled
+    setTimeout(silentUpdateCheck, 2500);
   }
 }
 
