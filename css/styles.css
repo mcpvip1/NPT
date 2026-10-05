@@ -1529,6 +1529,37 @@ textarea { resize: vertical; }
 .key-row { display: flex; gap: 8px; align-items: stretch; }
 .key-row input { flex: 1; min-width: 0; }
 .key-row .btn { flex-shrink: 0; }
+/* ---- splash (every launch) ---- */
+#splash { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #fff1f6 0%, #fce7f3 45%, #fbcfe8 100%);
+  transition: opacity .45s ease, visibility .45s ease;
+  animation: splashSafety .6s ease 9s forwards; }
+[data-theme="dark"] #splash { background: linear-gradient(160deg, #2a1220 0%, #3b1527 45%, #4a1a30 100%); }
+#splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+@keyframes splashSafety { to { opacity: 0; visibility: hidden; } }
+.splash-inner { text-align: center; padding: 24px; animation: splashIn .5s ease both; }
+@keyframes splashIn { from { opacity: 0; transform: translateY(12px) scale(.97); } to { opacity: 1; transform: none; } }
+.splash-logo { font-size: 76px; line-height: 1; animation: splashFloat 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 10px 24px rgba(236, 72, 153, .35)); }
+@keyframes splashFloat { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-12px) scale(1.07); } }
+.splash-name { margin-top: 14px; font-size: 36px; font-weight: 800; letter-spacing: .5px;
+  background: linear-gradient(120deg, #ec4899, #f472b6 60%, #db2777);
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.splash-tag { margin-top: 4px; font-size: 13px; opacity: .62; }
+.splash-bar { width: 210px; max-width: 60vw; height: 7px; margin: 22px auto 10px; border-radius: 99px;
+  background: rgba(236, 72, 153, .16); overflow: hidden; }
+.splash-bar span { display: block; height: 100%; width: 0; border-radius: 99px;
+  background: linear-gradient(90deg, #ec4899, #f9a8d4);
+  transition: width .35s ease; position: relative; overflow: hidden; }
+.splash-bar span::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  animation: splashShimmer 1.3s linear infinite; }
+@keyframes splashShimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+.splash-status { font-size: 12px; opacity: .6; min-height: 18px; }
+@media (prefers-reduced-motion: reduce) {
+  .splash-logo, .splash-bar span::after, .splash-inner { animation: none; }
+}
+
 .ai-setup { margin: 4px 0 14px; }
 .ai-setup summary {
   font-size: .84rem; font-weight: 700; color: var(--primary-dark);
