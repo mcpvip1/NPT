@@ -575,15 +575,15 @@ function initAudioUnlock() {
   document.addEventListener('keydown', unlockAudio);
 }
 
-// tap the bot anywhere and it boings at you.
+// tap the flower anywhere and it boings at you.
 function initBotTap() {
   document.addEventListener('click', e => {
-    const b = e.target.closest('.bot3d');
+    const b = e.target.closest('.flower-tap');
     if (!b) return;
     playBoing();
-    b.classList.remove('boing');
-    void b.offsetWidth; // restart the bounce
-    b.classList.add('boing');
+    b.classList.remove('flower-jump');
+    void b.offsetWidth; // restart the jump
+    b.classList.add('flower-jump');
   });
 }
 
