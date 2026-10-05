@@ -752,13 +752,55 @@ async function applyAppUpdate(sha, msg, info) {
   setTimeout(() => { if (!$('info-popup').classList.contains('hidden')) location.reload(); }, 4000);
 }
 
-// ---- silent update check on launch ---------------------------------------
-// Runs once per app open, a couple of seconds after the UI settles. If a
-// newer version exists on GitHub, the Update button grows a pulsing
-// notification dot and a toast explains what to do. Never bothers the
-// user when offline, up to date, or when the check itself fails.
-let _updateCheckDone = false;
+// ---- splash + update check on every launch -------------------------------
+// The splash shows on every app open with a loading bar. While it shows,
+// and only when the user has internet, we check GitHub for a newer version.
+// Update found -> the what's-new popup appears right after the splash.
+// No update / offline -> straight to the main page.
 let _pendingUpdate = null; // newest commit awaiting install from the what's-new card
+
+function setSplashProgress(pct, statusKey) {
+  const fill = $('splash-fill');
+  if (fill) fill.style.width = Math.min(100, Math.max(0, pct)) + '%';
+  if (statusKey) {
+    const st = $('splash-status');
+    const txt = t()[statusKey];
+    if (st && txt) st.textContent = txt;
+  }
+}
+
+function hideSplash() {
+  const sp = $('splash');
+  if (sp) sp.classList.add('hide');
+}
+
+// changelog of commits newer than the stored version (empty = none/offline/error)
+async function checkForUpdateChanges() {
+  try {
+    const online = (typeof hasInternet === 'function') ? await hasInternet(4000) : navigator.onLine !== false;
+    if (!online) return [];
+    let stored = APP_VERSION;
+    try { stored = localStorage.getItem('aura_app_ver') || APP_VERSION; } catch (e) {}
+    return await fetchChangelog(stored);
+  } catch (e) { return []; }
+}
+
+async function bootSplashFlow() {
+  setSplashProgress(55, 'splashChecking');
+  const minShow = new Promise(r => setTimeout(r, 1700));
+  const cap = new Promise(r => setTimeout(() => r([]), 9000));
+  const [changes] = await Promise.all([Promise.race([checkForUpdateChanges(), cap]), minShow]);
+  setSplashProgress(100);
+  await new Promise(r => setTimeout(r, 280));
+  hideSplash();
+  if (changes && changes.length) {
+    _pendingUpdate = changes[0];
+    showUpdateBadge();
+    showUpdateCard(changes);
+  } else {
+    clearUpdateBadge();
+  }
+}
 
 // newest commits on main since the stored version (capped, for the changelog).
 async function fetchChangelog(sinceShortSha) {
@@ -783,19 +825,8 @@ function escHtml(s) {
 }
 
 async function silentUpdateCheck() {
-  if (_updateCheckDone) return;
-  _updateCheckDone = true;
-  try {
-    const online = (typeof hasInternet === 'function') ? await hasInternet(4000) : navigator.onLine !== false;
-    if (!online) return;
-    let stored = APP_VERSION;
-    try { stored = localStorage.getItem('aura_app_ver') || APP_VERSION; } catch (e) {}
-    const changes = await fetchChangelog(stored);
-    if (!changes.length) { clearUpdateBadge(); return; }
-    _pendingUpdate = changes[0];
-    showUpdateBadge();
-    showUpdateCard(changes);
-  } catch (e) { /* silent */ }
+  // replaced by the splash-driven bootSplashFlow() on every launch;
+  // kept as a no-op so nothing breaks if called elsewhere.
 }
 
 function showUpdateBadge() {
@@ -874,15 +905,19 @@ function init() {
   if (!hasSettings || !state.data.lastDate) {
     wizOpen();
     renderCalendar();
+    // first run: nothing to check for — reveal the wizard right away
+    setTimeout(hideSplash, 700);
   } else {
     fillSettingsForm();
+    setSplashProgress(20);
     renderAll();
+    setSplashProgress(38);
     animateHomeStats();
     renderBotHello();
     maybeShowInstallNudge();
     checkWellnessNudges();
-    // check for a newer app version once the UI has settled
-    setTimeout(silentUpdateCheck, 2500);
+    // every launch: splash + immediate update check when online
+    bootSplashFlow();
   }
 }
 
