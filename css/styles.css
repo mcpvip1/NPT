@@ -1431,6 +1431,7 @@ textarea { resize: vertical; }
   background: rgba(255,255,255,.14); pointer-events: none;
 }
 .upd-ico { font-size: 1.9rem; display: block; margin-bottom: 8px; }
+.upd-flower { display: block; margin-bottom: 10px; position: relative; }
 .upd-hero h2 { font-size: 1.15rem; font-weight: 800; position: relative; }
 .upd-ver {
   display: inline-block; margin-top: 8px; padding: 4px 12px; border-radius: 999px;
@@ -1438,9 +1439,11 @@ textarea { resize: vertical; }
   font-family: ui-monospace, SFMono-Regular, monospace; position: relative;
 }
 .upd-sub { margin: 8px 0 0; font-size: .78rem; opacity: .88; position: relative; }
-.upd-log { list-style: none; padding: 16px 18px 4px; margin: 0; max-height: 240px; overflow-y: auto;
+.upd-log { padding: 16px 18px 4px; margin: 0; max-height: 240px; overflow-y: auto;
   display: flex; flex-direction: column; gap: 10px; }
-.upd-log li {
+.upd-group-title { font-size: .76rem; font-weight: 800; color: var(--primary-dark);
+  margin: 2px 2px -4px; }
+.upd-row {
   display: flex; gap: 10px; align-items: flex-start;
   background: var(--primary-soft); border-radius: 14px; padding: 11px 13px;
   font-size: .85rem; line-height: 1.6; color: var(--text);
