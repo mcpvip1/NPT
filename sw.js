@@ -10,7 +10,7 @@
 // (cache-first). Now only successful responses are cached, and assets are
 // cached one by one so a single failure can't abort the whole install.
 
-const CACHE = 'aura-v20';
+const CACHE = 'aura-v21';
 const ASSETS = [
   './',
   './index.html',
