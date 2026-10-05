@@ -89,10 +89,13 @@ const els = {
   advicePermBtn: $('advice-perm-btn'),
   adviceToday: $('advice-today'),
   doctorFlagsList: $('doctor-flags-list'),
-  aiAsk: $('ai-ask'),
+  aiAdvice: $('ai-advice'),
   aiLoading: $('ai-loading'),
-  aiResult: $('ai-result'),
-  aiError: $('ai-error'),
+  aiSections: $('ai-sections'),
+  aiCountryPill: $('ai-country-pill'),
+  aiRefresh: $('ai-refresh'),
+  adviceClassic: $('advice-classic'),
+  aiFallbackNote: $('ai-fallback-note'),
   aiProviderSeg: $('ai-provider-seg'),
   geminiKey: $('set-gemini-key'),
   aiSave: $('ai-save'),
@@ -746,27 +749,87 @@ function renderAdvicePage() {
   if (strip) strip.classList.toggle('hidden', !flags.length);
 
   if (typeof renderRecommendations === 'function') renderRecommendations();
-  renderAiCard();
+  renderAiAdvice();
 }
 
-// AI card: show today's cached advice if the logs haven't changed since.
-function renderAiCard() {
-  if (!els.aiResult || !els.aiAsk) return;
-  const T = t();
-  const cache = getAiCache();
-  const ctx = buildAiContext(typeof _liveCountry !== 'undefined' ? _liveCountry : null);
-  const fresh = cache && cache.hash === aiContextHash(ctx);
-  if (fresh) {
-    els.aiResult.innerHTML = cache.html;
-    els.aiResult.classList.remove('hidden');
-    els.aiAsk.querySelector('span').textContent = T.aiRefresh;
-  } else {
-    els.aiResult.classList.add('hidden');
-    els.aiResult.innerHTML = '';
-    els.aiAsk.querySelector('span').textContent = T.aiAsk;
+// AI advice sections: online → AI-generated from her condition + current
+// country (cached per day/context); offline or AI failure → classic UI.
+let _aiAdviceBusy = false;
+async function renderAiAdvice() {
+  if (!els.aiAdvice || !els.adviceClassic) return;
+  if (_aiAdviceBusy) return;
+  _aiAdviceBusy = true;
+
+  const showLoading = () => {
+    els.adviceClassic.classList.add('hidden');
+    els.aiAdvice.classList.remove('hidden');
+    els.aiSections.innerHTML = '';
+    els.aiLoading.classList.remove('hidden');
+  };
+  const showClassic = () => {
+    els.aiAdvice.classList.add('hidden');
+    els.adviceClassic.classList.remove('hidden');
+    if (els.aiFallbackNote) els.aiFallbackNote.classList.remove('hidden');
+  };
+
+  showLoading();
+  try {
+    const online = (typeof hasInternet === 'function') ? await hasInternet(5000) : navigator.onLine !== false;
+    const live = online ? await detectLiveCountry() : null;
+    const ctx = buildAiContext(live);
+    const hash = aiContextHash(ctx);
+    const cache = getAiJsonCache();
+    if (cache && cache.hash === hash) {
+      showAiSections(cache.data, ctx);
+      return;
+    }
+    if (!online) { showClassic(); return; }
+    const { data } = await getAiAdvice(ctx);
+    setAiJsonCache(data, hash);
+    showAiSections(data, ctx);
+  } catch (e) {
+    // AI unreachable or unparsable (or no key): the old way, as requested.
+    showClassic();
+  } finally {
+    _aiAdviceBusy = false;
   }
-  if (els.aiError) els.aiError.classList.add('hidden');
-  if (els.aiLoading) els.aiLoading.classList.add('hidden');
+}
+
+function showAiSections(data, ctx) {
+  const T = t();
+  els.aiLoading.classList.add('hidden');
+  els.adviceClassic.classList.add('hidden');
+  els.aiAdvice.classList.remove('hidden');
+  if (els.aiCountryPill) els.aiCountryPill.textContent = '📍 ' + ctx.countryName;
+
+  let html = '';
+  if (data.summary) {
+    html += `<div class="ai-sec"><h4>💗 ${esc(T.aiSecSummary)}</h4><p>${esc(data.summary)}</p></div>`;
+  }
+  if (data.mood) {
+    html += `<div class="ai-sec"><h4>😊 ${esc(T.aiSecMood)}</h4><p>${esc(data.mood)}</p></div>`;
+  }
+  if (data.dailyTips.length) {
+    html += `<div class="ai-sec"><h4>🌿 ${esc(T.aiSecDaily)}</h4><ul>${data.dailyTips.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  }
+  const prods = data.products.concat(data.medicines.map(m => ({
+    name: m.name, why: m.why, where: m.note, med: true
+  })));
+  if (prods.length) {
+    html += `<div class="ai-sec"><h4>🛍️ ${esc(T.aiSecShop)}</h4>` + prods.map(p =>
+      `<div class="ai-prod"><div class="ai-prod-name">${esc(p.name)}</div>` +
+      (p.why ? `<div class="ai-prod-why">${esc(p.why)}</div>` : '') +
+      (p.where ? `<div class="ai-prod-meta">${p.med ? '💊' : '📍'} ${esc(p.where)}</div>` : '') +
+      `</div>`
+    ).join('') + `</div>`;
+  }
+  if (data.doctor) {
+    html += `<div class="ai-sec ai-sec-doctor"><h4>🚩 ${esc(T.aiSecDoctor)}</h4><p>${esc(data.doctor)}</p></div>`;
+  }
+  if (!html) {
+    html = `<div class="ai-sec"><p>${esc(T.aiErrFailed)}</p></div>`;
+  }
+  els.aiSections.innerHTML = html;
 }
 
 function renderHeader() {
