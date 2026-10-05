@@ -627,6 +627,7 @@ function initEscape() {
     else if (!els.phaseModal.classList.contains('hidden')) closePhasePopup();
     else if (!els.importModal.classList.contains('hidden')) closeModal(els.importModal);
     else if (!els.confirmModal.classList.contains('hidden')) closeConfirm(false);
+    else if (els.updCard && !els.updCard.classList.contains('hidden')) hideUpdateCard();
   });
 }
 
@@ -703,20 +704,43 @@ async function applyAppUpdate(sha, msg, info) {
 // notification dot and a toast explains what to do. Never bothers the
 // user when offline, up to date, or when the check itself fails.
 let _updateCheckDone = false;
+let _pendingUpdate = null; // newest commit awaiting install from the what's-new card
+
+// newest commits on main since the stored version (capped, for the changelog).
+async function fetchChangelog(sinceShortSha) {
+  const r = await fetch(`https://api.github.com/repos/${UPDATE_REPO}/commits?per_page=10`, { cache: 'no-store' });
+  if (!r.ok) throw new Error('github api ' + r.status);
+  const list = await r.json();
+  if (!Array.isArray(list)) return [];
+  const out = [];
+  for (const c of list) {
+    const sha = String(c.sha || '');
+    if (sinceShortSha && sha.startsWith(sinceShortSha)) break;
+    const msg = String((c.commit && c.commit.message) || '').split('\n')[0].slice(0, 120).trim();
+    if (!msg) continue;
+    out.push({ sha: sha.slice(0, 8), msg });
+    if (out.length >= 5) break;
+  }
+  return out;
+}
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
 async function silentUpdateCheck() {
   if (_updateCheckDone) return;
   _updateCheckDone = true;
   try {
     const online = (typeof hasInternet === 'function') ? await hasInternet(4000) : navigator.onLine !== false;
     if (!online) return;
-    const r = await fetch('https://api.github.com/repos/' + UPDATE_REPO + '/commits/main', { cache: 'no-store' });
-    if (!r.ok) return;
-    const j = await r.json();
-    const sha = String(j.sha || '').slice(0, 8);
     let stored = APP_VERSION;
     try { stored = localStorage.getItem('aura_app_ver') || APP_VERSION; } catch (e) {}
-    if (!sha || sha === stored) { clearUpdateBadge(); return; }
+    const changes = await fetchChangelog(stored);
+    if (!changes.length) { clearUpdateBadge(); return; }
+    _pendingUpdate = changes[0];
     showUpdateBadge();
+    showUpdateCard(changes);
   } catch (e) { /* silent */ }
 }
 
@@ -724,12 +748,43 @@ function showUpdateBadge() {
   const btn = els.hdrUpdate;
   if (!btn || btn.classList.contains('has-update')) return;
   btn.classList.add('has-update');
-  toast(t().updAvailableToast);
 }
 
 function clearUpdateBadge() {
   const btn = els.hdrUpdate;
   if (btn) btn.classList.remove('has-update');
+}
+
+// beautiful what's-new card: version + changelog, with Update Now / Later.
+function showUpdateCard(changes) {
+  if (!els.updCard || !els.updCard.classList.contains('hidden')) return;
+  els.updVer.textContent = '#' + changes[0].sha;
+  els.updLog.innerHTML = changes.map(c =>
+    `<li><span class="upd-sha">${escHtml(c.sha)}</span>${escHtml(c.msg)}</li>`
+  ).join('');
+  els.updCard.classList.remove('hidden');
+  document.body.classList.add('no-scroll');
+}
+
+function hideUpdateCard() {
+  if (els.updCard) els.updCard.classList.add('hidden');
+  document.body.classList.remove('no-scroll');
+}
+
+function initUpdateCard() {
+  if (els.updNow) els.updNow.addEventListener('click', async () => {
+    hideUpdateCard();
+    if (_pendingUpdate) {
+      await applyAppUpdate(_pendingUpdate.sha, _pendingUpdate.msg);
+      clearUpdateBadge();
+      _pendingUpdate = null;
+    }
+  });
+  if (els.updLater) els.updLater.addEventListener('click', hideUpdateCard);
+  // tapping the backdrop dismisses (the badge stays for a manual update)
+  if (els.updCard) els.updCard.addEventListener('click', e => {
+    if (e.target === els.updCard) hideUpdateCard();
+  });
 }
 
 function init() {
@@ -759,6 +814,7 @@ function init() {
   if (typeof initRecommendations === 'function') initRecommendations();
   initBotTap();
   initEscape();
+  initUpdateCard();
 
   if (!hasSettings || !state.data.lastDate) {
     wizOpen();
