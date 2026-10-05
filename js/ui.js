@@ -788,7 +788,15 @@ async function renderAiAdvice() {
     setAiJsonCache(data, hash);
     showAiSections(data, ctx);
   } catch (e) {
-    // AI unreachable or unparsable (or no key): the old way, as requested.
+    // Show WHY it fell back — actionable for her, diagnosable for us.
+    if (els.aiFallbackNote) {
+      const T = t();
+      const code = e && e.code;
+      els.aiFallbackNote.textContent =
+        code === 'offline' ? T.aiErrOffline :
+        code === 'nokey' ? T.aiErrNoKey :
+        T.aiFallbackNote;
+    }
     showClassic();
   } finally {
     _aiAdviceBusy = false;
