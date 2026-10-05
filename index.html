@@ -176,6 +176,24 @@
               <span data-lbl="lblAdvicePermNote"></span>
               <button type="button" id="advice-perm-btn" class="btn ghost small" data-lbl="btnAskNotif"></button>
             </div>
+            <!-- AI health assistant: personal advice from the user's real logs -->
+            <div class="ai-card" id="ai-card">
+              <div class="ai-card-head">
+                <span class="ai-ico" aria-hidden="true">✨</span>
+                <div>
+                  <h3 data-lbl="aiTitle">AI Health Assistant</h3>
+                  <p class="sub-text tiny" data-lbl="aiSub"></p>
+                </div>
+              </div>
+              <div id="ai-loading" class="ai-loading hidden" aria-live="polite">
+                <div class="ai-think"><span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span></div>
+                <p class="sub-text tiny" data-lbl="aiThinking"></p>
+              </div>
+              <div id="ai-result" class="ai-result hidden"></div>
+              <p id="ai-error" class="ai-error hidden"></p>
+              <button type="button" id="ai-ask" class="btn primary full"><span data-lbl="aiAsk">Get AI advice</span></button>
+              <p class="sub-text tiny ai-privacy" data-lbl="aiPrivacy"></p>
+            </div>
             <details class="doctor-strip hidden" id="doctor-strip">
               <summary><span data-lbl="lblDoctorFlags"></span></summary>
               <ul id="doctor-flags-list" class="advice-list"></ul>
@@ -403,6 +421,25 @@
                 <label class="switch"><input type="checkbox" id="set-wellness" checked><span class="switch-track"></span></label>
               </div>
               <p class="sub-text tiny" data-lbl="lblWellnessNudgesSub"></p>
+            </div>
+
+            <h3 class="set-group-title"><span data-icon="advice"></span><span data-lbl="aiSetTitle">AI Assistant</span></h3>
+            <div class="set-card">
+              <p class="sub-text tiny" data-lbl="aiSetSub"></p>
+              <div class="field">
+                <label data-lbl="aiSetProvider">AI provider</label>
+                <div class="seg" id="ai-provider-seg" role="group">
+                  <button type="button" data-ai-provider="auto"><span data-lbl="aiProvAuto">Auto</span></button>
+                  <button type="button" data-ai-provider="gemini"><span data-lbl="aiProvGemini">Gemini</span></button>
+                  <button type="button" data-ai-provider="pollinations"><span data-lbl="aiProvPoll">Pollinations</span></button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="set-gemini-key" data-lbl="aiSetKey">Gemini API key (free)</label>
+                <input type="password" id="set-gemini-key" autocomplete="off" placeholder="AIza…">
+                <p class="sub-text tiny"><span data-lbl="aiSetKeyHint"></span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" data-lbl="aiGetKey">Get a free key</a></p>
+              </div>
+              <button type="button" class="btn primary full" id="ai-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
             </div>
 
             <h3 class="set-group-title"><span data-icon="settings"></span><span data-lbl="lblBotHeading">Helper bot</span></h3>
@@ -733,6 +770,7 @@
   <script src="js/icons-3d.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/recommend.js"></script>
+  <script src="js/ai.js"></script>
   <script src="js/main.js"></script>
 </body>
 
