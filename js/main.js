@@ -809,11 +809,13 @@ async function fetchChangelog(sinceShortSha) {
   const list = await r.json();
   if (!Array.isArray(list)) return [];
   const out = [];
+  const seen = new Set();
   for (const c of list) {
     const sha = String(c.sha || '');
     if (sinceShortSha && sha.startsWith(sinceShortSha)) break;
     const msg = String((c.commit && c.commit.message) || '').split('\n')[0].slice(0, 120).trim();
-    if (!msg) continue;
+    if (!msg || seen.has(msg)) continue; // one row per push (multi-file pushes share a message)
+    seen.add(msg);
     out.push({ sha: sha.slice(0, 8), msg });
     if (out.length >= 5) break;
   }
@@ -822,6 +824,36 @@ async function fetchChangelog(sinceShortSha) {
 
 function escHtml(s) {
   return String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+// Burmese for commits written before the bilingual message format below.
+const CHANGELOG_MY = {
+  'a2d6fbda': 'Splash မှာ ချစ်စရာ ပန်းကလေး animation အသစ် 🌸',
+  '64012026': 'App ဖွင့်တိုင်း animated splash + loading bar — အပ်ဒိတ် အလိုအလျောက် စစ်ပေးမယ်',
+  'ab64f550': 'အစ setup မှာ AI key ထည့်ဖို့ အဆင့်အသစ် + ကူးထည့်မယ် ခလုတ်',
+  '8ccd056e': 'AI ပိုတည်ငြိမ်အောင် ပြင်ဆင်မှု',
+  '4f83119e': 'AI အဖြေ ပြတ်တောက်သွားတာ ပြင်ဆင်ချက်',
+  'a4a97816': 'အကြံဉာဏ် tab မှာ AI အပိုင်းသစ်များ',
+  '8eff26d2': 'စာသားပြင်ဆင်မှုများ',
+  '26f9326d': 'AI key ကို Settings ထဲမှာပဲ လုံခြုံစွာ သိမ်းမယ်',
+  'b43533e8': 'AI key ကို Settings ထဲမှာပဲ လုံခြုံစွာ သိမ်းမယ်'
+};
+
+// Commit subjects may carry both languages: "[my] ... | [en] ...".
+// Show the user's language; fall back to the map above, then the raw subject.
+function changeText(raw, sha) {
+  const s = String(raw || '');
+  let my = null, en = null;
+  for (const part of s.split('|')) {
+    const p = part.trim();
+    let m = p.match(/^\[my\]\s*([\s\S]*)$/i);
+    if (m) { my = m[1].trim(); continue; }
+    m = p.match(/^\[en\]\s*([\s\S]*)$/i);
+    if (m) en = m[1].trim();
+  }
+  if (my || en) return state.lang === 'my' ? (my || en) : (en || my);
+  if (state.lang === 'my' && CHANGELOG_MY[sha]) return CHANGELOG_MY[sha];
+  return s;
 }
 
 async function silentUpdateCheck() {
@@ -844,8 +876,10 @@ function clearUpdateBadge() {
 function showUpdateCard(changes) {
   if (!els.updCard || !els.updCard.classList.contains('hidden')) return;
   els.updVer.textContent = '#' + changes[0].sha;
+  const sub = $('upd-sub');
+  if (sub) sub.textContent = t().updCount(changes.length);
   els.updLog.innerHTML = changes.map(c =>
-    `<li><span class="upd-sha">${escHtml(c.sha)}</span>${escHtml(c.msg)}</li>`
+    `<li><span class="upd-tick">✦</span><span>${escHtml(changeText(c.msg, c.sha))}</span></li>`
   ).join('');
   els.updCard.classList.remove('hidden');
   document.body.classList.add('no-scroll');
