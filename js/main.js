@@ -630,7 +630,7 @@ function initAiSettings() {
       provider: active ? active.dataset.aiProvider : 'auto',
       geminiKey: els.geminiKey ? els.geminiKey.value.trim() : ''
     });
-    try { localStorage.removeItem(AI_CACHE_KEY); } catch (e) {}
+    try { clearAiJsonCache(); } catch (e) {}
     toast(t().msgSaved, 'ok');
   });
 }
