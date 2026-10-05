@@ -185,17 +185,23 @@ SAFETY RULES
 // -- providers ------------------------------------------------------------------
 async function callGemini(key, system, user, jsonMode) {
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=' + encodeURIComponent(key);
-  const gen = { temperature: 0.7, maxOutputTokens: 1500 };
+  const gen = { temperature: 0.7, maxOutputTokens: 8192 };
   if (jsonMode) gen.responseMimeType = 'application/json';
-  const r = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: system }] },
-      contents: [{ parts: [{ text: user }] }],
-      generationConfig: gen
-    })
+  const body = JSON.stringify({
+    systemInstruction: { parts: [{ text: system }] },
+    contents: [{ parts: [{ text: user }] }],
+    generationConfig: gen
   });
+  // One retry on overload/rate-limit: the flash models 503 under spikes.
+  let r = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+    if ((r.status === 503 || r.status === 429) && attempt === 0) {
+      await new Promise(res => setTimeout(res, 2500));
+      continue;
+    }
+    break;
+  }
   if (!r.ok) throw new Error('gemini ' + r.status);
   const j = await r.json();
   const text = j && j.candidates && j.candidates[0] && j.candidates[0].content &&
