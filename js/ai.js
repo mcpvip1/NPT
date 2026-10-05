@@ -16,7 +16,6 @@ function getEffectiveKey() {
   return (aiSettings().geminiKey || '').trim();
 }
 
-const AI_CACHE_KEY = 'aura_ai_cache';
 const AI_SETTINGS_KEY = 'aura_ai';
 
 function aiSettings() {
@@ -137,8 +136,8 @@ function aiContextHash(ctx) {
   return String(h);
 }
 
-// -- the prompt ---------------------------------------------------------------
-function buildAiMessages(ctx) {
+// -- the prompt: strict JSON so advice lands in the right page sections --------
+function buildAiJsonMessages(ctx) {
   const my = ctx.lang === 'my';
   const langName = my ? 'Burmese (မြန်မာ)' : 'English';
 
@@ -146,31 +145,28 @@ function buildAiMessages(ctx) {
 `You are Aura, a warm and careful women's-health assistant inside a period-tracker app.
 You are NOT a doctor and you never diagnose illness.
 
-Reply ONLY in ${langName}. Keep it personal, specific and scannable — short lines, no walls of text.
+Reply with ONLY a JSON object — no markdown, no code fences, no other text.
+Use this exact shape (all strings in ${langName}):
+{
+  "summary": "2-3 sentences on how she seems based on her logs",
+  "mood": "warm guidance for her current mood and emotional state, tied to what she logged",
+  "dailyTips": ["3-5 short daily self-care tips tied to her actual symptoms"],
+  "products": [{"name": "product name", "why": "why it fits her symptoms", "where": "where to buy it in ${ctx.countryName}"}],
+  "medicines": [{"name": "medicine type + example brand", "why": "why it could help", "note": "must include: check with a pharmacist/doctor and follow the package dose"}],
+  "doctor": "clear 'see a doctor soon' note if her logs show warning signs, otherwise null"
+}
 
 LOCATION — DETECT FIRST
-The user is currently in ${ctx.countryName}. Every single product and medicine
-suggestion must be something commonly sold in ${ctx.countryName} ONLY.
-Never mention, suggest, or compare with products from any other country.
+She is currently in ${ctx.countryName}. Every product and medicine must be
+commonly sold in ${ctx.countryName} ONLY. Never mention, suggest, or compare
+with products from any other country. Never invent brands.
 
 SAFETY RULES
-- Give gentle self-care guidance only. Never state a diagnosis.
-- For any medicine: name the type and an example brand actually sold in ${ctx.countryName}, and ALWAYS add that she should check with a pharmacist or doctor and follow the package dose.
-- Only suggest real brand names you know exist in ${ctx.countryName} (e.g. from pharmacies or convenience stores there). Never invent brands.
-- If the logs show warning signs (very heavy bleeding, severe pain, cycle far outside her normal), put a clear "see a doctor soon" note FIRST.
-- End with one short line that this is friendly guidance, not medical advice. Do not repeat disclaimers.
-
-FORMAT (markdown, whole reply under 350 words)
-## 💗 Summary
-2-3 sentences on how she seems based on her logs.
-## 🌿 Self-care tips
-3-5 short bullets tied to her actual symptoms and mood.
-## 🛍️ Worth getting in ${ctx.countryName}
-2-4 items. Each: **product name** — why it fits her — where to find it in ${ctx.countryName}.
-## 💊 If medicine could help
-Only if her symptoms suggest it. Type + example brand in ${ctx.countryName} + pharmacist note.
-## 🚩 Doctor check
-Only if warning signs exist; otherwise write: ${my ? 'မှတ်တမ်းတွေမှာ စိုးရိမ်စရာ မတွေ့ပါ 👍' : 'Nothing alarming in your logs 👍'}`;
+- Gentle self-care guidance only. Never state a diagnosis.
+- "medicines" only when her symptoms suggest it; may be an empty array.
+- If her logs show warning signs (very heavy bleeding, severe pain, cycle far
+  outside her normal), put the warning in "doctor". Otherwise "doctor" is null.
+- Keep every string short and scannable.`;
 
   const lines = [
     `Profile: ${ctx.profile}`,
@@ -187,15 +183,17 @@ Only if warning signs exist; otherwise write: ${my ? 'မှတ်တမ်း�
 }
 
 // -- providers ------------------------------------------------------------------
-async function callGemini(key, system, user) {
+async function callGemini(key, system, user, jsonMode) {
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=' + encodeURIComponent(key);
+  const gen = { temperature: 0.7, maxOutputTokens: 1500 };
+  if (jsonMode) gen.responseMimeType = 'application/json';
   const r = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: system }] },
       contents: [{ parts: [{ text: user }] }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 1200 }
+      generationConfig: gen
     })
   });
   if (!r.ok) throw new Error('gemini ' + r.status);
@@ -226,13 +224,31 @@ async function callPollinations(system, user) {
   return String(text).trim();
 }
 
-// -- main entry -------------------------------------------------------------------
-async function askAiAdvice() {
-  const online = (typeof hasInternet === 'function') ? await hasInternet(6000) : navigator.onLine !== false;
-  if (!online) { const e = new Error('offline'); e.code = 'offline'; throw e; }
+// -- main entry: structured advice ------------------------------------------------
+// Online → AI-generated sections based on her condition + current country.
+// Offline (or AI failure) → the caller falls back to the classic rule-based UI.
+function parseAiJson(text) {
+  const clean = String(text).replace(/```(?:json)?/gi, '').trim();
+  const data = JSON.parse(clean);
+  if (!data || typeof data !== 'object') throw new Error('bad ai json');
+  const str = v => (typeof v === 'string' ? v.trim() : '');
+  const arr = v => (Array.isArray(v) ? v : []);
+  return {
+    summary: str(data.summary),
+    mood: str(data.mood),
+    dailyTips: arr(data.dailyTips).map(str).filter(Boolean).slice(0, 6),
+    products: arr(data.products).slice(0, 5).map(p => ({
+      name: str(p.name), why: str(p.why), where: str(p.where)
+    })).filter(p => p.name),
+    medicines: arr(data.medicines).slice(0, 4).map(m => ({
+      name: str(m.name), why: str(m.why), note: str(m.note)
+    })).filter(m => m.name),
+    doctor: str(data.doctor) || null
+  };
+}
 
-  const ctx = buildAiContext(await detectLiveCountry());
-  const { system, user } = buildAiMessages(ctx);
+async function getAiAdvice(ctx) {
+  const { system, user } = buildAiJsonMessages(ctx);
   const s = aiSettings();
   const key = getEffectiveKey();
 
@@ -244,13 +260,14 @@ async function askAiAdvice() {
   let lastErr = null;
   for (const p of tries) {
     try {
+      let text;
       if (p === 'gemini') {
         if (!key) { const e = new Error('nokey'); e.code = 'nokey'; throw e; }
-        const text = await callGemini(key, system, user);
-        return { text, provider: 'gemini', ctx };
+        text = await callGemini(key, system, user, true);
+      } else {
+        text = await callPollinations(system, user);
       }
-      const text = await callPollinations(system, user);
-      return { text, provider: 'pollinations', ctx };
+      return { data: parseAiJson(text), provider: p, ctx };
     } catch (e) {
       lastErr = e;
       if (e.code === 'nokey' || e.code === 'offline') throw e;
@@ -266,46 +283,11 @@ async function askAiAdvice() {
   throw e;
 }
 
-// -- tiny safe markdown renderer ----------------------------------------------------
-function aiMdToHtml(md) {
-  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const inline = s => esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>');
-
-  const out = [];
-  const lines = String(md).split('\n');
-  let list = null; // 'ul' | 'ol' | null
-
-  const closeList = () => { if (list) { out.push(list === 'ul' ? '</ul>' : '</ol>'); list = null; } };
-
-  lines.forEach(raw => {
-    const line = raw.trim();
-    const h = line.match(/^(#{2,3})\s+(.*)/);
-    const ul = line.match(/^[-*•]\s+(.*)/);
-    const ol = line.match(/^\d+[.)]\s+(.*)/);
-    if (h) {
-      closeList();
-      out.push(h[1] === '##' ? `<h4 class="ai-h">${inline(h[2])}</h4>` : `<h5 class="ai-h">${inline(h[2])}</h5>`);
-    } else if (ul) {
-      if (list !== 'ul') { closeList(); out.push('<ul class="ai-list">'); list = 'ul'; }
-      out.push(`<li>${inline(ul[1])}</li>`);
-    } else if (ol) {
-      if (list !== 'ol') { closeList(); out.push('<ol class="ai-list">'); list = 'ol'; }
-      out.push(`<li>${inline(ol[1])}</li>`);
-    } else if (!line) {
-      closeList();
-    } else {
-      closeList();
-      out.push(`<p>${inline(line)}</p>`);
-    }
-  });
-  closeList();
-  return out.join('');
-}
-
 // -- cache (one advice per context per day) ------------------------------------------
-function getAiCache() {
+const AI_JSON_CACHE_KEY = 'aura_ai_json';
+function getAiJsonCache() {
   try {
-    const raw = localStorage.getItem(AI_CACHE_KEY);
+    const raw = localStorage.getItem(AI_JSON_CACHE_KEY);
     if (!raw) return null;
     const c = JSON.parse(raw);
     if (!c || c.day !== toKey(today())) return null;
@@ -313,8 +295,12 @@ function getAiCache() {
   } catch (e) { return null; }
 }
 
-function setAiCache(html, hash, provider) {
+function setAiJsonCache(data, hash) {
   try {
-    localStorage.setItem(AI_CACHE_KEY, JSON.stringify({ day: toKey(today()), html, hash, provider }));
+    localStorage.setItem(AI_JSON_CACHE_KEY, JSON.stringify({ day: toKey(today()), data, hash }));
   } catch (e) {}
+}
+
+function clearAiJsonCache() {
+  try { localStorage.removeItem(AI_JSON_CACHE_KEY); } catch (e) {}
 }
