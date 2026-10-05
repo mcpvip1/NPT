@@ -176,30 +176,28 @@
               <span data-lbl="lblAdvicePermNote"></span>
               <button type="button" id="advice-perm-btn" class="btn ghost small" data-lbl="btnAskNotif"></button>
             </div>
-            <!-- AI health assistant: personal advice from the user's real logs -->
-            <div class="ai-card" id="ai-card">
-              <div class="ai-card-head">
-                <span class="ai-ico" aria-hidden="true">✨</span>
-                <div>
-                  <h3 data-lbl="aiTitle">AI Health Assistant</h3>
-                  <p class="sub-text tiny" data-lbl="aiSub"></p>
-                </div>
-              </div>
-              <div id="ai-loading" class="ai-loading hidden" aria-live="polite">
-                <div class="ai-think"><span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span></div>
-                <p class="sub-text tiny" data-lbl="aiThinking"></p>
-              </div>
-              <div id="ai-result" class="ai-result hidden"></div>
-              <p id="ai-error" class="ai-error hidden"></p>
-              <button type="button" id="ai-ask" class="btn primary full"><span data-lbl="aiAsk">Get AI advice</span></button>
-              <p class="sub-text tiny ai-privacy" data-lbl="aiPrivacy"></p>
-            </div>
             <details class="doctor-strip hidden" id="doctor-strip">
               <summary><span data-lbl="lblDoctorFlags"></span></summary>
               <ul id="doctor-flags-list" class="advice-list"></ul>
             </details>
-            <h3 class="sec-head clean-head" data-lbl="lblTipsHead"></h3>
-            <div id="advice-today" class="advice-cards"></div>
+            <!-- AI-driven advice (online): summary, mood, daily tips, shopping -->
+            <div id="ai-advice" class="hidden">
+              <div class="ai-sec-bar">
+                <span class="ai-country" id="ai-country-pill"></span>
+                <button type="button" id="ai-refresh" class="btn ghost small"><span data-icon="refresh"></span><span data-lbl="aiRefresh">Refresh</span></button>
+              </div>
+              <div id="ai-loading" class="ai-loading" aria-live="polite">
+                <div class="ai-think"><span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span></div>
+                <p class="sub-text tiny" data-lbl="aiThinking"></p>
+              </div>
+              <div id="ai-sections"></div>
+              <p class="sub-text tiny ai-privacy" data-lbl="aiPrivacy"></p>
+            </div>
+            <!-- classic rule-based advice: offline fallback only -->
+            <div id="advice-classic">
+              <p class="sub-text tiny ai-fallback-note hidden" id="ai-fallback-note"><span data-lbl="aiFallbackNote"></span></p>
+              <h3 class="sec-head clean-head" data-lbl="lblTipsHead"></h3>
+              <div id="advice-today" class="advice-cards"></div>
             <div class="rec-sec">
               <div class="rec-head">
                 <h3 class="sec-head" data-lbl="lblShopHead"></h3>
@@ -213,6 +211,7 @@
               <p class="sub-text tiny advice-disclaimer" data-lbl="lblRecDisclaimer"></p>
             </div>
             <p class="sub-text tiny advice-disclaimer" data-lbl="lblAdviceDisclaimer"></p>
+            </div><!-- /#advice-classic -->
           </div>
         </section>
 
