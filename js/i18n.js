@@ -224,6 +224,7 @@ const i18n = {
     updNeedInternetMsg: 'App update စစ်ဆေးဖို့ အင်တာနက် ဖွင့်ပေးပါ။',
     updUpToDateTitle: 'နောက်ဆုံးဗားရှင်း ဖြစ်ပါတယ် ✓',
     updUpToDateMsg: (sha) => `ဗားရှင်း ${sha} သုံးနေပါတယ် — အသစ်ထပ်မံရရှိနိုင်တာ မရှိပါ။`,
+    updCount: (n) => `အသစ်ပါဝင်မှု ${n} ခု`,
     updDoneMsg: (msg) => `ဗားရှင်းအသစ် ရရှိပါပြီ — ${msg}`,
 
     updFailedTitle: 'Update မအောင်မြင်ပါ',
@@ -639,6 +640,7 @@ const i18n = {
     updNeedInternetMsg: 'Please turn on the internet to check for app updates.',
     updUpToDateTitle: 'Already up to date ✓',
     updUpToDateMsg: (sha) => `You're on version ${sha} — nothing new available.`,
+    updCount: (n) => `${n} new update${n === 1 ? '' : 's'}`,
     updDoneMsg: (msg) => `New version installed — ${msg}`,
 
     updFailedTitle: 'Update failed',
