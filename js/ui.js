@@ -754,7 +754,7 @@ function renderAiCard() {
   if (!els.aiResult || !els.aiAsk) return;
   const T = t();
   const cache = getAiCache();
-  const ctx = buildAiContext();
+  const ctx = buildAiContext(typeof _liveCountry !== 'undefined' ? _liveCountry : null);
   const fresh = cache && cache.hash === aiContextHash(ctx);
   if (fresh) {
     els.aiResult.innerHTML = cache.html;
