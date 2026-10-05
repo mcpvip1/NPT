@@ -805,6 +805,34 @@ function renderStats() {
   celebrateCycleStart(w.pStart);
 }
 
+// count a number up with easing (respects reduced-motion).
+function countUp(el, to, fmt) {
+  if (!el || !(to > 0)) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.textContent = fmt(to);
+    return;
+  }
+  const t0 = performance.now(), dur = 650;
+  const step = now => {
+    const k = Math.min(1, (now - t0) / dur);
+    const e = 1 - Math.pow(1 - k, 3);
+    el.textContent = fmt(Math.max(1, Math.round(to * e)));
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// replay the home stat numbers whenever the home tab opens.
+function animateHomeStats() {
+  const T = t();
+  const w = cycleWindows();
+  const info = cycleInfoFor(today());
+  if (!w || !info) return;
+  const day = Math.max(1, diffDays(info.start, today()) + 1);
+  countUp(els.hmPeriod, day, v => T.dayOfCycle(v));
+  countUp(els.hmFertile, w.fDays, v => `${v} ${T.daysUnit}`);
+}
+
 // period starts detected from logged flow entries (a flow day after a gap)
 function loggedPeriodStarts() {
   const keys = Object.keys(state.logs || {}).filter(k => state.logs[k] && state.logs[k].flow).sort();
