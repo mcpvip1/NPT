@@ -1476,25 +1476,18 @@ textarea { resize: vertical; }
 .upd-actions { display: flex; gap: 10px; padding: 14px 20px 20px; }
 .upd-actions .btn { flex: 1; }
 
-/* ---------- AI health assistant card ---------- */
-.ai-card {
-  background: var(--surface-2); border: 1px solid var(--line);
-  border-radius: var(--r-md); padding: 16px; margin-bottom: 14px;
-  position: relative; overflow: hidden;
+/* ---------- AI advice sections ---------- */
+.ai-sec-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 12px;
 }
-.ai-card::before {
-  content: ''; position: absolute; inset: 0 0 auto 0; height: 3px;
-  background: var(--cta-grad);
+.ai-country {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .78rem; font-weight: 700; color: var(--primary-dark);
+  background: var(--primary-soft); border-radius: 999px;
+  padding: 5px 13px;
 }
-.ai-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.ai-ico {
-  font-size: 1.7rem; flex-shrink: 0; width: 46px; height: 46px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--primary-soft); border-radius: 14px;
-}
-.ai-card-head h3 { font-size: 1rem; font-weight: 800; color: var(--text); }
-.ai-card-head .sub-text { margin: 2px 0 0; }
-.ai-loading { text-align: center; padding: 18px 0 6px; }
+.ai-loading { text-align: center; padding: 26px 0 18px; }
 .ai-think { display: flex; gap: 6px; justify-content: center; margin-bottom: 10px; }
 .ai-dot {
   width: 9px; height: 9px; border-radius: 50%;
@@ -1506,30 +1499,33 @@ textarea { resize: vertical; }
   0%, 60%, 100% { transform: translateY(0); opacity: .5; }
   30% { transform: translateY(-7px); opacity: 1; }
 }
-.ai-result { margin: 4px 0 12px; }
-.ai-result .ai-h {
+.ai-sec {
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: 14px 15px; margin-bottom: 12px;
+}
+.ai-sec h4 {
   font-size: .92rem; font-weight: 800; color: var(--primary-dark);
-  margin: 14px 0 6px;
+  margin: 0 0 8px;
 }
-.ai-result .ai-h:first-child { margin-top: 2px; }
-.ai-result p { font-size: .84rem; line-height: 1.65; margin: 0 0 8px; color: var(--text); }
-.ai-list { margin: 0 0 10px; padding-left: 20px; }
-.ai-list li { font-size: .84rem; line-height: 1.6; margin-bottom: 6px; color: var(--text); }
-.ai-list li::marker { color: var(--primary); }
-.ai-error {
-  font-size: .82rem; color: #b91c1c; background: #fef2f2;
-  border: 1px solid #fecaca; border-radius: 10px;
-  padding: 10px 12px; margin: 0 0 12px; line-height: 1.55;
+.ai-sec > p { font-size: .84rem; line-height: 1.65; margin: 0; color: var(--text); }
+.ai-sec ul { margin: 0; padding-left: 20px; }
+.ai-sec ul li { font-size: .84rem; line-height: 1.6; margin-bottom: 6px; color: var(--text); }
+.ai-sec ul li::marker { color: var(--primary); }
+.ai-sec-doctor { border-color: #fca5a5; background: #fff7f7; }
+[data-theme="dark"] .ai-sec-doctor { background: rgba(185,28,28,.1); border-color: rgba(185,28,28,.45); }
+.ai-prod {
+  border-top: 1px dashed var(--line); padding: 10px 0 4px; margin-top: 10px;
 }
-[data-theme="dark"] .ai-error { background: rgba(185,28,28,.12); border-color: rgba(185,28,28,.4); color: #fca5a5; }
+.ai-prod:first-of-type { border-top: none; padding-top: 2px; margin-top: 4px; }
+.ai-prod-name { font-size: .86rem; font-weight: 800; color: var(--text); }
+.ai-prod-why { font-size: .8rem; line-height: 1.55; color: var(--text); margin: 3px 0; }
+.ai-prod-meta { font-size: .74rem; color: var(--muted); line-height: 1.5; }
+.ai-prod-meta strong { color: var(--primary-dark); font-weight: 700; }
+.ai-fallback-note {
+  background: var(--primary-soft); border-radius: 10px;
+  padding: 9px 12px; margin: 0 0 12px; font-size: .78rem; line-height: 1.55;
+}
 .ai-privacy { margin: 10px 0 0; opacity: .75; }
-#ai-ask { margin-top: 2px; }
-.ai-country {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: .78rem; font-weight: 700; color: var(--primary-dark);
-  background: var(--primary-soft); border-radius: 999px;
-  padding: 5px 13px; margin-bottom: 10px;
-}
 .ai-setup { margin: 4px 0 14px; }
 .ai-setup summary {
   font-size: .84rem; font-weight: 700; color: var(--primary-dark);
