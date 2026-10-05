@@ -672,6 +672,7 @@ function renderAdvicePage() {
   }
 
   // mood card — trend-aware
+  const trend = moodTrend();
   const mood = latestMood();
   if (mood && T.moodTips[mood]) {
     let body = T.moodTips[mood];
