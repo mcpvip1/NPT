@@ -89,6 +89,13 @@ const els = {
   advicePermBtn: $('advice-perm-btn'),
   adviceToday: $('advice-today'),
   doctorFlagsList: $('doctor-flags-list'),
+  aiAsk: $('ai-ask'),
+  aiLoading: $('ai-loading'),
+  aiResult: $('ai-result'),
+  aiError: $('ai-error'),
+  aiProviderSeg: $('ai-provider-seg'),
+  geminiKey: $('set-gemini-key'),
+  aiSave: $('ai-save'),
 
   botHello: $('bot-hello'),
   botHelloBot: $('bot-hello-bot'),
@@ -739,6 +746,27 @@ function renderAdvicePage() {
   if (strip) strip.classList.toggle('hidden', !flags.length);
 
   if (typeof renderRecommendations === 'function') renderRecommendations();
+  renderAiCard();
+}
+
+// AI card: show today's cached advice if the logs haven't changed since.
+function renderAiCard() {
+  if (!els.aiResult || !els.aiAsk) return;
+  const T = t();
+  const cache = getAiCache();
+  const ctx = buildAiContext();
+  const fresh = cache && cache.hash === aiContextHash(ctx);
+  if (fresh) {
+    els.aiResult.innerHTML = cache.html;
+    els.aiResult.classList.remove('hidden');
+    els.aiAsk.querySelector('span').textContent = T.aiRefresh;
+  } else {
+    els.aiResult.classList.add('hidden');
+    els.aiResult.innerHTML = '';
+    els.aiAsk.querySelector('span').textContent = T.aiAsk;
+  }
+  if (els.aiError) els.aiError.classList.add('hidden');
+  if (els.aiLoading) els.aiLoading.classList.add('hidden');
 }
 
 function renderHeader() {
