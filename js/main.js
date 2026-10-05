@@ -603,6 +603,65 @@ function initAdvicePage() {
     updateNotifStatus();
     renderAdvicePage();
   });
+  // AI health assistant: personal advice from the user's real logs
+  if (els.aiAsk) els.aiAsk.addEventListener('click', handleAskAi);
+}
+
+// -- AI health assistant -------------------------------------------------------
+let _aiBusy = false;
+async function handleAskAi() {
+  if (_aiBusy) return;
+  const T = t();
+  _aiBusy = true;
+  els.aiAsk.disabled = true;
+  els.aiError.classList.add('hidden');
+  els.aiResult.classList.add('hidden');
+  els.aiLoading.classList.remove('hidden');
+  try {
+    const { text, provider, ctx } = await askAiAdvice();
+    const html = aiMdToHtml(text);
+    setAiCache(html, aiContextHash(ctx), provider);
+    els.aiResult.innerHTML = html;
+    els.aiResult.classList.remove('hidden');
+    els.aiAsk.querySelector('span').textContent = T.aiRefresh;
+    els.aiResult.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  } catch (e) {
+    const code = e && e.code;
+    els.aiError.textContent =
+      code === 'offline' ? T.aiErrOffline :
+      code === 'nokey' ? T.aiErrNoKey :
+      T.aiErrFailed;
+    els.aiError.classList.remove('hidden');
+  } finally {
+    els.aiLoading.classList.add('hidden');
+    els.aiAsk.disabled = false;
+    _aiBusy = false;
+  }
+}
+
+function initAiSettings() {
+  if (!els.aiSave) return;
+  const s = aiSettings();
+  if (els.geminiKey) els.geminiKey.value = s.geminiKey || '';
+  if (els.aiProviderSeg) {
+    els.aiProviderSeg.querySelectorAll('[data-ai-provider]').forEach(b =>
+      b.classList.toggle('active', b.dataset.aiProvider === s.provider));
+    els.aiProviderSeg.addEventListener('click', e => {
+      const b = e.target.closest('[data-ai-provider]');
+      if (!b) return;
+      els.aiProviderSeg.querySelectorAll('[data-ai-provider]').forEach(x =>
+        x.classList.toggle('active', x === b));
+    });
+  }
+  els.aiSave.addEventListener('click', () => {
+    const active = els.aiProviderSeg && els.aiProviderSeg.querySelector('[data-ai-provider].active');
+    saveAiSettings({
+      provider: active ? active.dataset.aiProvider : 'auto',
+      geminiKey: els.geminiKey ? els.geminiKey.value.trim() : ''
+    });
+    try { localStorage.removeItem(AI_CACHE_KEY); } catch (e) {}
+    toast(t().msgSaved, 'ok');
+  });
 }
 
 function initInstallNudge() {
@@ -815,6 +874,7 @@ function init() {
   initBotTap();
   initEscape();
   initUpdateCard();
+  initAiSettings();
 
   if (!hasSettings || !state.data.lastDate) {
     wizOpen();
