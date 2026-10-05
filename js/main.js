@@ -603,40 +603,11 @@ function initAdvicePage() {
     updateNotifStatus();
     renderAdvicePage();
   });
-  // AI health assistant: personal advice from the user's real logs
-  if (els.aiAsk) els.aiAsk.addEventListener('click', handleAskAi);
-}
-
-// -- AI health assistant -------------------------------------------------------
-let _aiBusy = false;
-async function handleAskAi() {
-  if (_aiBusy) return;
-  const T = t();
-  _aiBusy = true;
-  els.aiAsk.disabled = true;
-  els.aiError.classList.add('hidden');
-  els.aiResult.classList.add('hidden');
-  els.aiLoading.classList.remove('hidden');
-  try {
-    const { text, provider, ctx } = await askAiAdvice();
-    const html = `<div class="ai-country">📍 ${escHtml(ctx.countryName)}</div>` + aiMdToHtml(text);
-    setAiCache(html, aiContextHash(ctx), provider);
-    els.aiResult.innerHTML = html;
-    els.aiResult.classList.remove('hidden');
-    els.aiAsk.querySelector('span').textContent = T.aiRefresh;
-    els.aiResult.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  } catch (e) {
-    const code = e && e.code;
-    els.aiError.textContent =
-      code === 'offline' ? T.aiErrOffline :
-      code === 'nokey' ? T.aiErrNoKey :
-      T.aiErrFailed;
-    els.aiError.classList.remove('hidden');
-  } finally {
-    els.aiLoading.classList.add('hidden');
-    els.aiAsk.disabled = false;
-    _aiBusy = false;
-  }
+  // AI advice sections: refresh button clears the cache and reloads
+  if (els.aiRefresh) els.aiRefresh.addEventListener('click', () => {
+    clearAiJsonCache();
+    renderAiAdvice();
+  });
 }
 
 function initAiSettings() {
