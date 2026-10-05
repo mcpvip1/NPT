@@ -813,7 +813,7 @@ async function fetchChangelog(sinceShortSha) {
   for (const c of list) {
     const sha = String(c.sha || '');
     if (sinceShortSha && sha.startsWith(sinceShortSha)) break;
-    const msg = String((c.commit && c.commit.message) || '').split('\n')[0].slice(0, 120).trim();
+    const msg = String((c.commit && c.commit.message) || '').split('\n')[0].slice(0, 220).trim();
     if (!msg || seen.has(msg)) continue; // one row per push (multi-file pushes share a message)
     seen.add(msg);
     out.push({ sha: sha.slice(0, 8), msg });
@@ -839,13 +839,18 @@ const CHANGELOG_MY = {
   'b43533e8': 'AI key ကို Settings ထဲမှာပဲ လုံခြုံစွာ သိမ်းမယ်'
 };
 
-// Commit subjects may carry both languages: "[my] ... | [en] ...".
-// Show the user's language; fall back to the map above, then the raw subject.
+// Commit subjects may carry both languages: "[my] ... | [en] ...",
+// and bug fixes are tagged "[fix]". Show the user's language;
+// fall back to the map above, then the raw subject.
+function changeKind(raw) {
+  return /\[fix\]/i.test(String(raw || '')) ? 'fix' : 'feat';
+}
+
 function changeText(raw, sha) {
   const s = String(raw || '');
   let my = null, en = null;
   for (const part of s.split('|')) {
-    const p = part.trim();
+    const p = part.trim().replace(/^\[fix\]\s*/i, '');
     let m = p.match(/^\[my\]\s*([\s\S]*)$/i);
     if (m) { my = m[1].trim(); continue; }
     m = p.match(/^\[en\]\s*([\s\S]*)$/i);
@@ -853,7 +858,7 @@ function changeText(raw, sha) {
   }
   if (my || en) return state.lang === 'my' ? (my || en) : (en || my);
   if (state.lang === 'my' && CHANGELOG_MY[sha]) return CHANGELOG_MY[sha];
-  return s;
+  return s.replace(/\[fix\]\s*/i, '').trim();
 }
 
 async function silentUpdateCheck() {
@@ -875,12 +880,26 @@ function clearUpdateBadge() {
 // beautiful what's-new card: version + changelog, with Update Now / Later.
 function showUpdateCard(changes) {
   if (!els.updCard || !els.updCard.classList.contains('hidden')) return;
+  const T = t();
   els.updVer.textContent = '#' + changes[0].sha;
   const sub = $('upd-sub');
-  if (sub) sub.textContent = t().updCount(changes.length);
-  els.updLog.innerHTML = changes.map(c =>
-    `<li><span class="upd-tick">✦</span><span>${escHtml(changeText(c.msg, c.sha))}</span></li>`
-  ).join('');
+  if (sub) sub.textContent = T.updCount(changes.length);
+  const fl = $('upd-flower');
+  if (fl) fl.innerHTML = flowerHTML(false);
+  const rowHTML = c =>
+    `<div class="upd-row"><span class="upd-tick">✦</span><span>${escHtml(changeText(c.msg, c.sha))}</span></div>`;
+  const feats = changes.filter(c => changeKind(c.msg) !== 'fix');
+  const fixes = changes.filter(c => changeKind(c.msg) === 'fix');
+  let html = '';
+  if (feats.length) {
+    if (fixes.length) html += `<div class="upd-group-title">${esc(T.updFeatTitle)}</div>`;
+    html += feats.map(rowHTML).join('');
+  }
+  if (fixes.length) {
+    html += `<div class="upd-group-title">${esc(T.updFixTitle)}</div>`;
+    html += fixes.map(rowHTML).join('');
+  }
+  els.updLog.innerHTML = html;
   els.updCard.classList.remove('hidden');
   document.body.classList.add('no-scroll');
 }
