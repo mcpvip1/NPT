@@ -650,7 +650,7 @@ function renderAdvicePage() {
     state.adviceFocus = null;
   }
 
-  els.adviceBot.innerHTML = flowerHTML(true);
+  els.adviceBot.innerHTML = flowerHTML(false);
 
   const perm = ('Notification' in window) ? Notification.permission : 'denied';
   els.advicePermNote.classList.toggle('hidden', perm === 'granted');
