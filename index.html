@@ -435,7 +435,10 @@
               </div>
               <div class="field">
                 <label for="set-gemini-key" data-lbl="aiSetKey">Gemini API key (free)</label>
-                <input type="password" id="set-gemini-key" autocomplete="off" placeholder="AIza…">
+                <div class="key-row">
+                  <input type="password" id="set-gemini-key" autocomplete="off" placeholder="AIza…">
+                  <button type="button" class="btn ghost" id="set-paste"><span data-lbl="btnPaste">Paste</span></button>
+                </div>
                 <p class="sub-text tiny"><span data-lbl="aiSetKeyHint"></span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" data-lbl="aiGetKey">Get a free key</a></p>
               </div>
               <details class="ai-setup">
@@ -610,6 +613,21 @@
         <p class="sub-text" data-lbl="wizInstallSub"></p>
         <button type="button" class="btn secondary full" id="wiz-install-btn" data-lbl="btnInstall">📲 Home screen မှာ ထည့်မယ်</button>
         <p class="sub-text tiny wiz-status hidden" id="wiz-install-status"></p>
+      </div>
+
+      <!-- step 6: AI assistant (optional) -->
+      <div class="wiz-step hidden" data-step="6">
+        <div class="welcome-ico">✨</div>
+        <h2 data-lbl="wizAiTitle">AI အကြံဉာဏ် သုံးချင်လား？</h2>
+        <p class="sub-text" data-lbl="wizAiSub"></p>
+        <div class="field">
+          <label for="w-ai-key" data-lbl="aiSetKey">Gemini API key (free)</label>
+          <div class="key-row">
+            <input type="password" id="w-ai-key" autocomplete="off" placeholder="AIza…">
+            <button type="button" class="btn ghost" id="w-ai-paste"><span data-lbl="btnPaste">Paste</span></button>
+          </div>
+          <p class="sub-text tiny"><span data-lbl="aiSetKeyHint"></span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" data-lbl="aiGetKey">Get a free key</a></p>
+        </div>
       </div>
 
       <div class="wiz-nav">
