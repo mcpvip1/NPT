@@ -642,7 +642,15 @@ async function handleAskAi() {
 function initAiSettings() {
   if (!els.aiSave) return;
   const s = aiSettings();
-  if (els.geminiKey) els.geminiKey.value = s.geminiKey || '';
+  // Key is built into the app — hide the key field and the setup guide.
+  if (typeof BUILTIN_GEMINI_KEY !== 'undefined' && BUILTIN_GEMINI_KEY) {
+    const field = els.geminiKey && els.geminiKey.closest('.field');
+    if (field) field.style.display = 'none';
+    const guide = document.querySelector('.ai-setup');
+    if (guide) guide.style.display = 'none';
+  } else if (els.geminiKey) {
+    els.geminiKey.value = s.geminiKey || '';
+  }
   if (els.aiProviderSeg) {
     els.aiProviderSeg.querySelectorAll('[data-ai-provider]').forEach(b =>
       b.classList.toggle('active', b.dataset.aiProvider === s.provider));
@@ -655,9 +663,11 @@ function initAiSettings() {
   }
   els.aiSave.addEventListener('click', () => {
     const active = els.aiProviderSeg && els.aiProviderSeg.querySelector('[data-ai-provider].active');
+    const builtIn = (typeof BUILTIN_GEMINI_KEY !== 'undefined' && BUILTIN_GEMINI_KEY) ? true : false;
     saveAiSettings({
       provider: active ? active.dataset.aiProvider : 'auto',
-      geminiKey: els.geminiKey ? els.geminiKey.value.trim() : ''
+      // when the key is built in, the field is hidden — keep any saved key as-is
+      geminiKey: builtIn ? (aiSettings().geminiKey || '') : (els.geminiKey ? els.geminiKey.value.trim() : '')
     });
     try { localStorage.removeItem(AI_CACHE_KEY); } catch (e) {}
     toast(t().msgSaved, 'ok');
