@@ -183,8 +183,10 @@ SAFETY RULES
 }
 
 // -- providers ------------------------------------------------------------------
+// Two flash models: if the first is overloaded, try the lite one.
+const GEMINI_MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite'];
+
 async function callGemini(key, system, user, jsonMode) {
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=' + encodeURIComponent(key);
   const gen = { temperature: 0.7, maxOutputTokens: 8192 };
   if (jsonMode) gen.responseMimeType = 'application/json';
   const body = JSON.stringify({
@@ -192,22 +194,32 @@ async function callGemini(key, system, user, jsonMode) {
     contents: [{ parts: [{ text: user }] }],
     generationConfig: gen
   });
-  // One retry on overload/rate-limit: the flash models 503 under spikes.
-  let r = null;
-  for (let attempt = 0; attempt < 2; attempt++) {
-    r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
-    if ((r.status === 503 || r.status === 429) && attempt === 0) {
-      await new Promise(res => setTimeout(res, 2500));
-      continue;
+  let lastErr = null;
+  for (const model of GEMINI_MODELS) {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model +
+      ':generateContent?key=' + encodeURIComponent(key);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      let r;
+      try {
+        r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+      } catch (e) { lastErr = e; break; }
+      // Retry once when the model is overloaded or rate-limited.
+      if ((r.status === 503 || r.status === 429) && attempt === 0) {
+        await new Promise(res => setTimeout(res, 2500));
+        continue;
+      }
+      if (!r.ok) { lastErr = new Error('gemini ' + r.status); break; }
+      let text = '';
+      try {
+        const j = await r.json();
+        text = j && j.candidates && j.candidates[0] && j.candidates[0].content &&
+          j.candidates[0].content.parts.map(p => p.text || '').join('');
+      } catch (e) { lastErr = e; break; }
+      if (!text || !text.trim()) { lastErr = new Error('gemini empty'); break; }
+      return text.trim();
     }
-    break;
   }
-  if (!r.ok) throw new Error('gemini ' + r.status);
-  const j = await r.json();
-  const text = j && j.candidates && j.candidates[0] && j.candidates[0].content &&
-    j.candidates[0].content.parts.map(p => p.text || '').join('');
-  if (!text || !text.trim()) throw new Error('gemini empty');
-  return text.trim();
+  throw lastErr || new Error('gemini failed');
 }
 
 async function callPollinations(system, user) {
