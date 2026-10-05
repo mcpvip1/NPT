@@ -1524,6 +1524,20 @@ textarea { resize: vertical; }
 [data-theme="dark"] .ai-error { background: rgba(185,28,28,.12); border-color: rgba(185,28,28,.4); color: #fca5a5; }
 .ai-privacy { margin: 10px 0 0; opacity: .75; }
 #ai-ask { margin-top: 2px; }
+.ai-country {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .78rem; font-weight: 700; color: var(--primary-dark);
+  background: var(--primary-soft); border-radius: 999px;
+  padding: 5px 13px; margin-bottom: 10px;
+}
+.ai-setup { margin: 4px 0 14px; }
+.ai-setup summary {
+  font-size: .84rem; font-weight: 700; color: var(--primary-dark);
+  cursor: pointer; padding: 6px 0;
+}
+.ai-setup ol { margin: 6px 0 0; padding-left: 20px; }
+.ai-setup li { font-size: .82rem; line-height: 1.6; margin-bottom: 6px; color: var(--text); }
+.ai-setup li::marker { color: var(--primary); font-weight: 800; }
 @media (prefers-reduced-motion: reduce) { .ai-dot { animation: none; } }
 .htool-seg {
   display: inline-flex; align-items: center; gap: 2px;
