@@ -29,12 +29,45 @@ function saveAiSettings(s) {
   try { localStorage.setItem(AI_SETTINGS_KEY, JSON.stringify(s)); } catch (e) {}
 }
 
+// -- where is she right now? ----------------------------------------------------
+// Live IP-based detection (any country, e.g. Singapore), so the AI always
+// advises for her CURRENT country. Falls back to the stored profile country
+// when offline or undetectable.
+let _liveCountry = null;
+async function detectLiveCountry() {
+  if (_liveCountry) return _liveCountry;
+  try {
+    const c = new AbortController();
+    const timer = setTimeout(() => c.abort(), 5000);
+    const r = await fetch('https://ipapi.co/country_code/', { signal: c.signal, cache: 'no-store' });
+    clearTimeout(timer);
+    const code = (await r.text()).trim().toLowerCase();
+    if (/^[a-z]{2}$/.test(code)) _liveCountry = code;
+  } catch (e) { /* keep fallback */ }
+  return _liveCountry;
+}
+
+// Localized country name for ANY country code, in the user's language.
+function countryName(code) {
+  const cc = String(code || '').toLowerCase();
+  const T = (typeof t === 'function') ? t() : {};
+  if (cc === 'mm') return T.lblCountryMM || 'Myanmar';
+  if (cc === 'th') return T.lblCountryTH || 'Thailand';
+  try {
+    const loc = (typeof locale === 'function') ? locale() : 'en-US';
+    return new Intl.DisplayNames([loc], { type: 'region' }).of(cc.toUpperCase()) || cc.toUpperCase();
+  } catch (e) {
+    return cc.toUpperCase();
+  }
+}
+
 // -- real context from the user's logs --------------------------------------
-function buildAiContext() {
+function buildAiContext(liveCode) {
   const T = t();
   const d = state.data || {};
   const lang = state.lang === 'en' ? 'en' : 'my';
-  const country = d.country === 'th' ? 'th' : 'mm';
+  const stored = d.country === 'th' ? 'th' : 'mm';
+  const code = (liveCode || stored || 'mm').toLowerCase();
 
   const chip = k => (T.chips && T.chips[k]) || k;
   const moodName = k => (T.moods && T.moods[k]) || k;
@@ -81,8 +114,9 @@ function buildAiContext() {
   if (d.height) profile.push(`${d.height} cm`);
 
   return {
-    lang, country,
-    countryName: country === 'th' ? T.lblCountryTH : T.lblCountryMM,
+    lang, country: code,
+    countryName: countryName(code),
+    countryLive: !!liveCode,
     profile: profile.join(', ') || (lang === 'my' ? 'မဖြည့်ထားပါ' : 'not provided'),
     cycle: cycleLine || (lang === 'my' ? 'မသိပါ' : 'unknown'),
     recent,
@@ -110,10 +144,15 @@ You are NOT a doctor and you never diagnose illness.
 
 Reply ONLY in ${langName}. Keep it personal, specific and scannable — short lines, no walls of text.
 
+LOCATION — DETECT FIRST
+The user is currently in ${ctx.countryName}. Every single product and medicine
+suggestion must be something commonly sold in ${ctx.countryName} ONLY.
+Never mention, suggest, or compare with products from any other country.
+
 SAFETY RULES
 - Give gentle self-care guidance only. Never state a diagnosis.
 - For any medicine: name the type and an example brand actually sold in ${ctx.countryName}, and ALWAYS add that she should check with a pharmacist or doctor and follow the package dose.
-- Only suggest products and medicines that are commonly sold in ${ctx.countryName} (real brand names you know exist there, e.g. from pharmacies or convenience stores). Never invent brands.
+- Only suggest real brand names you know exist in ${ctx.countryName} (e.g. from pharmacies or convenience stores there). Never invent brands.
 - If the logs show warning signs (very heavy bleeding, severe pain, cycle far outside her normal), put a clear "see a doctor soon" note FIRST.
 - End with one short line that this is friendly guidance, not medical advice. Do not repeat disclaimers.
 
@@ -123,7 +162,7 @@ FORMAT (markdown, whole reply under 350 words)
 ## 🌿 Self-care tips
 3-5 short bullets tied to her actual symptoms and mood.
 ## 🛍️ Worth getting in ${ctx.countryName}
-2-4 items. Each: **product name** — why it fits her — where to find it.
+2-4 items. Each: **product name** — why it fits her — where to find it in ${ctx.countryName}.
 ## 💊 If medicine could help
 Only if her symptoms suggest it. Type + example brand in ${ctx.countryName} + pharmacist note.
 ## 🚩 Doctor check
@@ -131,7 +170,7 @@ Only if warning signs exist; otherwise write: ${my ? 'မှတ်တမ်း�
 
   const lines = [
     `Profile: ${ctx.profile}`,
-    `Country: ${ctx.countryName}`,
+    `Current country (detected from her location): ${ctx.countryName}`,
     `Cycle: ${ctx.cycle}`,
     ctx.recent.length ? 'Recent logs (newest first):\n' + ctx.recent.map(r => '- ' + r).join('\n')
                       : (my ? 'မှတ်တမ်း မရှိသေးပါ။' : 'No logs yet.'),
@@ -188,7 +227,7 @@ async function askAiAdvice() {
   const online = (typeof hasInternet === 'function') ? await hasInternet(6000) : navigator.onLine !== false;
   if (!online) { const e = new Error('offline'); e.code = 'offline'; throw e; }
 
-  const ctx = buildAiContext();
+  const ctx = buildAiContext(await detectLiveCountry());
   const { system, user } = buildAiMessages(ctx);
   const s = aiSettings();
 
