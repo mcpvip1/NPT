@@ -619,7 +619,7 @@ async function handleAskAi() {
   els.aiLoading.classList.remove('hidden');
   try {
     const { text, provider, ctx } = await askAiAdvice();
-    const html = aiMdToHtml(text);
+    const html = `<div class="ai-country">📍 ${escHtml(ctx.countryName)}</div>` + aiMdToHtml(text);
     setAiCache(html, aiContextHash(ctx), provider);
     els.aiResult.innerHTML = html;
     els.aiResult.classList.remove('hidden');
