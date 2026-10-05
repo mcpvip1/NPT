@@ -594,36 +594,19 @@ input, select, textarea { font-family: inherit; }
   color: var(--primary-dark);
 }
 
-/* our 3D helper bot. floats around like it's hovering, and boings
-   when you tap it. happy / sad / sleepy moods are separate renders. */
+/* our flower mascot. bounces gently on its own, jumps when you tap it. */
 .bot-slot:empty { display: none; }
-.bot3d {
-  width: 40px; height: 40px;
-  object-fit: contain;
-  flex-shrink: 0;
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-drag: none;
-  animation: bot-float 3.4s ease-in-out infinite;
-  filter: drop-shadow(0 6px 5px rgba(244, 114, 182, .28));
-}
-.bot3d-big { width: 92px; height: 92px; }
-@keyframes bot-float {
-  0%, 100% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-7px) rotate(2deg); }
-}
-/* the tap bounce — a quick squash and stretch */
-.bot3d.boing { animation: bot-boing .45s ease; }
-@keyframes bot-boing {
-  0% { transform: scale(1, 1); }
-  30% { transform: scale(1.18, .8); }
-  55% { transform: scale(.9, 1.12) translateY(-9px); }
-  78% { transform: scale(1.04, .95); }
-  100% { transform: scale(1, 1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .bot3d { animation: none; }
-}
+/* the flower mascot — reusable at two sizes, scaled from the 128px splash art */
+.flower { position: relative; display: inline-block; flex-shrink: 0; cursor: pointer; user-select: none; }
+.flower-scale { display: block; width: 128px; height: 128px; transform-origin: top left; }
+.flower-40 { width: 40px; height: 40px; }
+.flower-40 .flower-scale { transform: scale(0.3125); }
+.flower-92 { width: 92px; height: 92px; }
+.flower-92 .flower-scale { transform: scale(0.71875); }
+/* tap: a happy little jump */
+.flower-jump { animation: flowerJump .45s ease; }
+@keyframes flowerJump { 30% { transform: translateY(-10px); } 60% { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .flower-jump { animation: none; } }
 .advice-title { display: flex; align-items: center; gap: 8px; }
 
 /* the morning hello. shows once a day on the home tab. */
@@ -686,8 +669,7 @@ input, select, textarea { font-family: inherit; }
 
 /* ---------- advice page (clean) ---------- */
 .advice-head { display: flex; gap: 12px; align-items: center; margin-bottom: 4px; }
-.advice-head-ico { width: 48px; height: 48px; flex-shrink: 0; }
-.advice-head-ico .bot3d { width: 100%; height: 100%; }
+.advice-head-ico { width: 48px; height: 48px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
 .advice-head .panel-head { margin: 0; }
 .advice-head .sub-text { margin: 2px 0 0; }
 .clean-head { margin: 18px 0 10px; font-size: .95rem; }
