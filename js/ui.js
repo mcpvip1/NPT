@@ -910,7 +910,7 @@ function renderStats() {
     today().toLocaleDateString(locale(), { month: 'long', day: 'numeric', weekday: 'long' });
   renderCycleRing(info, n, day);
 
-  const unit = u => ` <span class="hstat-unit">${u}</span>`;
+  const unit = u => `<span class="hstat-unit">${u}</span>`;
   els.hsCycle.innerHTML = `${n}${unit(T.infoDays)}`;
   els.hsPeriod.innerHTML = state.data.periodLength ? `${state.data.periodLength}${unit(T.infoDays)}` : '\u2013';
   els.hsReg.innerHTML = w.fDays ? `${w.fDays}${unit(T.infoDays)}` : '\u2013';
