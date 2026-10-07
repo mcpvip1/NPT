@@ -375,7 +375,7 @@ function wizOpen() {
   $('wiz-notif-status').classList.add('hidden');
   $('wiz-install-status').classList.add('hidden');
   openModal(els.welcome);
-  wizShow(1);
+  wizShow(0);
   // detect in the background; when it lands, pre-select + say so
   detectCountry().then(cc => {
     wizCountry = cc;
