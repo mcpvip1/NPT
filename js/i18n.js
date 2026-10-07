@@ -746,7 +746,7 @@ const i18n = {
     homePeak: 'Peak',
     homeHigh: 'High',
     homeHighChance: 'High Chance Today',
-    homeFertWin: 'Fertility Window',
+    homeFertWin: 'Feritility Window',
     homeInDays: d => (d <= 0 ? 'Today' : `in ${d} day${d === 1 ? '' : 's'}`),
     homePeriodDays: 'Period Days',
     homeRegularity: 'Regularity',
