@@ -228,65 +228,72 @@ function initSettings() {
   els.importModal.addEventListener('click', e => {
     if (e.target === els.importModal) closeModal(els.importModal);
   });
+
+// Shared backup import: parses, validates, saves, refreshes UI.
+// Returns true on success. Used by Settings import and wizard restore.
+function importBackupData(raw) {
+  const T = t();
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') throw new Error('bad import');
+
+    // Build into temp objects first — state is only replaced when everything validates.
+    let nextData = null;
+    let nextLogs = null;
+
+    if (parsed.data && typeof parsed.data === 'object') {
+      const d = parsed.data;
+      const lastDate = typeof d.lastDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d.lastDate) && parseDate(d.lastDate) ? d.lastDate : '';
+      nextData = {
+        ...DEFAULTS,
+        userName: typeof d.userName === 'string' ? d.userName.slice(0, 60) : '',
+        lastDate,
+        cycleLength: clamp(parseInt(d.cycleLength, 10), 15, 90, 28),
+        periodLength: clamp(parseInt(d.periodLength, 10), 1, 15, 5),
+        lutealPhase: clamp(parseInt(d.lutealPhase, 10), 8, 20, 14),
+        notify: !!d.notify,
+        notifyDays: clamp(parseInt(d.notifyDays, 10), 1, 30, 2),
+        showBot: d.showBot !== false,
+        logReminder: !!d.logReminder,
+        logReminderTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(d.logReminderTime || '') ? d.logReminderTime : '21:00',
+        wellnessNudges: d.wellnessNudges !== false,
+        nudgePrefs: (d.nudgePrefs && typeof d.nudgePrefs === 'object' && !Array.isArray(d.nudgePrefs)) ? d.nudgePrefs : {},
+        botName: typeof d.botName === 'string' && d.botName.trim() ? d.botName.trim().slice(0, 24) : 'Aura',
+        age: numOrNull(d.age, 9, 100),
+        weightKg: numOrNull(d.weightKg, 20, 300),
+        heightCm: numOrNull(d.heightCm, 80, 250),
+        country: d.country === 'th' ? 'th' : 'mm'
+      };
+    }
+    if (parsed.logs && typeof parsed.logs === 'object') {
+      nextLogs = {};
+      for (const k in parsed.logs) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
+        const entry = sanitizeLogEntry(parsed.logs[k]);
+        if (entry) nextLogs[k] = entry;
+      }
+    }
+
+    if (nextData) state.data = nextData;
+    if (nextLogs) state.logs = nextLogs;
+    if (!saveData() || !saveLogs()) {
+      toast(T.msgSaveError || 'Save failed', 'err');
+      return false;
+    }
+    fillSettingsForm();
+    applyLang();
+    renderAll();
+    toast(T.msgImported, 'ok');
+    return true;
+  } catch (_) {
+    toast(T.msgImportError, 'err');
+    return false;
+  }
+}
   els.importGo.addEventListener('click', () => {
-    const T = t();
     const raw = els.importText.value.trim();
     if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== 'object') throw new Error('bad import');
-
-      // Build into temp objects first — state is only replaced when everything validates.
-      let nextData = null;
-      let nextLogs = null;
-
-      if (parsed.data && typeof parsed.data === 'object') {
-        const d = parsed.data;
-        const lastDate = typeof d.lastDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d.lastDate) && parseDate(d.lastDate) ? d.lastDate : '';
-        nextData = {
-          ...DEFAULTS,
-          userName: typeof d.userName === 'string' ? d.userName.slice(0, 60) : '',
-          lastDate,
-          cycleLength: clamp(parseInt(d.cycleLength, 10), 15, 90, 28),
-          periodLength: clamp(parseInt(d.periodLength, 10), 1, 15, 5),
-          lutealPhase: clamp(parseInt(d.lutealPhase, 10), 8, 20, 14),
-          notify: !!d.notify,
-          notifyDays: clamp(parseInt(d.notifyDays, 10), 1, 30, 2),
-          showBot: d.showBot !== false,
-          logReminder: !!d.logReminder,
-          logReminderTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(d.logReminderTime || '') ? d.logReminderTime : '21:00',
-          wellnessNudges: d.wellnessNudges !== false,
-          nudgePrefs: (d.nudgePrefs && typeof d.nudgePrefs === 'object' && !Array.isArray(d.nudgePrefs)) ? d.nudgePrefs : {},
-          botName: typeof d.botName === 'string' && d.botName.trim() ? d.botName.trim().slice(0, 24) : 'Aura',
-          age: numOrNull(d.age, 9, 100),
-          weightKg: numOrNull(d.weightKg, 20, 300),
-          heightCm: numOrNull(d.heightCm, 80, 250),
-          country: d.country === 'th' ? 'th' : 'mm'
-        };
-      }
-      if (parsed.logs && typeof parsed.logs === 'object') {
-        nextLogs = {};
-        for (const k in parsed.logs) {
-          if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
-          const entry = sanitizeLogEntry(parsed.logs[k]);
-          if (entry) nextLogs[k] = entry;
-        }
-      }
-
-      if (nextData) state.data = nextData;
-      if (nextLogs) state.logs = nextLogs;
-      if (!saveData() || !saveLogs()) {
-        toast(T.msgSaveError || 'Save failed', 'err');
-        return;
-      }
-      fillSettingsForm();
-      applyLang();
-      renderAll();
-      closeModal(els.importModal);
-      toast(T.msgImported, 'ok');
-    } catch (_) {
-      toast(T.msgImportError, 'err');
-    }
+    if (importBackupData(raw)) closeModal(els.importModal);
   });
 
   $('btn-reset').addEventListener('click', async () => {
@@ -394,8 +401,10 @@ function wizFinish() {
   state.data.age = numOrNull($('w-age').value, 9, 100);
   state.data.weightKg = numOrNull($('w-weight').value, 20, 300);
   state.data.heightCm = numOrNull($('w-height').value, 80, 250);
-  // optional AI key from the wizard step
+  // optional AI key + bot name from the wizard step
   saveAiSettings({ provider: 'auto', geminiKey: ($('w-ai-key') && $('w-ai-key').value.trim()) || '' });
+  const wBotName = $('w-bot-name');
+  if (wBotName) state.data.botName = wBotName.value.trim().slice(0, 24) || 'Aura';
 
   saveData();
   closeModal(els.welcome);
@@ -500,6 +509,27 @@ function initWelcome() {
   // paste button on the wizard AI-key step
   const wPaste = $('w-ai-paste');
   if (wPaste) wPaste.addEventListener('click', () => pasteInto($('w-ai-key')));
+
+  // restore backup from the wizard (returning users skip data entry)
+  const wRestore = $('wiz-restore');
+  const wRestoreFile = $('wiz-restore-file');
+  if (wRestore && wRestoreFile) {
+    wRestore.addEventListener('click', () => wRestoreFile.click());
+    wRestoreFile.addEventListener('change', () => {
+      const f = wRestoreFile.files && wRestoreFile.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        if (importBackupData(r.result)) {
+          closeModal(els.welcome);
+          renderBotHello();
+          maybeShowInstallNudge();
+        }
+        wRestoreFile.value = '';
+      };
+      r.readAsText(f);
+    });
+  }
 }
 
 function initLanguage() {
