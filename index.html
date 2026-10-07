@@ -134,6 +134,51 @@
             <button class="icon-btn small" id="bot-hello-close" aria-label="Dismiss">×</button>
           </div>
 
+          <div class="panel hero-panel">
+            <p class="hero-today" data-lbl="homeToday">Today</p>
+            <h2 class="hero-date" id="hero-date">&mdash;</h2>
+            <div class="ring-wrap">
+              <svg id="cycle-ring" viewBox="0 0 220 220" aria-hidden="true"></svg>
+              <div class="ring-center">
+                <span class="ring-lbl" data-lbl="lblHomeCycleDay">Cycle Day</span>
+                <span class="ring-num"><b id="ring-day">&mdash;</b><i id="ring-total">/ 28</i></span>
+              </div>
+            </div>
+            <div class="ring-legend">
+              <span class="rl"><i class="dot rp"></i><span data-lbl="legPeriod">Period</span></span>
+              <span class="rl"><i class="dot rf"></i><span data-lbl="legFertile">Fertile</span></span>
+              <span class="rl"><i class="dot rk"></i><span data-lbl="homePeak">Peak</span></span>
+              <span class="rl"><i class="dot rlute"></i><span data-lbl="homeLuteal">Luteal</span></span>
+            </div>
+          </div>
+
+          <div class="hero-duo">
+            <div class="panel hcard">
+              <div class="hcard-head"><span class="hcard-ico ico-ovu"><span data-icon="ovulation"></span></span><span class="hcard-title" data-lbl="lblCardOvulation">Ovulation</span></div>
+              <div class="hcard-main c-ovu" id="hc-ovu-in">&mdash;</div>
+              <div class="hcard-sub" id="hc-ovu-day">&mdash;</div>
+            </div>
+            <div class="panel hcard">
+              <div class="hcard-head"><span class="hcard-ico ico-next"><span data-icon="period"></span></span><span class="hcard-title" data-lbl="lblCardNext">Next Period</span></div>
+              <div class="hcard-main c-period" id="hc-next-in">&mdash;</div>
+              <div class="hcard-sub" id="hc-next-date">&mdash;</div>
+            </div>
+          </div>
+
+          <div class="panel hcard-wide">
+            <div class="hcard-wide-main">
+              <div class="hcard-head"><span class="hcard-ico ico-fert"><span data-icon="fertile"></span></span><span class="hcard-title" data-lbl="homeFertWin">Fertility Window</span></div>
+              <div class="hcard-sub" id="hc-fert-status">&mdash;</div>
+            </div>
+            <span class="chance-pill hidden" id="hc-fert-pill">Peak</span>
+          </div>
+
+          <div class="hero-trio">
+            <div class="panel hstat"><b id="hs-cycle">&mdash;</b><span data-lbl="lblAvgCycle">Avg cycle</span></div>
+            <div class="panel hstat"><b id="hs-period">&mdash;</b><span data-lbl="homePeriodDays">Period Days</span></div>
+            <div class="panel hstat"><b id="hs-reg">&mdash;</b><span data-lbl="homeRegularity">Regularity</span></div>
+          </div>
+
           <div class="panel calendar-panel">
             <div class="cal-head">
               <button id="cal-prev" class="icon-btn small">‹</button>
@@ -150,37 +195,6 @@
 
             <div class="weekdays" id="weekdays"></div>
             <div class="days" id="cal-days"></div>
-          </div>
-
-          <div class="stats-grid">
-            <button type="button" class="stat-tile" data-phase="period">
-              <span class="tile-ico ico-period"><span data-icon="period"></span></span>
-              <span class="tile-lbl" data-lbl="lblHomeCycleDay">Cycle Day</span>
-              <span class="tile-val c-period" id="hm-period">&mdash;</span>
-            </button>
-            <button type="button" class="stat-tile" data-phase="fertile">
-              <span class="tile-ico ico-fertile"><span data-icon="fertile"></span></span>
-              <span class="tile-lbl" data-lbl="lblCardFertile">Fertile</span>
-              <span class="tile-val c-fertile" id="hm-fertile">&mdash;</span>
-            </button>
-            <button type="button" class="stat-tile" data-phase="ovulation">
-              <span class="tile-ico ico-ovu"><span data-icon="ovulation"></span></span>
-              <span class="tile-lbl" data-lbl="lblCardOvulation">Ovulation</span>
-              <span class="tile-val c-ovu" id="hm-ovu">&mdash;</span>
-            </button>
-          </div>
-
-
-          <div class="sec-head-row">
-            <h3 class="sec-title" data-lbl="lblCycleSummary">Cycle Summary</h3>
-          </div>
-          <div class="panel summary-card">
-            <div class="summary-top">
-              <div class="sum"><span class="sum-val" id="sum-cycle">—</span><span class="sum-lbl" data-lbl="lblAvgCycle">Avg cycle</span></div>
-              <div class="sum"><span class="sum-val" id="sum-period">—</span><span class="sum-lbl" data-lbl="lblAvgPeriod">Avg period</span></div>
-              <div class="sum"><span class="sum-val" id="sum-logs">—</span><span class="sum-lbl" data-lbl="lblTotalLogs">Logs</span></div>
-            </div>
-            <div class="mini-bars" id="cycle-bars"></div>
           </div>
 
           <button type="button" class="btn primary cta" data-tab="tab-insights"><span data-lbl="btnViewAllLogs">View All Logs</span></button>
