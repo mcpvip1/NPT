@@ -90,6 +90,8 @@ const i18n = {
     dsNoLog: 'ဒီရက်အတွက် မှတ်တမ်းမရှိသေးပါ',
     dsFlow: 'သွေးဆင်းမှု',
     dsSymptoms: 'လက္ခဏာများ',
+    dsLogDay: 'ဒီရက်ကို မှတ်တမ်းတင်ရန်',
+    ovuArc: 'မျိုးဥထွက်ချိန်',
     lblAvgCycle: 'ပျမ်းမျှစက်ဝန်း',
     lblAvgPeriod: 'ပျမ်းမျှရာသီ',
     lblTotalLogs: 'မှတ်တမ်းများ',
@@ -753,6 +755,8 @@ const i18n = {
     dsNoLog: 'No log for this day yet',
     dsFlow: 'Flow',
     dsSymptoms: 'Symptoms',
+    dsLogDay: 'Log this day',
+    ovuArc: 'OVULATION',
     btnSave: 'Save',
 
     lblWelcomeName: 'Your Name',
