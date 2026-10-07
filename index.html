@@ -349,73 +349,70 @@
 
         <!-- SETTINGS -->
         <section id="tab-settings" class="page">
-          <form id="settings-form">
-            <div class="set-card profile-card">
-              <div class="profile-head">
+          <form id="settings-form" class="nset">
+
+            <div class="nsec">
+              <div class="nrow nprofile">
                 <span class="hstat-ico blue profile-ico"><span data-icon="avatar"></span></span>
-                <h4 data-lbl="lblProfileTitle">User Information</h4>
-              </div>
-              <div class="field-row">
-                <div class="field">
-                  <label for="set-name" data-lbl="lblUserName">Name</label>
-                  <input type="text" id="set-name" required>
-                </div>
-                <div class="field">
-                  <label for="set-age" data-lbl="lblWelcomeAge">Age</label>
-                  <input type="number" id="set-age" min="9" max="100" inputmode="numeric" placeholder="—">
+                <div class="nprofile-meta">
+                  <b data-lbl="lblProfileTitle">User Information</b>
                 </div>
               </div>
-              <div class="field-row">
-                <div class="field">
-                  <label for="set-weight" data-lbl="lblWelcomeWeight">Weight (kg)</label>
-                  <input type="number" id="set-weight" min="20" max="300" step="0.5" inputmode="decimal" placeholder="—">
-                </div>
-                <div class="field">
-                  <label for="set-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
-                  <input type="number" id="set-height" min="80" max="250" inputmode="numeric" placeholder="—">
-                </div>
+              <div class="nrow">
+                <label for="set-name" data-lbl="lblUserName">Name</label>
+                <input type="text" id="set-name" class="nval" required>
               </div>
-              <button type="submit" class="btn primary full set-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
+              <div class="nrow">
+                <label for="set-age" data-lbl="lblWelcomeAge">Age</label>
+                <input type="number" id="set-age" class="nval" min="9" max="100" inputmode="numeric" placeholder="—">
+              </div>
+              <div class="nrow">
+                <label for="set-weight" data-lbl="lblWelcomeWeight">Weight (kg)</label>
+                <input type="number" id="set-weight" class="nval" min="20" max="300" step="0.5" inputmode="decimal" placeholder="—">
+              </div>
+              <div class="nrow">
+                <label for="set-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
+                <input type="number" id="set-height" class="nval" min="80" max="250" inputmode="numeric" placeholder="—">
+              </div>
             </div>
+            <button type="submit" class="btn primary full nsave"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
 
-            <h3 class="set-group-title"><span data-icon="calendar"></span><span data-lbl="lblCycleGroup">Cycle</span></h3>
-            <div class="set-card">
-              <div class="field">
+            <h3 class="nsec-title"><span data-lbl="lblCycleGroup">Cycle</span></h3>
+            <div class="nsec">
+              <div class="nrow">
                 <label for="set-last" data-lbl="lblLastDate">Last Period Date</label>
-                <input type="date" id="set-last" required>
+                <input type="date" id="set-last" class="nval" required>
               </div>
-              <div class="field-row">
-                <div class="field">
-                  <label for="set-cycle" data-lbl="lblCycleLength">Cycle (days)</label>
-                  <input type="number" id="set-cycle" min="15" max="90" value="28" required>
-                </div>
-                <div class="field">
-                  <label for="set-period" data-lbl="lblPeriodLength">Period (days)</label>
-                  <input type="number" id="set-period" min="1" max="15" value="5" required>
-                </div>
+              <div class="nrow">
+                <label for="set-cycle" data-lbl="lblCycleLength">Cycle (days)</label>
+                <input type="number" id="set-cycle" class="nval" min="15" max="90" value="28" required>
               </div>
-              <div class="field">
+              <div class="nrow">
+                <label for="set-period" data-lbl="lblPeriodLength">Period (days)</label>
+                <input type="number" id="set-period" class="nval" min="1" max="15" value="5" required>
+              </div>
+              <div class="nrow">
                 <label for="set-luteal" data-lbl="lblLutealLength">Luteal Phase (days)</label>
-                <input type="number" id="set-luteal" min="8" max="20" value="14" required>
+                <input type="number" id="set-luteal" class="nval" min="8" max="20" value="14" required>
               </div>
-              <button type="submit" class="btn primary full"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
             </div>
+            <button type="submit" class="btn primary full nsave"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
 
-            <h3 class="set-group-title"><span data-icon="bell"></span><span data-lbl="lblNotifHeading">Notifications</span></h3>
-            <div class="set-card">
-              <div class="notif-status-row">
+            <h3 class="nsec-title"><span data-lbl="lblNotifHeading">Notifications</span></h3>
+            <div class="nsec">
+              <div class="nrow">
                 <span class="notif-dot" id="notif-dot"></span>
-                <span class="notif-status-text" id="notif-status-text"></span>
+                <span class="nrow-label" id="notif-status-text"></span>
                 <button type="button" id="btn-notif-perm" class="btn ghost small" data-lbl="btnAskNotif">Ask permission</button>
               </div>
-              <p class="sub-text tiny hidden" id="notif-denied-hint" data-lbl="notifDeniedHint"></p>
-              <div class="switch-row">
-                <span data-lbl="lblNotifyEnable">Notify when period is near</span>
+              <p class="nrow-note hidden" id="notif-denied-hint" data-lbl="notifDeniedHint"></p>
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="lblNotifyEnable">Notify when period is near</span>
                 <label class="switch"><input type="checkbox" id="set-notify"><span class="switch-track"></span></label>
               </div>
-              <div class="field">
+              <div class="nrow">
                 <label for="set-notify-days" data-lbl="lblNotifyDays">Days in advance</label>
-                <select id="set-notify-days">
+                <select id="set-notify-days" class="nval">
                   <option value="1">1</option>
                   <option value="2" selected>2</option>
                   <option value="3">3</option>
@@ -423,41 +420,49 @@
                   <option value="7">7</option>
                 </select>
               </div>
-              <div class="switch-row">
-                <span data-lbl="lblRemindLog">Daily log reminder</span>
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="lblRemindLog">Daily log reminder</span>
                 <label class="switch"><input type="checkbox" id="set-remind-log"><span class="switch-track"></span></label>
               </div>
-              <div class="field">
+              <div class="nrow">
                 <label for="set-remind-time" data-lbl="lblRemindTime">Reminder time</label>
-                <input type="time" id="set-remind-time" value="21:00">
+                <input type="time" id="set-remind-time" class="nval" value="21:00">
               </div>
-              <div class="switch-row">
-                <span data-lbl="lblWellnessNudges">Wellness nudges</span>
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="lblWellnessNudges">Wellness nudges</span>
                 <label class="switch"><input type="checkbox" id="set-wellness" checked><span class="switch-track"></span></label>
               </div>
-              <p class="sub-text tiny" data-lbl="lblWellnessNudgesSub"></p>
+              <p class="nrow-note" data-lbl="lblWellnessNudgesSub"></p>
             </div>
 
-            <h3 class="set-group-title"><span data-icon="advice"></span><span data-lbl="aiSetTitle">AI Assistant</span></h3>
-            <div class="set-card">
-              <p class="sub-text tiny" data-lbl="aiSetSub"></p>
-              <div class="field">
-                <label data-lbl="aiSetProvider">AI provider</label>
-                <div class="seg" id="ai-provider-seg" role="group">
+            <h3 class="nsec-title"><span data-lbl="aiSetTitle">AI Assistant</span></h3>
+            <div class="nsec">
+              <p class="nrow-note" data-lbl="aiSetSub"></p>
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="aiSetProvider">AI provider</span>
+                <div class="seg nseg" id="ai-provider-seg" role="group">
                   <button type="button" data-ai-provider="auto"><span data-lbl="aiProvAuto">Auto</span></button>
                   <button type="button" data-ai-provider="gemini"><span data-lbl="aiProvGemini">Gemini</span></button>
                   <button type="button" data-ai-provider="pollinations"><span data-lbl="aiProvPoll">Pollinations</span></button>
                 </div>
               </div>
-              <div class="field">
+              <div class="nrow">
                 <label for="set-gemini-key" data-lbl="aiSetKey">Gemini API key (free)</label>
-                <div class="key-row">
-                  <input type="password" id="set-gemini-key" autocomplete="off" placeholder="AIza…">
-                  <button type="button" class="btn ghost" id="set-paste"><span data-lbl="btnPaste">Paste</span></button>
-                </div>
-                <p class="sub-text tiny"><span data-lbl="aiSetKeyHint"></span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" data-lbl="aiGetKey">Get a free key</a></p>
+                <input type="password" id="set-gemini-key" class="nval" autocomplete="off" placeholder="AIza…">
               </div>
-              <details class="ai-setup">
+              <div class="nrow">
+                <button type="button" class="btn ghost small" id="set-paste"><span data-lbl="btnPaste">Paste</span></button>
+                <span class="nrow-note inline"><span data-lbl="aiSetKeyHint"></span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" data-lbl="aiGetKey">Get a free key</a></span>
+              </div>
+              <div class="nrow">
+                <label for="set-bot-name" data-lbl="lblBotName">AI Bot name</label>
+                <input type="text" id="set-bot-name" class="nval" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
+              </div>
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="lblBotHeading">AI helper bot</span>
+                <label class="switch"><input type="checkbox" id="set-bot" checked><span class="switch-track"></span></label>
+              </div>
+              <details class="ai-setup ndetails">
                 <summary data-lbl="aiSetupTitle">Setup in 2 minutes</summary>
                 <ol>
                   <li data-lbl="aiSetup1"></li>
@@ -465,40 +470,40 @@
                   <li data-lbl="aiSetup3"></li>
                 </ol>
               </details>
-              <div class="field">
-                <label for="set-bot-name" data-lbl="lblBotName">AI Bot name</label>
-                <input type="text" id="set-bot-name" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
+            </div>
+            <button type="button" class="btn primary full nsave" id="ai-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
+
+            <h3 class="nsec-title"><span data-lbl="lblDataHeading">Data</span></h3>
+            <div class="nsec">
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="btnExport">Export</span>
+                <button type="button" id="btn-export" class="btn ghost small"><span data-icon="export"></span></button>
               </div>
-              <div class="switch-row">
-                <span data-lbl="lblBotHeading">AI helper bot</span>
-                <label class="switch"><input type="checkbox" id="set-bot" checked><span class="switch-track"></span></label>
+              <p class="nrow-note" data-lbl="dataExportHint"></p>
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="btnImport">Import</span>
+                <button type="button" id="btn-import" class="btn ghost small"><span data-icon="import"></span></button>
               </div>
-              <button type="button" class="btn primary full" id="ai-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
+              <p class="nrow-note" data-lbl="dataImportHint"></p>
+              <div class="nrow">
+                <span class="nrow-label danger" data-lbl="btnReset">Reset</span>
+                <button type="button" id="btn-reset" class="btn danger small"><span data-icon="delete"></span></button>
+              </div>
+              <p class="nrow-note" data-lbl="dataResetHint"></p>
             </div>
 
-            <h3 class="set-group-title"><span data-icon="save"></span><span data-lbl="lblDataHeading">Data</span></h3>
-            <div class="set-card">
-              <p class="sub-text tiny" data-lbl="dataExportHint"></p>
-              <div class="btn-row">
-                <button type="button" id="btn-export" class="btn ghost"><span data-icon="export"></span><span data-lbl="btnExport">Export</span></button>
-                <button type="button" id="btn-import" class="btn ghost"><span data-icon="import"></span><span data-lbl="btnImport">Import</span></button>
-              </div>
-              <p class="sub-text tiny" data-lbl="dataImportHint"></p>
-              <div class="btn-row">
-                <button type="button" id="btn-reset" class="btn danger"><span data-icon="delete"></span><span data-lbl="btnReset">Reset</span></button>
-              </div>
-              <p class="sub-text tiny" data-lbl="dataResetHint"></p>
-            </div>
-
-            <h3 class="set-group-title"><span data-icon="advice"></span><span data-lbl="lblAbout">About</span></h3>
-            <div class="set-card about-card">
-              <div class="about-hero">
+            <h3 class="nsec-title"><span data-lbl="lblAbout">About</span></h3>
+            <div class="nsec">
+              <div class="nrow nabout">
                 <span class="about-flower">🌸</span>
-                <p class="about-line"><strong>Aura</strong> · <span data-lbl="lblAppTagline">Cycle Tracker</span></p>
+                <div>
+                  <p class="about-line"><strong>Aura</strong> · <span data-lbl="lblAppTagline">Cycle Tracker</span></p>
+                  <p class="nrow-note" data-lbl="aboutBody"></p>
+                  <p class="about-maker"><span data-lbl="aboutMaker">Made by</span> <strong>HPT (DO2)</strong></p>
+                </div>
               </div>
-              <p class="sub-text" data-lbl="aboutBody"></p>
-              <p class="about-maker"><span data-lbl="aboutMaker">Made by</span> <strong>HPT (DO2)</strong></p>
             </div>
+
           </form>
         </section>
 
