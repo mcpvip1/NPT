@@ -964,7 +964,7 @@ function renderCycleRing(info, n, day) {
   const phaseOf = d =>
     d <= pLen ? 'period' : d === ovuDay ? 'peak' : (d >= fS && d <= fE) ? 'fertile' : 'luteal';
   // thin connectors between day dots, then the dots on top (reference detail)
-  const dotR = Math.min(7, (2 * Math.PI * r / n) * 0.32);
+  const dotR = Math.min(6.5, (2 * Math.PI * r / n) * 0.28);
   let s = '';
   for (let d = 1; d <= n; d++) {
     const a0 = (d - 0.5) * step, a1 = (d + 0.5) * step;
