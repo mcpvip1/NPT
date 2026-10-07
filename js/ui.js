@@ -29,8 +29,7 @@ const els = {
   hcOvuDay: $('hc-ovu-day'),
   hcNextIn: $('hc-next-in'),
   hcNextDate: $('hc-next-date'),
-  hcFertStatus: $('hc-fert-status'),
-  hcFertPill: $('hc-fert-pill'),
+
   hsCycle: $('hs-cycle'),
   hsPeriod: $('hs-period'),
   hsReg: $('hs-reg'),
@@ -39,6 +38,7 @@ const els = {
   dsCycleDay: $('ds-cycle-day'),
   dsPhase: $('ds-phase'),
   dsLog: $('ds-log'),
+  dsPhaseRow: $('ds-phase-row'),
   dsClose: $('ds-close'),
   dsLogBtn: $('ds-log-btn'),
 
@@ -899,9 +899,8 @@ function renderStats() {
   const info = cycleInfoFor(today());
   if (!w || !info) {
     [els.ringDay, els.hcOvuIn, els.hcOvuDay, els.hcNextIn, els.hcNextDate,
-     els.hcFertStatus, els.hsCycle, els.hsPeriod, els.hsReg].forEach(el => { if (el) el.textContent = '\u2013'; });
+     els.hsCycle, els.hsPeriod, els.hsReg].forEach(el => { if (el) el.textContent = '\u2013'; });
     if (els.cycleRing) els.cycleRing.innerHTML = '';
-    if (els.hcFertPill) els.hcFertPill.classList.add('hidden');
     return;
   }
   const n = state.data.cycleLength || 28;
@@ -918,24 +917,9 @@ function renderStats() {
   els.hcNextDate.textContent =
     w.nxt.toLocaleDateString(locale(), { month: 'long', day: 'numeric', year: 'numeric' });
 
-  const td = today();
-  if (isSameDay(td, w.ovu)) {
-    els.hcFertStatus.textContent = T.homeHighChance;
-    els.hcFertPill.textContent = '🔥 ' + T.homePeak;
-    els.hcFertPill.className = 'chance-pill peak';
-  } else if (td >= w.fStart && td <= w.fEnd) {
-    els.hcFertStatus.textContent = T.homeHighChance;
-    els.hcFertPill.textContent = T.homeHigh;
-    els.hcFertPill.className = 'chance-pill high';
-  } else {
-    els.hcFertStatus.textContent = T.homeInDays(diffDays(td, w.fStart));
-    els.hcFertPill.className = 'chance-pill hidden';
-  }
-
   els.hsCycle.textContent = n;
   els.hsPeriod.textContent = state.data.periodLength || '\u2013';
-  const reg = cycleRegularity();
-  els.hsReg.textContent = reg == null ? '\u2013' : reg + '%';
+  els.hsReg.textContent = w.fDays || '\u2013';
 
   checkAlarm(w.left);
   celebrateCycleStart(w.pStart);
@@ -992,7 +976,7 @@ function renderCycleRing(info, n, day) {
   }
   // cycle-start marker: white center with pink outline (reference detail)
   const [sx, sy] = pt(0.5 * step, r);
-  s += `<circle class="start-ring" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${(dotR + 3.2).toFixed(1)}" fill="var(--surface)" stroke="var(--ring-period)" stroke-width="3"/>`;
+  s += `<circle class="start-ring" data-day="1" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${(dotR + 3.2).toFixed(1)}" fill="var(--surface)" stroke="var(--ring-period)" stroke-width="3"/>`;
   // curved OVULATION label hugging the inside of the ring at the ovulation day
   const ovuMid = (ovuDay - 0.5) * step, arcR = r - 26, span = 42;
   const [ax1, ay1] = pt(ovuMid + span, arcR), [ax2, ay2] = pt(ovuMid - span, arcR);
@@ -1000,7 +984,7 @@ function renderCycleRing(info, n, day) {
        `<text class="ovu-arc"><textPath href="#ovu-arc-path" startOffset="50%" text-anchor="middle">${esc(T.ovuArc)}</textPath></text>`;
   // ovulation day: white dot with glowing green ring (reference style)
   const [ox, oy] = pt(ovuMid, r);
-  s += `<circle class="ovu-glow" cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" r="11" fill="var(--surface)" stroke="#22c55e" stroke-width="3.5"/>`;
+  s += `<circle class="ovu-glow" data-day="${ovuDay}" cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" r="11" fill="var(--surface)" stroke="#22c55e" stroke-width="3.5"/>`;
   [...new Set([1, 7, 14, 21, n])].filter(m => m <= n).sort((a, b) => a - b).forEach(m => {
     const [x, y] = pt((m - 0.5) * step, r + 20);
     s += `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" class="ring-mark">${m}</text>`;
@@ -1008,8 +992,8 @@ function renderCycleRing(info, n, day) {
   // today: purple badge with pulsing halo (reference style)
   const [tx, ty] = pt((day - 0.5) * step, r);
   s += `<circle class="ring-halo" cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="21" fill="none" stroke="var(--ring-peak)" stroke-width="3"/>` +
-       `<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="14" fill="var(--ring-peak)"/>` +
-       `<text x="${tx.toFixed(1)}" y="${(ty + 5).toFixed(1)}" text-anchor="middle" class="ring-today">${day}</text>`;
+       `<circle data-day="${day}" cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="14" fill="var(--ring-peak)"/>` +
+       `<text data-day="${day}" x="${tx.toFixed(1)}" y="${(ty + 5).toFixed(1)}" text-anchor="middle" class="ring-today">${day}</text>`;
   svg.innerHTML = s;
   els.ringDay.textContent = day;
   els.ringTotal.textContent = '/ ' + n;
@@ -1048,6 +1032,8 @@ function showDayDetail(day) {
       h += `<div class="ds-log-row"><span class="ds-ico">✨</span><span>${esc(T.dsSymptoms)}: ${esc(log.symptoms.map(s => (T.chips && T.chips[s]) || s).join(' · '))}</span></div>`;
   }
   els.dsLog.innerHTML = h || `<div class="ds-empty">${esc(T.dsNoLog)}</div>`;
+  if (els.dsPhaseRow) els.dsPhaseRow.classList.remove('hidden');
+  if (els.dsLogBtn) els.dsLogBtn.classList.remove('hidden');
   els.dsBg.classList.remove('hidden');
   document.body.classList.add('no-scroll');
 }
@@ -1057,6 +1043,61 @@ let _sheetDateKey = null;
 function hideDaySheet() {
   if (els.dsBg) els.dsBg.classList.add('hidden');
   document.body.classList.remove('no-scroll');
+}
+
+// ---- info popups for tappable home cards/tiles (reuse the day sheet) ----
+function infoRow(label, value) {
+  return `<div class="ds-log-row"><span>${esc(label)}</span><b>${esc(value)}</b></div>`;
+}
+function showInfoSheet(title, sub, rowsHtml) {
+  _sheetDateKey = null;
+  els.dsDate.textContent = title;
+  els.dsCycleDay.textContent = sub;
+  if (els.dsPhaseRow) els.dsPhaseRow.classList.add('hidden');
+  els.dsLog.innerHTML = rowsHtml;
+  if (els.dsLogBtn) els.dsLogBtn.classList.add('hidden');
+  if (els.dsBg) els.dsBg.classList.remove('hidden');
+  document.body.classList.add('no-scroll');
+}
+function recentPeriodDurations() {
+  return loggedPeriodStarts().slice(-3).map(s => {
+    let c = 0, d = parseDate(s);
+    while (c < 20 && state.logs[toKey(d)] && state.logs[toKey(d)].flow) { c++; d = addDays(d, 1); }
+    return c;
+  }).filter(c => c > 0);
+}
+function showInfo(kind) {
+  const T = t();
+  const w = cycleWindows();
+  if (!w) return;
+  const n = state.data.cycleLength || 28;
+  const pLen = state.data.periodLength || 5;
+  const f = d => d.toLocaleDateString(locale(), { month: 'short', day: 'numeric' });
+  const note = `<div class="ds-empty">${esc(T.infoEstNote)}</div>`;
+  if (kind === 'cycle') {
+    const starts = loggedPeriodStarts().slice(-4), diffs = [];
+    for (let i = 1; i < starts.length; i++) diffs.push(diffDays(parseDate(starts[i - 1]), parseDate(starts[i])));
+    showInfoSheet(T.lblAvgCycle, `${n} ${T.infoDays}`,
+      infoRow(T.infoRecent, diffs.length ? diffs.join(' · ') : '—') + note);
+  } else if (kind === 'period') {
+    const durs = recentPeriodDurations();
+    showInfoSheet(T.homePeriodDays, `${pLen} ${T.infoDays}`,
+      infoRow(T.infoRecent, durs.length ? durs.join(' · ') : '—') + note);
+  } else if (kind === 'fert') {
+    showInfoSheet(T.homeFertWin, `${w.fDays} ${T.infoDays}`,
+      infoRow(T.infoWindow, `${f(w.fStart)} – ${f(w.fEnd)}`) + note);
+  } else if (kind === 'ovulation') {
+    const info = cycleInfoFor(today());
+    showInfoSheet(T.lblCardOvulation, f(w.ovu),
+      infoRow(T.lblHomeCycleDay, T.dayOfCycle(diffDays(info.start, w.ovu) + 1)) + note);
+  } else if (kind === 'next') {
+    showInfoSheet(T.lblCardNext, `${f(w.nxt)} · ${T.homeInDays(w.left)}`, note);
+  }
+}
+function initInfoSheets() {
+  document.querySelectorAll('[data-info]').forEach(el => {
+    el.addEventListener('click', () => showInfo(el.dataset.info));
+  });
 }
 
 function initDaySheet() {
