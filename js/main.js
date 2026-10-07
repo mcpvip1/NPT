@@ -866,6 +866,34 @@ async function silentUpdateCheck() {
   // kept as a no-op so nothing breaks if called elsewhere.
 }
 
+// ---- periodic update check while the app stays open -----------------------
+// The splash checks once per launch. This re-checks every 30 minutes while
+// the tab is visible, so a phone left open all day still gets the red badge
+// on the Update button and the what's-new card when a push lands.
+const PERIODIC_UPDATE_MS = 30 * 60 * 1000;
+let _lastPeriodicUpdate = 0;
+
+async function periodicUpdateCheck() {
+  if (document.hidden) return;             // background tabs: skip, re-check on focus
+  if (_pendingUpdate) return;              // an update is already waiting for the user
+  if (Date.now() - _lastPeriodicUpdate < PERIODIC_UPDATE_MS) return;
+  _lastPeriodicUpdate = Date.now();
+  const changes = await checkForUpdateChanges(); // [] when offline or nothing new
+  if (changes && changes.length) {
+    _pendingUpdate = changes[0];
+    showUpdateBadge();
+    showUpdateCard(changes);               // no-ops if the card is already up
+  }
+}
+
+function initPeriodicUpdateCheck() {
+  _lastPeriodicUpdate = Date.now();        // the splash check covers the first 30 minutes
+  setInterval(periodicUpdateCheck, PERIODIC_UPDATE_MS);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) periodicUpdateCheck(); // tab back in focus: fresh check if overdue
+  });
+}
+
 function showUpdateBadge() {
   const btn = els.hdrUpdate;
   if (!btn || btn.classList.contains('has-update')) return;
@@ -971,6 +999,8 @@ function init() {
     checkWellnessNudges();
     // every launch: splash + immediate update check when online
     bootSplashFlow();
+    // while the app stays open: re-check every 30 min so the badge appears
+    initPeriodicUpdateCheck();
   }
 }
 
