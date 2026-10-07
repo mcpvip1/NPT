@@ -1,7 +1,7 @@
 /* ---- tokens · premium pink system ---- */
 :root {
   --bg: #ffffff;
-  --surface: #ffffff;
+  --surface: #f4f6f8;
   --surface-2: #e9edf3;
   --line: rgba(244,190,210,.55);
   --text: #3f1d2e;
@@ -13,7 +13,7 @@
   --primary-soft: #fce7f3;
   --header-grad: linear-gradient(135deg, #f9a8d4 0%, #ec4899 55%, #db2777 100%);
   --cta-grad: linear-gradient(135deg, #f9a8d4 0%, #ec4899 55%, #e11d48 100%);
-  --bg-grad: linear-gradient(165deg, #ffe4cf 0%, #ffd2e0 32%, #dfcdfb 63%, #c6e6fc 100%);
+  --bg-grad: #ffffff;
 
   --c-period: #f43f5e;   --c-period-bg: #ffe4ea;
   --c-fertile: #a855f7;  --c-fertile-bg: #f3e8ff;
@@ -23,7 +23,7 @@
   --ring-period: #f43f5e;
   --ring-fertile: #3b82f6;
   --ring-peak: #8b5cf6;
-  --ring-luteal: #d9d2da;
+  --ring-luteal: #e4e1e6;
 
   --r-lg: 24px;
   --r-md: 16px;
@@ -1192,7 +1192,7 @@ textarea { resize: vertical; }
 }
 .ico-period { background: var(--c-period-bg); }
 .ico-fertile { background: var(--c-fertile-bg); }
-.ico-ovu { background: var(--c-ovu-bg); }
+.ico-ovu { background: #eef0f3; }
 .ico-next { background: var(--c-next-bg); }
 
 /* floating bottom nav */
@@ -1701,6 +1701,7 @@ textarea { resize: vertical; }
 .hcard-head { display: flex; align-items: center; gap: 8px; }
 .hcard-ico { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
 .hcard-ico .ic3d { width: 22px; height: 22px; }
+.hcard-ico svg, .hstat-ico svg { width: 24px; height: 24px; display: block; }
 .ico-ovu { background: var(--c-ovu-bg); }
 .ico-next { background: var(--c-period-bg); }
 .ico-fert { background: var(--c-fertile-bg); }
