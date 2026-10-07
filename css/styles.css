@@ -1750,5 +1750,6 @@ textarea { resize: vertical; }
 [data-info] { cursor: pointer; }
 [data-info]:active { transform: scale(.98); }
 .ds-log-row b { margin-left: auto; }
+.ds-para { font-size: .85rem; line-height: 1.65; color: var(--text); background: var(--surface-2); border-radius: 14px; padding: 12px 14px; }
 .hstat-ico.purple { background: #f3e8ff; }
 [data-theme="dark"] .hstat-ico.purple { background: #3a1f52; }
