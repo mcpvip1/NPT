@@ -1684,7 +1684,7 @@ textarea { resize: vertical; }
 /* ---- home hero: cycle ring + prediction cards (screenshot design) ---- */
 .hero-panel { text-align: center; padding: 20px 16px 18px; }
 .hero-today { font-size: .8rem; color: var(--muted); font-weight: 600; }
-.hero-date { font-size: 1.28rem; font-weight: 800; margin: 2px 0 4px; }
+.hero-date { font-size: 1.55rem; font-weight: 800; margin: 2px 0 4px; letter-spacing: -.01em; }
 .ring-wrap { position: relative; width: 242px; height: 242px; margin: 2px auto 0; }
 #cycle-ring { width: 100%; height: 100%; display: block; }
 .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; pointer-events: none; }
@@ -1709,10 +1709,7 @@ textarea { resize: vertical; }
 .ico-next { background: var(--c-period-bg); }
 .ico-fert { background: var(--c-fertile-bg); }
 .hcard-title { font-size: .82rem; font-weight: 700; }
-.hcard-main { font-size: .98rem; font-weight: 800; }
-.hcard-main.c-ovu { color: #16a34a; }
-[data-theme="dark"] .hcard-main.c-ovu { color: #4ade80; }
-.hcard-sub { font-size: .75rem; color: var(--muted); font-weight: 600; }
+[data-theme="dark"] .hcard-sub { font-size: .75rem; color: var(--muted); font-weight: 600; }
 
 .hcard-wide { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px; }
 .hcard-wide-main { display: flex; flex-direction: column; gap: 7px; }
@@ -1767,3 +1764,24 @@ textarea { resize: vertical; }
 .ds-log-row { display: flex; align-items: center; gap: 10px; background: var(--surface-2); border-radius: 14px; padding: 10px 12px; font-size: .82rem; font-weight: 600; }
 .ds-log-row .ds-ico { font-size: 1.05rem; }
 .ds-empty { font-size: .82rem; color: var(--muted); font-weight: 600; background: var(--surface-2); border-radius: 14px; padding: 12px; text-align: center; }
+
+/* ---- v30: reference-faithful cards, ring markers, day sheet ---- */
+.in-pill { display: inline-block; padding: 7px 14px; border-radius: 11px; font-size: .92rem; font-weight: 800; }
+.in-pill.green { background: #e7f8ef; color: #16a34a; }
+.in-pill.pink { background: #fde9f0; color: #e11d48; }
+[data-theme="dark"] .in-pill.green { background: #123a24; color: #4ade80; }
+[data-theme="dark"] .in-pill.pink { background: #3d1424; color: #fb7185; }
+
+.hstat-ico { width: 38px; height: 38px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 2px; }
+.hstat-ico .ic3d { width: 24px; height: 24px; }
+.hstat-ico.blue { background: #e3f0fd; }
+.hstat-ico.red { background: #fde9f0; }
+.hstat-ico.yellow { background: #fdf3d7; }
+[data-theme="dark"] .hstat-ico.blue { background: #16283f; }
+[data-theme="dark"] .hstat-ico.red { background: #3d1424; }
+[data-theme="dark"] .hstat-ico.yellow { background: #3a2f14; }
+
+.ovu-glow { filter: drop-shadow(0 0 5px rgba(34, 197, 94, .9)); }
+.ovu-arc { font-size: 10px; font-weight: 700; letter-spacing: 2px; fill: var(--muted); }
+
+.ds-log-btn { width: 100%; margin-top: 14px; }
