@@ -793,8 +793,10 @@ input, select, textarea { font-family: inherit; }
 /* =============================
    FORMS
    ============================= */
-.field { display: flex; flex-direction: column; margin-bottom: 12px; }
+.field { display: flex; flex-direction: column; margin-bottom: 10px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.field-row.cols-3 .field { margin-bottom: 10px; }
 label { font-size: .78rem; font-weight: 700; margin-bottom: 5px; }
 input, select, textarea {
   padding: 10px 12px;
@@ -1627,6 +1629,7 @@ textarea { resize: vertical; }
 .wiz-step h2 { margin: 6px 0 4px; font-size: 1.25rem; }
 .wiz-step .sub-text { margin-bottom: 16px; }
 .wiz-opts { display: grid; gap: 10px; }
+.wiz-restore { margin-top: 16px; width: 100%; }
 .wiz-opt {
   display: flex; align-items: center; gap: 12px; text-align: left;
   background: var(--surface-2); border: 2px solid var(--line); border-radius: 16px;
