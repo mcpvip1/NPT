@@ -1066,6 +1066,9 @@ function recentPeriodDurations() {
     return c;
   }).filter(c => c > 0);
 }
+function infoPara(text) {
+  return `<p class="ds-para">${esc(text)}</p>`;
+}
 function showInfo(kind) {
   const T = t();
   const w = cycleWindows();
@@ -1078,20 +1081,28 @@ function showInfo(kind) {
     const starts = loggedPeriodStarts().slice(-4), diffs = [];
     for (let i = 1; i < starts.length; i++) diffs.push(diffDays(parseDate(starts[i - 1]), parseDate(starts[i])));
     showInfoSheet(T.lblAvgCycle, `${n} ${T.infoDays}`,
+      infoPara(T.infoWhat_cycle) +
+      infoRow(T.infoHow, T.infoHow_cycle) +
       infoRow(T.infoRecent, diffs.length ? diffs.join(' · ') : '—') + note);
   } else if (kind === 'period') {
     const durs = recentPeriodDurations();
     showInfoSheet(T.homePeriodDays, `${pLen} ${T.infoDays}`,
+      infoPara(T.infoWhat_period) +
+      infoRow(T.infoHow, T.infoHow_period) +
       infoRow(T.infoRecent, durs.length ? durs.join(' · ') : '—') + note);
   } else if (kind === 'fert') {
     showInfoSheet(T.homeFertWin, `${w.fDays} ${T.infoDays}`,
+      infoPara(T.infoWhat_fert) +
+      infoRow(T.infoHow, T.infoHow_fert) +
       infoRow(T.infoWindow, `${f(w.fStart)} – ${f(w.fEnd)}`) + note);
   } else if (kind === 'ovulation') {
     const info = cycleInfoFor(today());
     showInfoSheet(T.lblCardOvulation, f(w.ovu),
+      infoPara(T.infoWhat_ovu) +
       infoRow(T.lblHomeCycleDay, T.dayOfCycle(diffDays(info.start, w.ovu) + 1)) + note);
   } else if (kind === 'next') {
-    showInfoSheet(T.lblCardNext, `${f(w.nxt)} · ${T.homeInDays(w.left)}`, note);
+    showInfoSheet(T.lblCardNext, `${f(w.nxt)} · ${T.homeInDays(w.left)}`,
+      infoPara(T.infoWhat_next) + note);
   }
 }
 function initInfoSheets() {
