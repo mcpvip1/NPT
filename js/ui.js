@@ -963,17 +963,31 @@ function renderCycleRing(info, n, day) {
   };
   const phaseOf = d =>
     d <= pLen ? 'period' : d === ovuDay ? 'peak' : (d >= fS && d <= fE) ? 'fertile' : 'luteal';
+  // reference style: each phase's dots graduate across its range
+  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+  const lerpColor = (c1, c2, t) => {
+    const p = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+    const [r1, g1, b1] = p(c1), [r2, g2, b2] = p(c2);
+    return `rgb(${lerp(r1, r2, t)},${lerp(g1, g2, t)},${lerp(b1, b2, t)})`;
+  };
+  const dotColor = d => {
+    const ph = phaseOf(d);
+    if (ph === 'period') return lerpColor('#f43f5e', '#f9a8d4', (d - 1) / Math.max(1, pLen - 1));
+    if (ph === 'fertile') return lerpColor('#bcd6fe', '#3b82f6', (d - fS) / Math.max(1, fE - fS));
+    if (ph === 'peak') return '#8b5cf6';
+    return lerpColor('#f2f0f3', '#e2dee4', (d - fE - 1) / Math.max(1, n - fE - 1));
+  };
   // thin connectors between day dots, then the dots on top (reference detail)
   const dotR = Math.min(6.5, (2 * Math.PI * r / n) * 0.28);
   let s = '';
   for (let d = 1; d <= n; d++) {
     const a0 = (d - 0.5) * step, a1 = (d + 0.5) * step;
     const [x1, y1] = pt(a0, r), [x2, y2] = pt(a1, r);
-    s += `<path class="rlink" style="animation-delay:${d * 22}ms" d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="var(--ring-${phaseOf(d)})" stroke-width="3" stroke-linecap="round" opacity=".5"/>`;
+    s += `<path class="rlink" style="animation-delay:${d * 22}ms" d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="${dotColor(d)}" stroke-width="3" stroke-linecap="round" opacity=".5"/>`;
   }
   for (let d = 1; d <= n; d++) {
     const [x, y] = pt((d - 0.5) * step, r);
-    s += `<circle class="rdot" data-day="${d}" style="animation-delay:${d * 30}ms" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${dotR.toFixed(1)}" fill="var(--ring-${phaseOf(d)})"/>`;
+    s += `<circle class="rdot" data-day="${d}" style="animation-delay:${d * 30}ms" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${dotR.toFixed(1)}" fill="${dotColor(d)}"/>`;
   }
   // cycle-start marker: white center with pink outline (reference detail)
   const [sx, sy] = pt(0.5 * step, r);
