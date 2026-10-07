@@ -25,14 +25,14 @@ const els = {
   cycleRing: $('cycle-ring'),
   ringDay: $('ring-day'),
   ringTotal: $('ring-total'),
-  hcOvuIn: $('hc-ovu-in'),
-  hcOvuDay: $('hc-ovu-day'),
-  hcNextIn: $('hc-next-in'),
-  hcNextDate: $('hc-next-date'),
+
 
   hsCycle: $('hs-cycle'),
   hsPeriod: $('hs-period'),
   hsReg: $('hs-reg'),
+  hsOvu: $('hs-ovu'),
+  hsNext: $('hs-next'),
+  hsLogs: $('hs-logs'),
   dsBg: $('day-sheet-bg'),
   dsDate: $('ds-date'),
   dsCycleDay: $('ds-cycle-day'),
@@ -898,8 +898,8 @@ function renderStats() {
   const w = cycleWindows();
   const info = cycleInfoFor(today());
   if (!w || !info) {
-    [els.ringDay, els.hcOvuIn, els.hcOvuDay, els.hcNextIn, els.hcNextDate,
-     els.hsCycle, els.hsPeriod, els.hsReg].forEach(el => { if (el) el.textContent = '\u2013'; });
+    [els.ringDay, els.hsCycle, els.hsPeriod, els.hsReg,
+     els.hsOvu, els.hsNext, els.hsLogs].forEach(el => { if (el) el.textContent = '\u2013'; });
     if (els.cycleRing) els.cycleRing.innerHTML = '';
     return;
   }
@@ -910,16 +910,13 @@ function renderStats() {
     today().toLocaleDateString(locale(), { month: 'long', day: 'numeric', weekday: 'long' });
   renderCycleRing(info, n, day);
 
-  els.hcOvuIn.textContent = T.homeInDays(diffDays(today(), w.ovu));
-  els.hcOvuDay.textContent = T.dayOfCycle(diffDays(info.start, w.ovu) + 1);
-
-  els.hcNextIn.textContent = T.homeInDays(w.left);
-  els.hcNextDate.textContent =
-    w.nxt.toLocaleDateString(locale(), { month: 'long', day: 'numeric', year: 'numeric' });
-
+  const shortD = d => d.toLocaleDateString(locale(), { month: 'short', day: 'numeric' });
   els.hsCycle.textContent = n;
   els.hsPeriod.textContent = state.data.periodLength || '\u2013';
   els.hsReg.textContent = w.fDays || '\u2013';
+  els.hsOvu.textContent = shortD(w.ovu);
+  els.hsNext.textContent = shortD(w.nxt);
+  els.hsLogs.textContent = Object.keys(state.logs || {}).length;
 
   checkAlarm(w.left);
   celebrateCycleStart(w.pStart);
@@ -1108,6 +1105,11 @@ function showInfo(kind) {
 function initInfoSheets() {
   document.querySelectorAll('[data-info]').forEach(el => {
     el.addEventListener('click', () => showInfo(el.dataset.info));
+  });
+  document.querySelectorAll('[data-goto]').forEach(el => {
+    el.addEventListener('click', () => {
+      if (typeof switchTab === 'function') switchTab(el.dataset.goto);
+    });
   });
 }
 
