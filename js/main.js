@@ -29,6 +29,7 @@ function initTabs() {
 }
 
 function initCalendarNav() {
+  if (!els.calPrev || !els.calNext || !els.calDays) return; // calendar panel removed from home
   els.calPrev.addEventListener('click', () => {
     state.viewDate = new Date(state.viewDate.getFullYear(), state.viewDate.getMonth() - 1, 1);
     renderCalendar();
@@ -681,6 +682,7 @@ function initEscape() {
     else if (!els.phaseModal.classList.contains('hidden')) closePhasePopup();
     else if (!els.importModal.classList.contains('hidden')) closeModal(els.importModal);
     else if (!els.confirmModal.classList.contains('hidden')) closeConfirm(false);
+    else if (els.dsBg && !els.dsBg.classList.contains('hidden')) hideDaySheet();
     else if (els.updCard && !els.updCard.classList.contains('hidden')) hideUpdateCard();
   });
 }
@@ -969,6 +971,7 @@ function init() {
   initTheme();
   initHistoryControls();
   initQuickLog();
+  initDaySheet();
   if (typeof hydrateIcons === 'function') hydrateIcons(document);
   initReminders();
   initServiceWorker();
