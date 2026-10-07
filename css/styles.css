@@ -1630,6 +1630,13 @@ textarea { resize: vertical; }
 .wiz-step .sub-text { margin-bottom: 16px; }
 .wiz-opts { display: grid; gap: 10px; }
 .wiz-restore { margin-top: 16px; width: 100%; }
+/* file input: off-screen, NOT display:none (Android blocks programmatic click on display:none) */
+.wiz-file-hidden { position: fixed; left: -9999px; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+/* step 0 big options */
+.wiz-opt-big { display: flex; align-items: center; gap: 14px; padding: 16px; text-align: left; }
+.wiz-opt-big .wiz-opt-flag { font-size: 1.8rem; }
+.wiz-opt-text { display: flex; flex-direction: column; gap: 2px; }
+.wiz-opt-sub { font-size: .8rem; color: var(--muted); font-weight: 400; }
 .wiz-opt {
   display: flex; align-items: center; gap: 12px; text-align: left;
   background: var(--surface-2); border: 2px solid var(--line); border-radius: 16px;
