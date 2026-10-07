@@ -810,24 +810,24 @@ textarea { resize: vertical; }
 
 .sec-head { font-size: .82rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 10px; }
 
-.switch { position: relative; width: 38px; height: 22px; }
+.switch { position: relative; width: 34px; height: 20px; flex: none; min-width: 34px; max-width: 34px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .switch-track {
   position: absolute; inset: 0;
   background: var(--faint);
-  border-radius: 22px;
+  border-radius: 20px;
   transition: background .2s;
 }
 .switch-track::before {
   content: "";
   position: absolute;
-  width: 16px; height: 16px;
+  width: 14px; height: 14px;
   left: 3px; top: 3px;
   background: white; border-radius: 50%;
   transition: transform .2s;
 }
 .switch input:checked + .switch-track { background: var(--primary); }
-.switch input:checked + .switch-track::before { transform: translateX(16px); }
+.switch input:checked + .switch-track::before { transform: translateX(14px); }
 
 .btn {
   padding: 10px 16px;
