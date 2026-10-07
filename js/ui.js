@@ -910,12 +910,11 @@ function renderStats() {
     today().toLocaleDateString(locale(), { month: 'long', day: 'numeric', weekday: 'long' });
   renderCycleRing(info, n, day);
 
-  const shortD = d => d.toLocaleDateString(locale(), { month: 'short', day: 'numeric' });
   els.hsCycle.textContent = n;
   els.hsPeriod.textContent = state.data.periodLength || '\u2013';
   els.hsReg.textContent = w.fDays || '\u2013';
-  els.hsOvu.textContent = shortD(w.ovu);
-  els.hsNext.textContent = shortD(w.nxt);
+  els.hsOvu.textContent = T.homeInDays(diffDays(today(), w.ovu));
+  els.hsNext.textContent = T.homeInDays(w.left);
   els.hsLogs.textContent = Object.keys(state.logs || {}).length;
 
   checkAlarm(w.left);
@@ -1094,12 +1093,18 @@ function showInfo(kind) {
       infoRow(T.infoWindow, `${f(w.fStart)} – ${f(w.fEnd)}`) + note);
   } else if (kind === 'ovulation') {
     const info = cycleInfoFor(today());
-    showInfoSheet(T.lblCardOvulation, f(w.ovu),
+    const fullD = d => d.toLocaleDateString(locale(), { day: 'numeric', month: 'long' });
+    const monthN = w.ovu.toLocaleDateString(locale(), { month: 'long' });
+    showInfoSheet(T.lblCardOvulation, fullD(w.ovu),
       infoPara(T.infoWhat_ovu) +
+      infoRow(T.infoMonth, monthN) +
       infoRow(T.lblHomeCycleDay, T.dayOfCycle(diffDays(info.start, w.ovu) + 1)) + note);
   } else if (kind === 'next') {
-    showInfoSheet(T.lblCardNext, `${f(w.nxt)} · ${T.homeInDays(w.left)}`,
-      infoPara(T.infoWhat_next) + note);
+    const fullD = d => d.toLocaleDateString(locale(), { day: 'numeric', month: 'long' });
+    const monthN = w.nxt.toLocaleDateString(locale(), { month: 'long' });
+    showInfoSheet(T.lblCardNext, `${fullD(w.nxt)} · ${T.homeInDays(w.left)}`,
+      infoPara(T.infoWhat_next) +
+      infoRow(T.infoMonth, monthN) + note);
   }
 }
 function initInfoSheets() {
