@@ -374,11 +374,16 @@
                 <label for="set-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
                 <input type="number" id="set-height" class="nval" min="80" max="250" inputmode="numeric" placeholder="—">
               </div>
+              <div class="nrow nconfirm">
+                <button type="submit" class="btn primary full"><span data-icon="save"></span><span data-lbl="btnConfirm">Confirm</span></button>
+              </div>
             </div>
-            <button type="submit" class="btn primary full nsave"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
 
-            <h3 class="nsec-title"><span data-lbl="lblCycleGroup">Cycle</span></h3>
             <div class="nsec">
+              <div class="nrow nhead">
+                <span class="hstat-ico blue profile-ico"><span data-icon="calendar"></span></span>
+                <b data-lbl="lblCycleGroup">Cycle</b>
+              </div>
               <div class="nrow">
                 <label for="set-last" data-lbl="lblLastDate">Last Period Date</label>
                 <input type="date" id="set-last" class="nval" required>
@@ -395,11 +400,16 @@
                 <label for="set-luteal" data-lbl="lblLutealLength">Luteal Phase (days)</label>
                 <input type="number" id="set-luteal" class="nval" min="8" max="20" value="14" required>
               </div>
+              <div class="nrow nconfirm">
+                <button type="submit" class="btn primary full"><span data-icon="save"></span><span data-lbl="btnConfirm">Confirm</span></button>
+              </div>
             </div>
-            <button type="submit" class="btn primary full nsave"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
 
-            <h3 class="nsec-title"><span data-lbl="lblNotifHeading">Notifications</span></h3>
             <div class="nsec">
+              <div class="nrow nhead">
+                <span class="hstat-ico amber profile-ico"><span data-icon="bell"></span></span>
+                <b data-lbl="lblNotifHeading">Notifications</b>
+              </div>
               <div class="nrow">
                 <span class="notif-dot" id="notif-dot"></span>
                 <span class="nrow-label" id="notif-status-text"></span>
@@ -435,10 +445,13 @@
               <p class="nrow-note" data-lbl="lblWellnessNudgesSub"></p>
             </div>
 
-            <h3 class="nsec-title"><span data-lbl="aiSetTitle">AI Assistant</span></h3>
             <div class="nsec">
+              <div class="nrow nhead">
+                <span class="hstat-ico purple profile-ico"><span data-icon="advice"></span></span>
+                <b data-lbl="aiSetTitle">AI Assistant</b>
+              </div>
               <p class="nrow-note" data-lbl="aiSetSub"></p>
-              <div class="nrow">
+              <div class="nrow nstack">
                 <span class="nrow-label" data-lbl="aiSetProvider">AI provider</span>
                 <div class="seg nseg" id="ai-provider-seg" role="group">
                   <button type="button" data-ai-provider="auto"><span data-lbl="aiProvAuto">Auto</span></button>
@@ -450,10 +463,7 @@
                 <label for="set-gemini-key" data-lbl="aiSetKey">Gemini API key (free)</label>
                 <input type="password" id="set-gemini-key" class="nval" autocomplete="off" placeholder="AIza…">
               </div>
-              <div class="nrow">
-                <button type="button" class="btn ghost small" id="set-paste"><span data-lbl="btnPaste">Paste</span></button>
-                <span class="nrow-note inline"><span data-lbl="aiSetKeyHint"></span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" data-lbl="aiGetKey">Get a free key</a></span>
-              </div>
+              <p class="nrow-note"><button type="button" class="btn ghost small" id="set-paste"><span data-lbl="btnPaste">Paste</span></button> <span data-lbl="aiSetKeyHint"></span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" data-lbl="aiGetKey">Get a free key</a></p>
               <div class="nrow">
                 <label for="set-bot-name" data-lbl="lblBotName">AI Bot name</label>
                 <input type="text" id="set-bot-name" class="nval" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
@@ -470,11 +480,16 @@
                   <li data-lbl="aiSetup3"></li>
                 </ol>
               </details>
+              <div class="nrow nconfirm">
+                <button type="button" class="btn primary full" id="ai-save"><span data-icon="save"></span><span data-lbl="btnConfirm">Confirm</span></button>
+              </div>
             </div>
-            <button type="button" class="btn primary full nsave" id="ai-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
 
-            <h3 class="nsec-title"><span data-lbl="lblDataHeading">Data</span></h3>
             <div class="nsec">
+              <div class="nrow nhead">
+                <span class="hstat-ico green profile-ico"><span data-icon="save"></span></span>
+                <b data-lbl="lblDataHeading">Data</b>
+              </div>
               <div class="nrow">
                 <span class="nrow-label" data-lbl="btnExport">Export</span>
                 <button type="button" id="btn-export" class="btn ghost small"><span data-icon="export"></span></button>
@@ -492,8 +507,11 @@
               <p class="nrow-note" data-lbl="dataResetHint"></p>
             </div>
 
-            <h3 class="nsec-title"><span data-lbl="lblAbout">About</span></h3>
             <div class="nsec">
+              <div class="nrow nhead">
+                <span class="hstat-ico red profile-ico"><span data-icon="heart"></span></span>
+                <b data-lbl="lblAbout">About</b>
+              </div>
               <div class="nrow nabout">
                 <span class="about-flower">🌸</span>
                 <div>
