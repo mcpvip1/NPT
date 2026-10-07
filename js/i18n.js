@@ -316,6 +316,7 @@ const i18n = {
     aboutBody: 'Aura သည် ရာသီစက်ဝန်းကို လွယ်ကူစွာ မှတ်တမ်းတင်နိုင်ပြီး ကျန်းမာရေးဆိုင်ရာ အကြံပြုချက်များ ရရှိနိုင်တဲ့ အက်ပ်ဖြစ်ပါတယ်။',
     aboutMaker: 'ထုတ်လုပ်သူ',
     btnSave: 'သိမ်းမယ်',
+    btnConfirm: 'အတည်ပြု',
 
     lblWelcomeName: 'သင့်အမည်',
     lblWelcomeLastDate: 'နောက်ဆုံးရာသီရက်',
@@ -735,6 +736,7 @@ const i18n = {
     dsLogDay: 'Log this day',
     ovuArc: 'OVULATION',
     btnSave: 'Save',
+    btnConfirm: 'Confirm',
 
     lblWelcomeName: 'Your Name',
     lblWelcomeLastDate: 'Last Period Date',
