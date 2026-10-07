@@ -1,9 +1,9 @@
 /* ---- tokens · premium pink system ---- */
 :root {
   --bg: #ffffff;
-  --surface: #f4f6f8;
+  --surface: #ffffff;
   --surface-2: #e9edf3;
-  --line: rgba(244,190,210,.55);
+  --line: #e9ebef;
   --text: #3f1d2e;
   --muted: #9c6b80;
   --faint: #c49aac;
@@ -1680,6 +1680,7 @@ textarea { resize: vertical; }
 .hero-greet { font-size: 1.02rem; margin: 2px 0 10px; color: var(--text); }
 .hero-greet #header-greet { color: var(--primary); font-weight: 700; }
 .hero-greet #header-title { font-weight: 800; }
+.hero-today { font-size: .8rem; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
 .hero-date { font-size: 1.55rem; font-weight: 800; margin: 2px 0 4px; letter-spacing: -.01em; }
 .ring-wrap { position: relative; width: 280px; height: 280px; margin: 2px auto 0; }
 #cycle-ring { width: 100%; height: 100%; display: block; }
