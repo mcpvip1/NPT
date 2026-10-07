@@ -3,6 +3,8 @@
 function switchTab(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(name).classList.add('active');
+  window.scrollTo(0, 0);
+  const main = document.querySelector('.main'); if (main) main.scrollTop = 0;
 
   document.querySelectorAll('[data-tab]').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === name);
