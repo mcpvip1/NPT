@@ -35,6 +35,12 @@ const els = {
   hsCycle: $('hs-cycle'),
   hsPeriod: $('hs-period'),
   hsReg: $('hs-reg'),
+  dsBg: $('day-sheet-bg'),
+  dsDate: $('ds-date'),
+  dsCycleDay: $('ds-cycle-day'),
+  dsPhase: $('ds-phase'),
+  dsLog: $('ds-log'),
+  dsClose: $('ds-close'),
 
   calTitle: $('cal-title'),
   calDays: $('cal-days'),
@@ -366,7 +372,7 @@ function applyLang() {
 
   els.search.placeholder = T.searchPlaceholder;
 
-  els.weekdays.innerHTML = T.weekdays.map(w => `<div>${w}</div>`).join('');
+  if (els.weekdays) els.weekdays.innerHTML = T.weekdays.map(w => `<div>${w}</div>`).join('');
 
   els.logFlowRow.querySelectorAll('.chip').forEach(c => {
     const k = c.dataset.flow; if (T.flows[k]) c.textContent = T.flows[k];
@@ -946,11 +952,15 @@ function renderStats() {
   celebrateCycleStart(w.pStart);
 }
 
+let _ringInfo = null; // { info, n } for the day-detail sheet
+
 // segmented cycle ring: one arc per cycle day, colored by phase, with a
 // marker on today and milestone day numbers around the outside.
+// Segments stagger in with a fade and are tappable (see initDaySheet).
 function renderCycleRing(info, n, day) {
   const svg = els.cycleRing;
   if (!svg) return;
+  _ringInfo = { info, n };
   const pLen = state.data.periodLength || 5;
   const ovuDay = diffDays(info.start, info.ovulation) + 1;
   const fS = diffDays(info.start, info.fertileStart) + 1;
@@ -967,18 +977,70 @@ function renderCycleRing(info, n, day) {
   for (let d = 1; d <= n; d++) {
     const a0 = (d - 1) * step + gap / 2, a1 = d * step - gap / 2;
     const [x1, y1] = pt(a0, r), [x2, y2] = pt(a1, r);
-    s += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="var(--ring-${phaseOf(d)})" stroke-width="10" stroke-linecap="round"/>`;
+    s += `<path class="rseg" data-day="${d}" style="animation-delay:${d * 22}ms" d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="var(--ring-${phaseOf(d)})" stroke-width="10" stroke-linecap="round"/>`;
   }
   [...new Set([1, 7, 14, 21, n])].filter(m => m <= n).sort((a, b) => a - b).forEach(m => {
     const [x, y] = pt((m - 0.5) * step, r + 20);
     s += `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" class="ring-mark">${m}</text>`;
   });
   const [tx, ty] = pt((day - 0.5) * step, r);
-  s += `<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="14" fill="var(--ring-${phaseOf(day)})"/>` +
+  const tcol = phaseOf(day);
+  s += `<circle class="ring-halo" cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="21" fill="none" stroke="var(--ring-${tcol})" stroke-width="3"/>` +
+       `<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="14" fill="var(--ring-${tcol})"/>` +
        `<text x="${tx.toFixed(1)}" y="${(ty + 5).toFixed(1)}" text-anchor="middle" class="ring-today">${day}</text>`;
   svg.innerHTML = s;
   els.ringDay.textContent = day;
   els.ringTotal.textContent = '/ ' + n;
+}
+
+// day-detail bottom sheet: tap a ring segment to see that day's date,
+// phase and any logged flow / mood / symptoms.
+function showDayDetail(day) {
+  const T = t();
+  if (!_ringInfo || !els.dsBg) return;
+  const { info, n } = _ringInfo;
+  if (!(day >= 1 && day <= n)) return;
+  const date = addDays(info.start, day - 1);
+  const pLen = state.data.periodLength || 5;
+  const ovuDay = diffDays(info.start, info.ovulation) + 1;
+  const fS = diffDays(info.start, info.fertileStart) + 1;
+  const fE = diffDays(info.start, info.fertileEnd) + 1;
+  const ph = day <= pLen ? 'menstrual'
+    : day === ovuDay ? 'ovulation'
+    : (day >= fS && day <= fE) ? 'fertile'
+    : (date < info.ovulation ? 'follicular' : 'luteal');
+  els.dsDate.textContent = date.toLocaleDateString(locale(), { month: 'long', day: 'numeric', weekday: 'long' });
+  els.dsCycleDay.textContent = T.dayOfCycle(day);
+  els.dsPhase.textContent = phaseLabel(ph);
+  els.dsPhase.className = 'phase-pill pp-' +
+    (ph === 'menstrual' ? 'period' : ph === 'ovulation' ? 'peak' : ph === 'fertile' ? 'fertile' : ph);
+  const log = (state.logs || {})[toKey(date)];
+  let h = '';
+  if (log) {
+    if (log.flow && T.flows && T.flows[log.flow])
+      h += `<div class="ds-log-row"><span class="ds-ico">🩸</span><span>${esc(T.dsFlow)}: ${esc(T.flows[log.flow])}</span></div>`;
+    if (log.mood && T.moods && T.moods[log.mood])
+      h += `<div class="ds-log-row"><span class="ds-ico">😊</span><span>${esc(T.lblInsightMood)}: ${esc(T.moods[log.mood])}</span></div>`;
+    if (log.symptoms && log.symptoms.length)
+      h += `<div class="ds-log-row"><span class="ds-ico">✨</span><span>${esc(T.dsSymptoms)}: ${esc(log.symptoms.map(s => (T.chips && T.chips[s]) || s).join(' · '))}</span></div>`;
+  }
+  els.dsLog.innerHTML = h || `<div class="ds-empty">${esc(T.dsNoLog)}</div>`;
+  els.dsBg.classList.remove('hidden');
+  document.body.classList.add('no-scroll');
+}
+
+function hideDaySheet() {
+  if (els.dsBg) els.dsBg.classList.add('hidden');
+  document.body.classList.remove('no-scroll');
+}
+
+function initDaySheet() {
+  if (els.cycleRing) els.cycleRing.addEventListener('click', e => {
+    const seg = e.target && e.target.closest ? e.target.closest('[data-day]') : null;
+    if (seg) showDayDetail(parseInt(seg.dataset.day, 10));
+  });
+  if (els.dsClose) els.dsClose.addEventListener('click', hideDaySheet);
+  if (els.dsBg) els.dsBg.addEventListener('click', e => { if (e.target === els.dsBg) hideDaySheet(); });
 }
 
 // regularity % from the last logged cycle lengths (null when too little data).
@@ -1107,6 +1169,7 @@ const ICONS = {
 };
 
 function renderCalendar() {
+  if (!els.calDays || !els.calTitle) return; // calendar panel removed from home
   const T = t();
   const y = state.viewDate.getFullYear();
   const m = state.viewDate.getMonth();
