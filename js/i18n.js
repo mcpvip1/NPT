@@ -125,6 +125,7 @@ const i18n = {
     // welcome wizard
     wizLangTitle: 'ဘာသာစကား ရွေးပါ',
     wizLangSub: 'Aura ကို ဘယ်ဘာသာနဲ့ သုံးချင်လဲ?',
+    wizRestore: 'အရန်သိမ်းထားတာ ရှိရင် ပြန်ယူမယ်',
     wizCountryTitle: 'နေထိုင်ရာနိုင်ငံ',
     wizCountrySub: 'ဘယ်နိုင်ငံမှာ နေထိုင်လဲ? ဒီအပေါ်မူတည်ပြီး ဈေးဝယ်အကြံပြုချက်တွေ ပေးမှာပါ။',
     wizCountryAuto: '📍 သင့်အင်တာနက်အရ အလိုအလျောက် ရွေးထားပါတယ်',
@@ -517,6 +518,7 @@ const i18n = {
     // welcome wizard
     wizLangTitle: 'Choose your language',
     wizLangSub: 'Which language should Aura speak?',
+    wizRestore: 'Restore from a backup file',
     wizCountryTitle: 'Where do you live?',
     wizCountrySub: 'We use this to tailor shopping suggestions to your country.',
     wizCountryAuto: '📍 Auto-detected from your internet connection',
