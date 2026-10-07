@@ -97,17 +97,10 @@
     <!-- Everything else lives inside .main -->
     <div class="main">
 
-      <!-- Blue gradient header (reference-style) -->
+      <!-- Slim header: settings avatar + tool pills in one row -->
       <header class="app-header">
-        <div class="header-blob b1"></div>
-        <div class="header-blob b2"></div>
-        <div class="header-text">
-          <span class="header-greet" id="header-greet">Good morning,</span>
-          <h1 class="header-title" id="header-title">Han!</h1>
-          <span class="header-status" id="header-status"></span>
-        </div>
-        <button class="avatar-btn" data-tab="tab-settings" aria-label="Profile"><span data-icon="avatar"></span></button>
-        <div class="header-tools">
+        <div class="header-tools-row">
+          <button class="avatar-btn" data-tab="tab-settings" aria-label="Settings"><span data-icon="settings"></span></button>
           <button type="button" id="hdr-theme" class="htool" aria-label="Toggle theme"><span data-icon="moon"></span></button>
           <div class="htool-seg" id="hdr-langseg" role="group" aria-label="Language">
             <button type="button" data-lang-val="my">မြန်မာ</button>
@@ -134,7 +127,9 @@
             <button class="icon-btn small" id="bot-hello-close" aria-label="Dismiss">×</button>
           </div>
 
-          <div class="panel hero-panel">
+          <div class="hero-nocard">
+            <p class="hero-greet-sub" id="header-greet">Good afternoon,</p>
+            <h1 class="hero-greet-name" id="header-title">Nwe!</h1>
             <p class="hero-today" data-lbl="homeToday">Today</p>
             <h2 class="hero-date" id="hero-date">&mdash;</h2>
             <div class="ring-wrap">
