@@ -972,6 +972,7 @@ function init() {
   initHistoryControls();
   initQuickLog();
   initDaySheet();
+  initInfoSheets();
   if (typeof hydrateIcons === 'function') hydrateIcons(document);
   initReminders();
   initServiceWorker();
