@@ -315,20 +315,24 @@ function importBackupData(raw) {
 }
 
 // ---- welcome wizard ------------------------------------------------------
-// 6 steps: language -> country (IP auto-detected) -> profile -> what the
-// app can do -> notifications + home-screen install -> AI key (optional).
-let wizStep = 1;
+// 7 steps: welcome (new/returning) -> language -> country (IP auto-detected) ->
+// profile -> what the app can do -> notifications + home-screen install -> AI key (optional).
+let wizStep = 0;
 const WIZ_STEPS = 6;
 let wizCountry = 'mm';
 let wizCountryDetected = false;
 let deferredInstallPrompt = null;
 
 function wizShow(n) {
-  wizStep = Math.min(Math.max(n, 1), WIZ_STEPS);
+  wizStep = Math.min(Math.max(n, 0), WIZ_STEPS);
   document.querySelectorAll('.wiz-step').forEach(s =>
     s.classList.toggle('hidden', +s.dataset.step !== wizStep));
   const dots = $('wiz-dots');
   dots.innerHTML = '';
+  // hide dots and nav on the welcome step
+  $('wiz-stepof').style.display = wizStep === 0 ? 'none' : '';
+  document.querySelector('.wiz-nav').style.display = wizStep === 0 ? 'none' : '';
+  if (wizStep === 0) return;
   for (let i = 1; i <= WIZ_STEPS; i++) {
     const d = document.createElement('span');
     d.className = 'wiz-dot' + (i === wizStep ? ' active' : '') + (i < wizStep ? ' done' : '');
@@ -510,11 +514,13 @@ function initWelcome() {
   const wPaste = $('w-ai-paste');
   if (wPaste) wPaste.addEventListener('click', () => pasteInto($('w-ai-key')));
 
-  // restore backup from the wizard (returning users skip data entry)
-  const wRestore = $('wiz-restore');
+  // step 0: new vs returning user
+  const wNewUser = $('wiz-new-user');
+  const wOldUser = $('wiz-old-user');
   const wRestoreFile = $('wiz-restore-file');
-  if (wRestore && wRestoreFile) {
-    wRestore.addEventListener('click', () => wRestoreFile.click());
+  if (wNewUser) wNewUser.addEventListener('click', () => wizShow(1));
+  if (wOldUser && wRestoreFile) {
+    wOldUser.addEventListener('click', () => wRestoreFile.click());
     wRestoreFile.addEventListener('change', () => {
       const f = wRestoreFile.files && wRestoreFile.files[0];
       if (!f) return;
