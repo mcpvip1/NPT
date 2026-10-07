@@ -59,6 +59,7 @@
   --primary: #60a5fa;
   --primary-dark: #93c5fd;
   --primary-soft: #1e2c4e;
+  --surface-2: #1c2947;
   --header-grad: linear-gradient(135deg, #1e40af 0%, #1d4ed8 60%, #172e6e 100%);
   --cta-grad: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
   --bg-grad: linear-gradient(180deg, #152238 0%, #0f1830 38%, #0a1024 100%);
