@@ -910,12 +910,13 @@ function renderStats() {
     today().toLocaleDateString(locale(), { month: 'long', day: 'numeric', weekday: 'long' });
   renderCycleRing(info, n, day);
 
-  els.hsCycle.textContent = n;
-  els.hsPeriod.textContent = state.data.periodLength || '\u2013';
-  els.hsReg.textContent = w.fDays || '\u2013';
+  const unit = u => ` <span class="hstat-unit">${u}</span>`;
+  els.hsCycle.innerHTML = `${n}${unit(T.infoDays)}`;
+  els.hsPeriod.innerHTML = state.data.periodLength ? `${state.data.periodLength}${unit(T.infoDays)}` : '\u2013';
+  els.hsReg.innerHTML = w.fDays ? `${w.fDays}${unit(T.infoDays)}` : '\u2013';
   els.hsOvu.textContent = T.homeInDays(diffDays(today(), w.ovu));
   els.hsNext.textContent = T.homeInDays(w.left);
-  els.hsLogs.textContent = Object.keys(state.logs || {}).length;
+  els.hsLogs.innerHTML = `${Object.keys(state.logs || {}).length}${unit(T.infoTimes)}`;
 
   checkAlarm(w.left);
   celebrateCycleStart(w.pStart);
