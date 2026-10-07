@@ -956,19 +956,23 @@ function renderCycleRing(info, n, day) {
   const fS = diffDays(info.start, info.fertileStart) + 1;
   const fE = diffDays(info.start, info.fertileEnd) + 1;
   const cx = 110, cy = 110, r = 80;
-  const step = 360 / n, gap = Math.min(6, step * 0.22);
+  const step = 360 / n;
   const pt = (ang, rad) => {
     const a = (ang - 90) * Math.PI / 180;
     return [cx + rad * Math.cos(a), cy + rad * Math.sin(a)];
   };
   const phaseOf = d =>
     d <= pLen ? 'period' : d === ovuDay ? 'peak' : (d >= fS && d <= fE) ? 'fertile' : 'luteal';
+  // one dot per cycle day, evenly spaced with clear gaps (reference style)
+  const dotR = Math.min(7, (2 * Math.PI * r / n) * 0.32);
   let s = '';
   for (let d = 1; d <= n; d++) {
-    const a0 = (d - 1) * step + gap / 2, a1 = d * step - gap / 2;
-    const [x1, y1] = pt(a0, r), [x2, y2] = pt(a1, r);
-    s += `<path class="rseg" data-day="${d}" style="animation-delay:${d * 22}ms" d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="var(--ring-${phaseOf(d)})" stroke-width="8" stroke-linecap="round"/>`;
+    const [x, y] = pt((d - 0.5) * step, r);
+    s += `<circle class="rdot" data-day="${d}" style="animation-delay:${d * 22}ms" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${dotR.toFixed(1)}" fill="var(--ring-${phaseOf(d)})"/>`;
   }
+  // cycle-start marker: white center with pink outline (reference detail)
+  const [sx, sy] = pt(0.5 * step, r);
+  s += `<circle class="start-ring" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${(dotR + 3.2).toFixed(1)}" fill="var(--surface)" stroke="var(--ring-period)" stroke-width="3"/>`;
   // curved OVULATION label hugging the inside of the ring at the ovulation day
   const ovuMid = (ovuDay - 0.5) * step, arcR = r - 26, span = 42;
   const [ax1, ay1] = pt(ovuMid + span, arcR), [ax2, ay2] = pt(ovuMid - span, arcR);
