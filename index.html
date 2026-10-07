@@ -351,26 +351,29 @@
         <section id="tab-settings" class="page">
           <form id="settings-form">
             <div class="set-card profile-card">
-              <span class="set-avatar"><span data-icon="avatar"></span></span>
-              <div class="field">
-                <label for="set-name" data-lbl="lblUserName">Name</label>
-                <input type="text" id="set-name" required>
+              <div class="profile-head">
+                <span class="set-avatar"><span data-icon="avatar"></span></span>
+                <h4 data-lbl="lblProfileTitle">User Information</h4>
               </div>
-              <div class="field">
-                <label for="set-bot-name" data-lbl="lblBotName">Bot name</label>
-                <input type="text" id="set-bot-name" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
+              <div class="field-row">
+                <div class="field">
+                  <label for="set-name" data-lbl="lblUserName">Name</label>
+                  <input type="text" id="set-name" required>
+                </div>
+                <div class="field">
+                  <label for="set-age" data-lbl="lblWelcomeAge">Age</label>
+                  <input type="number" id="set-age" min="9" max="100" inputmode="numeric" placeholder="—">
+                </div>
               </div>
-              <div class="field">
-                <label for="set-age" data-lbl="lblWelcomeAge">Age</label>
-                <input type="number" id="set-age" min="9" max="100" inputmode="numeric" placeholder="—">
-              </div>
-              <div class="field">
-                <label for="set-weight" data-lbl="lblWelcomeWeight">Weight (kg)</label>
-                <input type="number" id="set-weight" min="20" max="300" step="0.5" inputmode="decimal" placeholder="—">
-              </div>
-              <div class="field">
-                <label for="set-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
-                <input type="number" id="set-height" min="80" max="250" inputmode="numeric" placeholder="—">
+              <div class="field-row">
+                <div class="field">
+                  <label for="set-weight" data-lbl="lblWelcomeWeight">Weight (kg)</label>
+                  <input type="number" id="set-weight" min="20" max="300" step="0.5" inputmode="decimal" placeholder="—">
+                </div>
+                <div class="field">
+                  <label for="set-height" data-lbl="lblWelcomeHeight">Height (cm)</label>
+                  <input type="number" id="set-height" min="80" max="250" inputmode="numeric" placeholder="—">
+                </div>
               </div>
               <button type="submit" class="btn primary full set-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
             </div>
@@ -462,30 +465,39 @@
                   <li data-lbl="aiSetup3"></li>
                 </ol>
               </details>
-              <button type="button" class="btn primary full" id="ai-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
-            </div>
-
-            <h3 class="set-group-title"><span data-icon="settings"></span><span data-lbl="lblBotHeading">Helper bot</span></h3>
-            <div class="set-card">
+              <div class="field">
+                <label for="set-bot-name" data-lbl="lblBotName">AI Bot name</label>
+                <input type="text" id="set-bot-name" maxlength="24" data-ph="phBotName" placeholder="Aura" autocomplete="off">
+              </div>
               <div class="switch-row">
-                <span data-lbl="lblBotEnable">Show cute helper bot</span>
+                <span data-lbl="lblBotHeading">AI helper bot</span>
                 <label class="switch"><input type="checkbox" id="set-bot" checked><span class="switch-track"></span></label>
               </div>
+              <button type="button" class="btn primary full" id="ai-save"><span data-icon="save"></span><span data-lbl="btnSave">Save</span></button>
             </div>
 
             <h3 class="set-group-title"><span data-icon="save"></span><span data-lbl="lblDataHeading">Data</span></h3>
             <div class="set-card">
+              <p class="sub-text tiny" data-lbl="dataExportHint"></p>
               <div class="btn-row">
                 <button type="button" id="btn-export" class="btn ghost"><span data-icon="export"></span><span data-lbl="btnExport">Export</span></button>
                 <button type="button" id="btn-import" class="btn ghost"><span data-icon="import"></span><span data-lbl="btnImport">Import</span></button>
+              </div>
+              <p class="sub-text tiny" data-lbl="dataImportHint"></p>
+              <div class="btn-row">
                 <button type="button" id="btn-reset" class="btn danger"><span data-icon="delete"></span><span data-lbl="btnReset">Reset</span></button>
               </div>
+              <p class="sub-text tiny" data-lbl="dataResetHint"></p>
             </div>
 
             <h3 class="set-group-title"><span data-icon="advice"></span><span data-lbl="lblAbout">About</span></h3>
             <div class="set-card about-card">
-              <p class="about-line"><strong>Aura</strong> · <span data-lbl="lblAppTagline">Cycle Tracker</span></p>
-              <p class="sub-text tiny" data-lbl="lblIconCredit">3D icons by Icons8</p>
+              <div class="about-hero">
+                <span class="about-flower">🌸</span>
+                <p class="about-line"><strong>Aura</strong> · <span data-lbl="lblAppTagline">Cycle Tracker</span></p>
+              </div>
+              <p class="sub-text" data-lbl="aboutBody"></p>
+              <p class="about-maker"><span data-lbl="aboutMaker">Made by</span> <strong>HPT (DO2)</strong></p>
             </div>
           </form>
         </section>
@@ -803,7 +815,7 @@
   <script src="js/i18n.js"></script>
   <script src="js/store.js"></script>
   <script src="js/cycle.js"></script>
-  <script src="js/icons-3d.js"></script>
+  <script src="js/icons-flat.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/recommend.js"></script>
   <script src="js/ai.js"></script>
