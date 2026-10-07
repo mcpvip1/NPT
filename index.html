@@ -505,6 +505,23 @@
                 <button type="button" id="btn-reset" class="btn danger small"><span data-icon="delete"></span></button>
               </div>
               <p class="nrow-note" data-lbl="dataResetHint"></p>
+              <div class="nrow nhead nsub">
+                <b data-lbl="gdriveTitle">Google Drive backup</b>
+              </div>
+              <p class="nrow-note"><span data-gdrive-status></span></p>
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="gdriveBackup">Back up to Google</span>
+                <button type="button" class="btn ghost small" data-gdrive-btn onclick="gdriveBackup()"><span data-icon="export"></span></button>
+              </div>
+              <div class="nrow">
+                <span class="nrow-label" data-lbl="gdriveRestore">Restore from Google</span>
+                <button type="button" class="btn ghost small" data-gdrive-btn onclick="gdriveRestore()"><span data-icon="import"></span></button>
+              </div>
+              <p class="nrow-note" data-lbl="gdriveHint"></p>
+              <div class="nrow" data-gdrive-signout style="display:none">
+                <span class="nrow-label" data-lbl="gdriveSignOut">Sign out</span>
+                <button type="button" class="btn ghost small" onclick="gdriveSignOut()"><span>↪</span></button>
+              </div>
             </div>
 
             <div class="nsec">
@@ -579,6 +596,9 @@
             </span>
           </button>
         </div>
+        <button type="button" class="btn ghost wiz-restore" data-gdrive-btn onclick="gdriveRestore()">
+          <span data-lbl="wizGoogleRestore">Google Drive ကနေ ပြန်ယူမယ်</span>
+        </button>
         <input type="file" id="wiz-restore-file" accept=".json,application/json" class="wiz-file-hidden">
       </div>
 
@@ -869,6 +889,7 @@
   <script src="js/ui.js"></script>
   <script src="js/recommend.js"></script>
   <script src="js/ai.js"></script>
+  <script src="js/gdrive.js"></script>
   <script src="js/main.js"></script>
 </body>
 
