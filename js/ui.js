@@ -41,6 +41,7 @@ const els = {
   dsPhase: $('ds-phase'),
   dsLog: $('ds-log'),
   dsClose: $('ds-close'),
+  dsLogBtn: $('ds-log-btn'),
 
   calTitle: $('cal-title'),
   calDays: $('cal-days'),
@@ -932,7 +933,7 @@ function renderStats() {
   const td = today();
   if (isSameDay(td, w.ovu)) {
     els.hcFertStatus.textContent = T.homeHighChance;
-    els.hcFertPill.textContent = T.homePeak;
+    els.hcFertPill.textContent = '🔥 ' + T.homePeak;
     els.hcFertPill.className = 'chance-pill peak';
   } else if (td >= w.fStart && td <= w.fEnd) {
     els.hcFertStatus.textContent = T.homeHighChance;
@@ -961,6 +962,7 @@ function renderCycleRing(info, n, day) {
   const svg = els.cycleRing;
   if (!svg) return;
   _ringInfo = { info, n };
+  const T = t();
   const pLen = state.data.periodLength || 5;
   const ovuDay = diffDays(info.start, info.ovulation) + 1;
   const fS = diffDays(info.start, info.fertileStart) + 1;
@@ -977,16 +979,24 @@ function renderCycleRing(info, n, day) {
   for (let d = 1; d <= n; d++) {
     const a0 = (d - 1) * step + gap / 2, a1 = d * step - gap / 2;
     const [x1, y1] = pt(a0, r), [x2, y2] = pt(a1, r);
-    s += `<path class="rseg" data-day="${d}" style="animation-delay:${d * 22}ms" d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="var(--ring-${phaseOf(d)})" stroke-width="10" stroke-linecap="round"/>`;
+    s += `<path class="rseg" data-day="${d}" style="animation-delay:${d * 22}ms" d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="var(--ring-${phaseOf(d)})" stroke-width="8" stroke-linecap="round"/>`;
   }
+  // curved OVULATION label hugging the inside of the ring at the ovulation day
+  const ovuMid = (ovuDay - 0.5) * step, arcR = r - 26, span = 42;
+  const [ax1, ay1] = pt(ovuMid + span, arcR), [ax2, ay2] = pt(ovuMid - span, arcR);
+  s += `<path id="ovu-arc-path" d="M${ax1.toFixed(1)} ${ay1.toFixed(1)} A${arcR} ${arcR} 0 0 0 ${ax2.toFixed(1)} ${ay2.toFixed(1)}" fill="none"/>` +
+       `<text class="ovu-arc"><textPath href="#ovu-arc-path" startOffset="50%" text-anchor="middle">${esc(T.ovuArc)}</textPath></text>`;
+  // ovulation day: white dot with glowing green ring (reference style)
+  const [ox, oy] = pt(ovuMid, r);
+  s += `<circle class="ovu-glow" cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" r="11" fill="var(--surface)" stroke="#22c55e" stroke-width="3.5"/>`;
   [...new Set([1, 7, 14, 21, n])].filter(m => m <= n).sort((a, b) => a - b).forEach(m => {
     const [x, y] = pt((m - 0.5) * step, r + 20);
     s += `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" class="ring-mark">${m}</text>`;
   });
+  // today: purple badge with pulsing halo (reference style)
   const [tx, ty] = pt((day - 0.5) * step, r);
-  const tcol = phaseOf(day);
-  s += `<circle class="ring-halo" cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="21" fill="none" stroke="var(--ring-${tcol})" stroke-width="3"/>` +
-       `<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="14" fill="var(--ring-${tcol})"/>` +
+  s += `<circle class="ring-halo" cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="21" fill="none" stroke="var(--ring-peak)" stroke-width="3"/>` +
+       `<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="14" fill="var(--ring-peak)"/>` +
        `<text x="${tx.toFixed(1)}" y="${(ty + 5).toFixed(1)}" text-anchor="middle" class="ring-today">${day}</text>`;
   svg.innerHTML = s;
   els.ringDay.textContent = day;
@@ -1001,6 +1011,7 @@ function showDayDetail(day) {
   const { info, n } = _ringInfo;
   if (!(day >= 1 && day <= n)) return;
   const date = addDays(info.start, day - 1);
+  _sheetDateKey = toKey(date);
   const pLen = state.data.periodLength || 5;
   const ovuDay = diffDays(info.start, info.ovulation) + 1;
   const fS = diffDays(info.start, info.fertileStart) + 1;
@@ -1029,6 +1040,8 @@ function showDayDetail(day) {
   document.body.classList.add('no-scroll');
 }
 
+let _sheetDateKey = null;
+
 function hideDaySheet() {
   if (els.dsBg) els.dsBg.classList.add('hidden');
   document.body.classList.remove('no-scroll');
@@ -1041,6 +1054,11 @@ function initDaySheet() {
   });
   if (els.dsClose) els.dsClose.addEventListener('click', hideDaySheet);
   if (els.dsBg) els.dsBg.addEventListener('click', e => { if (e.target === els.dsBg) hideDaySheet(); });
+  if (els.dsLogBtn) els.dsLogBtn.addEventListener('click', () => {
+    const k = _sheetDateKey;
+    hideDaySheet();
+    if (k && typeof openLogModal === 'function') openLogModal(k);
+  });
 }
 
 // regularity % from the last logged cycle lengths (null when too little data).
