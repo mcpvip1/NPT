@@ -1,8 +1,8 @@
 /* ---- tokens · premium pink system ---- */
 :root {
-  --bg: #f2f4f7;
-  --surface: #ffffff;
-  --surface-2: #fdf0f5;
+  --bg: #ffffff;
+  --surface: #f3f5f9;
+  --surface-2: #e9edf3;
   --line: rgba(244,190,210,.55);
   --text: #3f1d2e;
   --muted: #9c6b80;
@@ -13,7 +13,7 @@
   --primary-soft: #fce7f3;
   --header-grad: linear-gradient(135deg, #f9a8d4 0%, #ec4899 55%, #db2777 100%);
   --cta-grad: linear-gradient(135deg, #f9a8d4 0%, #ec4899 55%, #e11d48 100%);
-  --bg-grad: linear-gradient(180deg, #f8fafc 0%, #edf0f5 100%);
+  --bg-grad: #ffffff;
 
   --c-period: #f43f5e;   --c-period-bg: #ffe4ea;
   --c-fertile: #a855f7;  --c-fertile-bg: #f3e8ff;
@@ -45,7 +45,7 @@
   --primary-soft: #dbeafe;
   --header-grad: linear-gradient(135deg, #93c5fd 0%, #3b82f6 55%, #2563eb 100%);
   --cta-grad: linear-gradient(135deg, #93c5fd 0%, #3b82f6 55%, #1d4ed8 100%);
-  --bg-grad: linear-gradient(180deg, #f5f9fe 0%, #edf2f8 100%);
+  --bg-grad: #ffffff;
   --surface-2: #eef4ff;
   --shadow: 0 10px 25px -6px rgba(37,99,235,.1);
   --shadow-lg: 0 14px 40px rgba(37,99,235,.18);
@@ -186,18 +186,12 @@ input, select, textarea { font-family: inherit; }
 .app-header {
   background: transparent;
   color: var(--text);
-  border-radius: 0;
-  padding: 16px 18px 4px;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  box-shadow: none;
+  padding: 14px 18px 2px;
+  display: flex; justify-content: center;
   position: relative; z-index: 5;
 }
-.header-blob { display: none; }
-.header-text { text-align: center; width: 100%; }
-.header-greet { font-size: .8rem; font-weight: 600; color: var(--primary-dark); opacity: .9; }
-.header-title { font-size: 1.7rem; font-weight: 800; margin-top: 2px; line-height: 1.15; color: var(--text); letter-spacing: -.01em; }
+.header-tools-row { display: flex; align-items: center; gap: 10px; }
 .avatar-btn {
-  position: absolute; top: 16px; right: 18px;
   width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
   border: 2px solid rgba(255,255,255,.7); background: rgba(255,255,255,.5); color: var(--primary-dark);
   font-size: 1.2rem; display: grid; place-items: center;
@@ -1682,10 +1676,12 @@ textarea { resize: vertical; }
 [data-theme="dark"] .t-amber { background: #4a3413; }
 
 /* ---- home hero: cycle ring + prediction cards (screenshot design) ---- */
-.hero-panel { text-align: center; padding: 20px 16px 18px; }
+.hero-nocard { text-align: center; padding: 6px 4px 0; }
+.hero-greet-sub { font-size: .95rem; font-weight: 700; color: var(--primary); }
+.hero-greet-name { font-size: 1.7rem; font-weight: 800; letter-spacing: -.01em; margin: 1px 0 10px; }
 .hero-today { font-size: .8rem; color: var(--muted); font-weight: 600; }
 .hero-date { font-size: 1.55rem; font-weight: 800; margin: 2px 0 4px; letter-spacing: -.01em; }
-.ring-wrap { position: relative; width: 242px; height: 242px; margin: 2px auto 0; }
+.ring-wrap { position: relative; width: 280px; height: 280px; margin: 2px auto 0; }
 #cycle-ring { width: 100%; height: 100%; display: block; }
 .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; pointer-events: none; }
 .ring-lbl { font-size: .78rem; color: var(--muted); font-weight: 600; }
