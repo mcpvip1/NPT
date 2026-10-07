@@ -13,12 +13,7 @@
   --primary-soft: #fce7f3;
   --header-grad: linear-gradient(135deg, #f9a8d4 0%, #ec4899 55%, #db2777 100%);
   --cta-grad: linear-gradient(135deg, #f9a8d4 0%, #ec4899 55%, #e11d48 100%);
-  --bg-grad:
-    radial-gradient(45% 40% at 18% 6%, rgba(255, 205, 160, .55), transparent 70%),
-    radial-gradient(50% 42% at 88% 16%, rgba(255, 175, 200, .5), transparent 70%),
-    radial-gradient(55% 50% at 78% 94%, rgba(165, 212, 250, .55), transparent 70%),
-    radial-gradient(45% 42% at 8% 90%, rgba(224, 200, 255, .5), transparent 70%),
-    #fbfbfd;
+  --bg-grad: linear-gradient(165deg, #ffe4cf 0%, #ffd2e0 32%, #dfcdfb 63%, #c6e6fc 100%);
 
   --c-period: #f43f5e;   --c-period-bg: #ffe4ea;
   --c-fertile: #a855f7;  --c-fertile-bg: #f3e8ff;
@@ -28,7 +23,7 @@
   --ring-period: #f43f5e;
   --ring-fertile: #3b82f6;
   --ring-peak: #8b5cf6;
-  --ring-luteal: #e9e2e6;
+  --ring-luteal: #d9d2da;
 
   --r-lg: 24px;
   --r-md: 16px;
@@ -98,22 +93,12 @@ body.no-scroll { overflow: hidden; }
 body {
   font-family: 'Plus Jakarta Sans', 'Padauk', sans-serif;
   background: var(--bg-grad);
-  background-size: 220% 220%, 220% 220%, 220% 220%, 220% 220%, auto;
   background-attachment: fixed;
-  animation: meshDrift 26s ease-in-out infinite alternate;
   color: var(--text);
   min-height: 100vh;
   -webkit-tap-highlight-color: transparent;
   overflow-x: clip; /* never let a stray element widen the page on phones */
 }
-/* ---- v32: drifting pastel mesh (light mode) ---- */
-@keyframes meshDrift {
-  0% { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0 0; }
-  50% { background-position: 55% 25%, 45% 55%, 35% 45%, 65% 65%, 0 0; }
-  100% { background-position: 100% 50%, 0% 50%, 0% 10%, 100% 90%, 0 0; }
-}
-[data-theme="dark"] body { animation: none; }
-@media (prefers-reduced-motion: reduce) { body { animation: none; } }
 
 button { font-family: inherit; cursor: pointer; }
 input, select, textarea { font-family: inherit; }
@@ -1087,6 +1072,7 @@ textarea { resize: vertical; }
 }
 
 @media (min-width: 640px) {
+  .ring-wrap { width: 300px; height: 300px; }
   .content { max-width: 720px; margin: 0 auto; width: 100%; padding: 0 24px; padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
   .alarm { max-width: 672px; margin: 0 auto 12px; }
 
@@ -1694,7 +1680,6 @@ textarea { resize: vertical; }
 .hero-greet { font-size: 1.02rem; margin: 2px 0 10px; color: var(--text); }
 .hero-greet #header-greet { color: var(--primary); font-weight: 700; }
 .hero-greet #header-title { font-weight: 800; }
-.hero-today { font-size: .8rem; color: var(--muted); font-weight: 600; }
 .hero-date { font-size: 1.55rem; font-weight: 800; margin: 2px 0 4px; letter-spacing: -.01em; }
 .ring-wrap { position: relative; width: 280px; height: 280px; margin: 2px auto 0; }
 #cycle-ring { width: 100%; height: 100%; display: block; }
@@ -1734,12 +1719,14 @@ textarea { resize: vertical; }
 
 /* ---- cycle ring: entrance animation, today pulse, tap targets ---- */
 @keyframes dotPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+@keyframes linkFade { from { opacity: 0; } to { opacity: .5; } }
+#cycle-ring .rlink { animation: linkFade .5s ease backwards; pointer-events: none; }
 #cycle-ring .rdot { animation: dotPop .45s cubic-bezier(.2,.9,.3,1.4) backwards; cursor: pointer; transform-box: fill-box; transform-origin: center; }
 #cycle-ring .rdot:active { opacity: .65; }
 @keyframes haloPulse { 0%, 100% { opacity: .5; } 50% { opacity: 0; } }
 .ring-halo { animation: haloPulse 2.4s ease-in-out infinite; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
-  #cycle-ring .rdot, .ring-halo { animation: none; }
+  #cycle-ring .rdot, #cycle-ring .rlink, .ring-halo { animation: none; }
 }
 .ring-hint { margin-top: 8px; font-size: .72rem; color: var(--faint); font-weight: 600; }
 
