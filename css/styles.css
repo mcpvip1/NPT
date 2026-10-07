@@ -1186,7 +1186,7 @@ textarea { resize: vertical; }
 [data-theme="dark"] {
   --card-shadow: 0 20px 45px -20px rgba(0,0,0,.7), 0 4px 14px rgba(0,0,0,.4);
 }
-.page { padding-bottom: calc(var(--nav-h) + 22px); }
+.page { padding-bottom: calc(var(--nav-h) + 48px); }
 
 /* cards */
 .panel { border: none; border-radius: 26px; box-shadow: var(--card-shadow); }
