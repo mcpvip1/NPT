@@ -20,6 +20,11 @@
   --c-ovu: #d97706;      --c-ovu-bg: #fef3c7;
   --c-next: #0284c7;     --c-next-bg: #e0f2fe;
 
+  --ring-period: #f43f5e;
+  --ring-fertile: #3b82f6;
+  --ring-peak: #8b5cf6;
+  --ring-luteal: #e9e2e6;
+
   --r-lg: 24px;
   --r-md: 16px;
   --r-sm: 12px;
@@ -61,6 +66,7 @@
 }
 
 [data-theme="dark"] {
+  --ring-luteal: #3b3440;
   --bg: #1c0f16;
   --surface: #2a1822;
   --surface-2: #341e2a;
@@ -1289,25 +1295,6 @@ textarea { resize: vertical; }
   .page.active, .page.active > * { animation: none; }
 }
 
-/* stat tiles: quick-card style grid (icon tile, label, value) */
-.stats-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-}
-.stat-tile {
-  background: var(--surface); border: none; border-radius: 20px;
-  box-shadow: var(--card-shadow);
-  padding: 16px 6px 14px;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  font-family: inherit; color: var(--text); min-width: 0;
-}
-.stat-tile:active { transform: scale(.95); }
-.tile-ico {
-  width: 56px; height: 56px; border-radius: 20px; flex-shrink: 0;
-  display: grid; place-items: center;
-}
-.tile-ico .ic3d { width: 36px; height: 36px; }
-.tile-lbl { font-size: .72rem; font-weight: 700; color: var(--text); text-align: center; line-height: 1.35; }
-.tile-val { font-size: 1.05rem; font-weight: 800; white-space: nowrap; }
 .c-period { color: var(--c-period); }
 .c-fertile { color: var(--c-fertile); }
 .c-ovu { color: var(--c-ovu); }
@@ -1315,12 +1302,6 @@ textarea { resize: vertical; }
 /* cycle summary + nav fab (restored) */
 .ic3d { width: 28px; height: 28px; object-fit: contain; display: block; pointer-events: none; }
 .tint-red { filter: hue-rotate(155deg) saturate(1.5); }
-.summary-top { display: flex; justify-content: space-around; text-align: center; margin-bottom: 6px; }
-.sum { display: flex; flex-direction: column; gap: 2px; }
-.sum-val { font-size: 1.55rem; font-weight: 800; color: var(--primary-dark); }
-.sum-lbl { font-size: .68rem; color: var(--muted); font-weight: 600; }
-.mini-bars { display: flex; align-items: flex-end; justify-content: center; gap: 10px; height: 92px; padding-top: 20px; }
-.mini-bar { width: 26px; border-radius: 8px 8px 4px 4px; background: var(--cta-grad); position: relative; opacity: .92; }
 .nav-fab {
   width: 58px; height: 58px; border-radius: 50%; border: none; flex-shrink: 0;
   background: var(--cta-grad); color: #fff;
@@ -1329,8 +1310,6 @@ textarea { resize: vertical; }
   box-shadow: 0 14px 26px -8px var(--glow-strong), 0 0 0 6px var(--bg);
 }
 .nav-fab:active { transform: scale(.93); }
-.mini-bar span { position: absolute; top: -19px; left: 50%; transform: translateX(-50%); font-size: .66rem; font-weight: 800; color: var(--muted); }
-
 
 .sec-title { font-size: 1rem; font-weight: 800; color: var(--text); margin: 2px 2px 0; }
 .sec-head-row { display: flex; align-items: center; justify-content: space-between; }
@@ -1701,3 +1680,46 @@ textarea { resize: vertical; }
 /* amber tile for the heat icon */
 .t-amber { background: #fef3c7; }
 [data-theme="dark"] .t-amber { background: #4a3413; }
+
+/* ---- home hero: cycle ring + prediction cards (screenshot design) ---- */
+.hero-panel { text-align: center; padding: 20px 16px 18px; }
+.hero-today { font-size: .8rem; color: var(--muted); font-weight: 600; }
+.hero-date { font-size: 1.28rem; font-weight: 800; margin: 2px 0 4px; }
+.ring-wrap { position: relative; width: 242px; height: 242px; margin: 2px auto 0; }
+#cycle-ring { width: 100%; height: 100%; display: block; }
+.ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; pointer-events: none; }
+.ring-lbl { font-size: .78rem; color: var(--muted); font-weight: 600; }
+.ring-num b { font-size: 2.7rem; font-weight: 800; line-height: 1; }
+.ring-num i { font-style: normal; font-size: 1rem; color: var(--muted); font-weight: 600; margin-left: 5px; }
+.ring-mark { font-size: 11px; fill: var(--muted); font-weight: 600; }
+.ring-today { font-size: 13px; fill: #fff; font-weight: 800; }
+.ring-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: .75rem; font-weight: 600; }
+.ring-legend .rl { display: inline-flex; align-items: center; gap: 5px; }
+.dot.rp { background: var(--ring-period); }
+.dot.rf { background: var(--ring-fertile); }
+.dot.rk { background: var(--ring-peak); }
+.dot.rlute { background: var(--ring-luteal); border: 1px solid var(--line); }
+
+.hero-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hcard { padding: 14px; display: flex; flex-direction: column; gap: 7px; }
+.hcard-head { display: flex; align-items: center; gap: 8px; }
+.hcard-ico { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
+.hcard-ico .ic3d { width: 22px; height: 22px; }
+.ico-ovu { background: var(--c-ovu-bg); }
+.ico-next { background: var(--c-period-bg); }
+.ico-fert { background: var(--c-fertile-bg); }
+.hcard-title { font-size: .82rem; font-weight: 700; }
+.hcard-main { font-size: .98rem; font-weight: 800; }
+.hcard-main.c-ovu { color: #16a34a; }
+[data-theme="dark"] .hcard-main.c-ovu { color: #4ade80; }
+.hcard-sub { font-size: .75rem; color: var(--muted); font-weight: 600; }
+
+.hcard-wide { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px; }
+.hcard-wide-main { display: flex; flex-direction: column; gap: 7px; }
+.chance-pill { background: var(--ring-peak); color: #fff; font-size: .75rem; font-weight: 800; padding: 8px 16px; border-radius: 999px; flex-shrink: 0; }
+.chance-pill.high { background: var(--ring-fertile); }
+
+.hero-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.hstat { padding: 14px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.hstat b { font-size: 1.32rem; font-weight: 800; }
+.hstat span { font-size: .7rem; color: var(--muted); font-weight: 600; line-height: 1.35; }
