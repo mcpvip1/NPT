@@ -1357,6 +1357,8 @@ textarea { resize: vertical; }
 .profile-card { display: flex; flex-direction: column; gap: 4px; }
 .profile-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .profile-head h4 { font-size: .95rem; font-weight: 800; }
+.profile-ico { width: 34px; height: 34px; border-radius: 12px; margin-bottom: 0; }
+.profile-ico svg { width: 22px; height: 22px; }
 .profile-card .field-row { margin-bottom: 4px; }
 .profile-card .field { margin-bottom: 8px; }
 .profile-card input { padding: 8px 10px; font-size: .82rem; }
