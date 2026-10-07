@@ -1,7 +1,7 @@
 /* ---- tokens · premium pink system ---- */
 :root {
   --bg: #ffffff;
-  --surface: #f3f5f9;
+  --surface: #ffffff;
   --surface-2: #e9edf3;
   --line: rgba(244,190,210,.55);
   --text: #3f1d2e;
@@ -13,7 +13,12 @@
   --primary-soft: #fce7f3;
   --header-grad: linear-gradient(135deg, #f9a8d4 0%, #ec4899 55%, #db2777 100%);
   --cta-grad: linear-gradient(135deg, #f9a8d4 0%, #ec4899 55%, #e11d48 100%);
-  --bg-grad: #ffffff;
+  --bg-grad:
+    radial-gradient(45% 40% at 18% 6%, rgba(255, 205, 160, .55), transparent 70%),
+    radial-gradient(50% 42% at 88% 16%, rgba(255, 175, 200, .5), transparent 70%),
+    radial-gradient(55% 50% at 78% 94%, rgba(165, 212, 250, .55), transparent 70%),
+    radial-gradient(45% 42% at 8% 90%, rgba(224, 200, 255, .5), transparent 70%),
+    #fbfbfd;
 
   --c-period: #f43f5e;   --c-period-bg: #ffe4ea;
   --c-fertile: #a855f7;  --c-fertile-bg: #f3e8ff;
@@ -45,7 +50,6 @@
   --primary-soft: #dbeafe;
   --header-grad: linear-gradient(135deg, #93c5fd 0%, #3b82f6 55%, #2563eb 100%);
   --cta-grad: linear-gradient(135deg, #93c5fd 0%, #3b82f6 55%, #1d4ed8 100%);
-  --bg-grad: #ffffff;
   --surface-2: #eef4ff;
   --shadow: 0 10px 25px -6px rgba(37,99,235,.1);
   --shadow-lg: 0 14px 40px rgba(37,99,235,.18);
@@ -94,12 +98,22 @@ body.no-scroll { overflow: hidden; }
 body {
   font-family: 'Plus Jakarta Sans', 'Padauk', sans-serif;
   background: var(--bg-grad);
+  background-size: 220% 220%, 220% 220%, 220% 220%, 220% 220%, auto;
   background-attachment: fixed;
+  animation: meshDrift 26s ease-in-out infinite alternate;
   color: var(--text);
   min-height: 100vh;
   -webkit-tap-highlight-color: transparent;
   overflow-x: clip; /* never let a stray element widen the page on phones */
 }
+/* ---- v32: drifting pastel mesh (light mode) ---- */
+@keyframes meshDrift {
+  0% { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0 0; }
+  50% { background-position: 55% 25%, 45% 55%, 35% 45%, 65% 65%, 0 0; }
+  100% { background-position: 100% 50%, 0% 50%, 0% 10%, 100% 90%, 0 0; }
+}
+[data-theme="dark"] body { animation: none; }
+@media (prefers-reduced-motion: reduce) { body { animation: none; } }
 
 button { font-family: inherit; cursor: pointer; }
 input, select, textarea { font-family: inherit; }
@@ -1677,8 +1691,9 @@ textarea { resize: vertical; }
 
 /* ---- home hero: cycle ring + prediction cards (screenshot design) ---- */
 .hero-nocard { text-align: center; padding: 6px 4px 0; }
-.hero-greet-sub { font-size: .95rem; font-weight: 700; color: var(--primary); }
-.hero-greet-name { font-size: 1.7rem; font-weight: 800; letter-spacing: -.01em; margin: 1px 0 10px; }
+.hero-greet { font-size: 1.02rem; margin: 2px 0 10px; color: var(--text); }
+.hero-greet #header-greet { color: var(--primary); font-weight: 700; }
+.hero-greet #header-title { font-weight: 800; }
 .hero-today { font-size: .8rem; color: var(--muted); font-weight: 600; }
 .hero-date { font-size: 1.55rem; font-weight: 800; margin: 2px 0 4px; letter-spacing: -.01em; }
 .ring-wrap { position: relative; width: 280px; height: 280px; margin: 2px auto 0; }
@@ -1718,13 +1733,13 @@ textarea { resize: vertical; }
 .hstat span { font-size: .7rem; color: var(--muted); font-weight: 600; line-height: 1.35; }
 
 /* ---- cycle ring: entrance animation, today pulse, tap targets ---- */
-@keyframes ringSegIn { from { opacity: 0; } to { opacity: 1; } }
-#cycle-ring .rseg { animation: ringSegIn .45s ease backwards; cursor: pointer; }
-#cycle-ring .rseg:active { opacity: .65; }
+@keyframes dotPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+#cycle-ring .rdot { animation: dotPop .45s cubic-bezier(.2,.9,.3,1.4) backwards; cursor: pointer; transform-box: fill-box; transform-origin: center; }
+#cycle-ring .rdot:active { opacity: .65; }
 @keyframes haloPulse { 0%, 100% { opacity: .5; } 50% { opacity: 0; } }
 .ring-halo { animation: haloPulse 2.4s ease-in-out infinite; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
-  #cycle-ring .rseg, .ring-halo { animation: none; }
+  #cycle-ring .rdot, .ring-halo { animation: none; }
 }
 .ring-hint { margin-top: 8px; font-size: .72rem; color: var(--faint); font-weight: 600; }
 
