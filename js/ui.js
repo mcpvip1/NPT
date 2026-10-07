@@ -5,7 +5,6 @@ let currentTab = 'tab-home';
 const els = {
   headerGreet: $('header-greet'),
   headerTitle: $('header-title'),
-  headerStatus: $('header-status'),
   sideTitle: $('side-title'),
   sideSubtitle: $('side-subtitle'),
   langSeg: $('hdr-langseg'),
@@ -861,22 +860,11 @@ function renderHeader() {
     const h = new Date().getHours();
     els.headerGreet.textContent = h < 12 ? T.hdGreetMorning : h < 17 ? T.hdGreetAfternoon : T.hdGreetEvening;
     els.headerGreet.classList.remove('hidden');
+    els.headerTitle.classList.remove('hidden');
     els.headerTitle.textContent = (state.data.userName || T.hdFallbackName) + '!';
-    // cycle status sits beside the name
-    const info = cycleInfoFor(today());
-    const phase = phaseFor(today());
-    if (els.headerStatus && info && phase) {
-      const day = Math.max(1, diffDays(info.start, today()) + 1);
-      els.headerStatus.textContent = `${T.dayOfCycle(day)} · ${phaseLabel(phase)}`;
-      els.headerStatus.classList.remove('hidden');
-    } else if (els.headerStatus) {
-      els.headerStatus.classList.add('hidden');
-    }
   } else {
     els.headerGreet.classList.add('hidden');
-    if (els.headerStatus) els.headerStatus.classList.add('hidden');
-    const keys = { 'tab-advice': 'navAdvice', 'tab-insights': 'navInsights', 'tab-history': 'navHistory', 'tab-settings': 'navSettings' };
-    els.headerTitle.textContent = T[keys[currentTab]] || '';
+    els.headerTitle.classList.add('hidden');
   }
 }
 
@@ -968,7 +956,7 @@ function renderCycleRing(info, n, day) {
   const fS = diffDays(info.start, info.fertileStart) + 1;
   const fE = diffDays(info.start, info.fertileEnd) + 1;
   const cx = 110, cy = 110, r = 80;
-  const step = 360 / n, gap = Math.min(7, step * 0.3);
+  const step = 360 / n, gap = Math.min(6, step * 0.22);
   const pt = (ang, rad) => {
     const a = (ang - 90) * Math.PI / 180;
     return [cx + rad * Math.cos(a), cy + rad * Math.sin(a)];
