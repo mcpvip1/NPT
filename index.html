@@ -573,6 +573,10 @@
             <span class="wiz-opt-name">English</span>
           </button>
         </div>
+        <button type="button" class="btn ghost wiz-restore" id="wiz-restore">
+          <span data-lbl="wizRestore">အရန်သိမ်းထားတာ ရှိရင် ပြန်ယူမယ်</span>
+        </button>
+        <input type="file" id="wiz-restore-file" accept=".json,application/json" class="hidden">
       </div>
 
       <!-- step 2: country -->
@@ -603,7 +607,7 @@
             <label for="w-name" data-lbl="lblWelcomeName">Name</label>
             <input type="text" id="w-name" required>
           </div>
-          <div class="field-row">
+          <div class="field-row cols-3">
             <div class="field">
               <label for="w-age" data-lbl="lblWelcomeAge">Age</label>
               <input type="number" id="w-age" min="9" max="100" inputmode="numeric" placeholder="—">
@@ -668,6 +672,10 @@
         <div class="welcome-ico">✨</div>
         <h2 data-lbl="wizAiTitle">AI အကြံဉာဏ် သုံးချင်လား？</h2>
         <p class="sub-text" data-lbl="wizAiSub"></p>
+        <div class="field">
+          <label for="w-bot-name" data-lbl="lblBotName">AI Bot နာမည်</label>
+          <input type="text" id="w-bot-name" maxlength="24" data-ph="phBotName" placeholder="ဥပမာ - မိုချီ" autocomplete="off">
+        </div>
         <div class="field">
           <label for="w-ai-key" data-lbl="aiSetKey">Gemini API key (free)</label>
           <div class="key-row">
