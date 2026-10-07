@@ -1693,7 +1693,7 @@ textarea { resize: vertical; }
 .hstat b { font-size: 1.32rem; font-weight: 800; }
 .hstat b.hstat-count { font-size: 1.02rem; line-height: 1.35; }
 .hstat .hstat-label { font-size: .7rem; color: var(--muted); font-weight: 600; line-height: 1.35; }
-.hstat-unit { display: inline-block; font-size: 1em; font-weight: inherit; color: inherit; margin-left: 6px; vertical-align: baseline; }
+.hstat-unit { display: inline-block; font-size: 1.02rem; font-weight: 800; color: inherit; margin-left: 6px; vertical-align: baseline; }
 .hstat-ico svg { width: 24px; height: 24px; display: block; }
 .hstat-ico.amber { background: #fef3c7; }
 .hstat-ico.sky { background: #e0f2fe; }
