@@ -559,7 +559,30 @@
       <p class="sub-text tiny wiz-stepof" id="wiz-stepof"></p>
 
       <!-- step 1: language -->
-      <div class="wiz-step" data-step="1">
+      <div class="wiz-step" data-step="0">
+        <div class="welcome-ico">🌸</div>
+        <h2 data-lbl="wizWelcomeTitle">Aura က ကြိုဆိုပါတယ်</h2>
+        <p class="sub-text" data-lbl="wizWelcomeSub">ဘယ်လိုစသုံးမလဲ ရွေးပါ</p>
+        <div class="wiz-opts">
+          <button type="button" class="wiz-opt wiz-opt-big" id="wiz-new-user">
+            <span class="wiz-opt-flag">🆕</span>
+            <span class="wiz-opt-text">
+              <span class="wiz-opt-name" data-lbl="wizNewUser">လူသစ်</span>
+              <span class="wiz-opt-sub" data-lbl="wizNewUserSub">အခုမှ စသုံးမယ်</span>
+            </span>
+          </button>
+          <button type="button" class="wiz-opt wiz-opt-big" id="wiz-old-user">
+            <span class="wiz-opt-flag">📥</span>
+            <span class="wiz-opt-text">
+              <span class="wiz-opt-name" data-lbl="wizOldUser">လူဟောင်း</span>
+              <span class="wiz-opt-sub" data-lbl="wizOldUserSub">Data အဟောင်း ပြန်ထည့်မယ်</span>
+            </span>
+          </button>
+        </div>
+        <input type="file" id="wiz-restore-file" accept=".json,application/json" class="wiz-file-hidden">
+      </div>
+
+      <div class="wiz-step hidden" data-step="1">
         <div class="welcome-ico">🌸</div>
         <h2 id="w-title" data-lbl="wizLangTitle">ဘာသာစကား ရွေးပါ</h2>
         <p class="sub-text" data-lbl="wizLangSub"></p>
@@ -573,10 +596,6 @@
             <span class="wiz-opt-name">English</span>
           </button>
         </div>
-        <button type="button" class="btn ghost wiz-restore" id="wiz-restore">
-          <span data-lbl="wizRestore">အရန်သိမ်းထားတာ ရှိရင် ပြန်ယူမယ်</span>
-        </button>
-        <input type="file" id="wiz-restore-file" accept=".json,application/json" class="hidden">
       </div>
 
       <!-- step 2: country -->
