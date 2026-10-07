@@ -22,13 +22,19 @@ const els = {
   alarm: $('alarm-banner'),
   alarmText: $('alarm-text'),
 
-  hmPeriod: $('hm-period'),
-  hmFertile: $('hm-fertile'),
-  hmOvu: $('hm-ovu'),
-  sumCycle: $('sum-cycle'),
-  sumPeriod: $('sum-period'),
-  sumLogs: $('sum-logs'),
-  cycleBars: $('cycle-bars'),
+  heroDate: $('hero-date'),
+  cycleRing: $('cycle-ring'),
+  ringDay: $('ring-day'),
+  ringTotal: $('ring-total'),
+  hcOvuIn: $('hc-ovu-in'),
+  hcOvuDay: $('hc-ovu-day'),
+  hcNextIn: $('hc-next-in'),
+  hcNextDate: $('hc-next-date'),
+  hcFertStatus: $('hc-fert-status'),
+  hcFertPill: $('hc-fert-pill'),
+  hsCycle: $('hs-cycle'),
+  hsPeriod: $('hs-period'),
+  hsReg: $('hs-reg'),
 
   calTitle: $('cal-title'),
   calDays: $('cal-days'),
@@ -891,24 +897,100 @@ function cycleWindows() {
   };
 }
 
-// the four key numbers on home — shared by the stats card, banner and popups.
+// home hero: cycle ring, ovulation / next-period / fertility cards, stat tiles.
 function renderStats() {
   const T = t();
   const w = cycleWindows();
   const info = cycleInfoFor(today());
   if (!w || !info) {
-    els.hmPeriod.textContent = '\u2013';
-    els.hmFertile.textContent = '\u2013';
-    els.hmOvu.textContent = '\u2013';
+    [els.ringDay, els.hcOvuIn, els.hcOvuDay, els.hcNextIn, els.hcNextDate,
+     els.hcFertStatus, els.hsCycle, els.hsPeriod, els.hsReg].forEach(el => { if (el) el.textContent = '\u2013'; });
+    if (els.cycleRing) els.cycleRing.innerHTML = '';
+    if (els.hcFertPill) els.hcFertPill.classList.add('hidden');
     return;
   }
-  const day = Math.max(1, diffDays(info.start, today()) + 1);
-  els.hmPeriod.textContent = T.dayOfCycle(day);
-  els.hmFertile.textContent = `${w.fDays} ${T.daysUnit}`;
-  els.hmOvu.textContent = fmtShort(w.ovu);
+  const n = state.data.cycleLength || 28;
+  const day = Math.max(1, Math.min(n, diffDays(info.start, today()) + 1));
+
+  if (els.heroDate) els.heroDate.textContent =
+    today().toLocaleDateString(locale(), { month: 'long', day: 'numeric', weekday: 'long' });
+  renderCycleRing(info, n, day);
+
+  els.hcOvuIn.textContent = T.homeInDays(diffDays(today(), w.ovu));
+  els.hcOvuDay.textContent = T.dayOfCycle(diffDays(info.start, w.ovu) + 1);
+
+  els.hcNextIn.textContent = T.homeInDays(w.left);
+  els.hcNextDate.textContent =
+    w.nxt.toLocaleDateString(locale(), { month: 'long', day: 'numeric', year: 'numeric' });
+
+  const td = today();
+  if (isSameDay(td, w.ovu)) {
+    els.hcFertStatus.textContent = T.homeHighChance;
+    els.hcFertPill.textContent = T.homePeak;
+    els.hcFertPill.className = 'chance-pill peak';
+  } else if (td >= w.fStart && td <= w.fEnd) {
+    els.hcFertStatus.textContent = T.homeHighChance;
+    els.hcFertPill.textContent = T.homeHigh;
+    els.hcFertPill.className = 'chance-pill high';
+  } else {
+    els.hcFertStatus.textContent = T.homeInDays(diffDays(td, w.fStart));
+    els.hcFertPill.className = 'chance-pill hidden';
+  }
+
+  els.hsCycle.textContent = n;
+  els.hsPeriod.textContent = state.data.periodLength || '\u2013';
+  const reg = cycleRegularity();
+  els.hsReg.textContent = reg == null ? '\u2013' : reg + '%';
 
   checkAlarm(w.left);
   celebrateCycleStart(w.pStart);
+}
+
+// segmented cycle ring: one arc per cycle day, colored by phase, with a
+// marker on today and milestone day numbers around the outside.
+function renderCycleRing(info, n, day) {
+  const svg = els.cycleRing;
+  if (!svg) return;
+  const pLen = state.data.periodLength || 5;
+  const ovuDay = diffDays(info.start, info.ovulation) + 1;
+  const fS = diffDays(info.start, info.fertileStart) + 1;
+  const fE = diffDays(info.start, info.fertileEnd) + 1;
+  const cx = 110, cy = 110, r = 80;
+  const step = 360 / n, gap = Math.min(7, step * 0.3);
+  const pt = (ang, rad) => {
+    const a = (ang - 90) * Math.PI / 180;
+    return [cx + rad * Math.cos(a), cy + rad * Math.sin(a)];
+  };
+  const phaseOf = d =>
+    d <= pLen ? 'period' : d === ovuDay ? 'peak' : (d >= fS && d <= fE) ? 'fertile' : 'luteal';
+  let s = '';
+  for (let d = 1; d <= n; d++) {
+    const a0 = (d - 1) * step + gap / 2, a1 = d * step - gap / 2;
+    const [x1, y1] = pt(a0, r), [x2, y2] = pt(a1, r);
+    s += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="var(--ring-${phaseOf(d)})" stroke-width="10" stroke-linecap="round"/>`;
+  }
+  [...new Set([1, 7, 14, 21, n])].filter(m => m <= n).sort((a, b) => a - b).forEach(m => {
+    const [x, y] = pt((m - 0.5) * step, r + 20);
+    s += `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" class="ring-mark">${m}</text>`;
+  });
+  const [tx, ty] = pt((day - 0.5) * step, r);
+  s += `<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="14" fill="var(--ring-${phaseOf(day)})"/>` +
+       `<text x="${tx.toFixed(1)}" y="${(ty + 5).toFixed(1)}" text-anchor="middle" class="ring-today">${day}</text>`;
+  svg.innerHTML = s;
+  els.ringDay.textContent = day;
+  els.ringTotal.textContent = '/ ' + n;
+}
+
+// regularity % from the last logged cycle lengths (null when too little data).
+function cycleRegularity() {
+  const starts = loggedPeriodStarts().slice(-7);
+  const lens = [];
+  for (let i = 1; i < starts.length; i++) lens.push(diffDays(parseDate(starts[i - 1]), parseDate(starts[i])));
+  const recent = lens.filter(l => l > 0 && l < 90);
+  if (recent.length < 2) return null;
+  const mean = recent.reduce((a, b) => a + b, 0) / recent.length;
+  const sd = Math.sqrt(recent.reduce((a, b) => a + (b - mean) * (b - mean), 0) / recent.length);
+  return Math.max(0, Math.min(100, Math.round(100 * (1 - sd / mean))));
 }
 
 // count a number up with easing (respects reduced-motion).
@@ -930,13 +1012,16 @@ function countUp(el, to, fmt) {
 
 // replay the home stat numbers whenever the home tab opens.
 function animateHomeStats() {
-  const T = t();
   const w = cycleWindows();
   const info = cycleInfoFor(today());
   if (!w || !info) return;
-  const day = Math.max(1, diffDays(info.start, today()) + 1);
-  countUp(els.hmPeriod, day, v => T.dayOfCycle(v));
-  countUp(els.hmFertile, w.fDays, v => `${v} ${T.daysUnit}`);
+  const n = state.data.cycleLength || 28;
+  const day = Math.max(1, Math.min(n, diffDays(info.start, today()) + 1));
+  countUp(els.ringDay, day, v => v);
+  countUp(els.hsCycle, n, v => v);
+  countUp(els.hsPeriod, state.data.periodLength || 0, v => v);
+  const reg = cycleRegularity();
+  if (reg != null) countUp(els.hsReg, reg, v => v + '%');
 }
 
 // period starts detected from logged flow entries (a flow day after a gap)
@@ -950,23 +1035,6 @@ function loggedPeriodStarts() {
   return starts;
 }
 
-function renderSummary() {
-  els.sumCycle.textContent = state.data.cycleLength || '\u2013';
-  els.sumPeriod.textContent = state.data.periodLength || '\u2013';
-  els.sumLogs.textContent = Object.keys(state.logs || {}).length;
-
-  const starts = loggedPeriodStarts().slice(-7); // up to 7 starts -> 6 lengths
-  const lens = [];
-  for (let i = 1; i < starts.length; i++) lens.push(diffDays(parseDate(starts[i - 1]), parseDate(starts[i])));
-  const recent = lens.slice(-6).filter(l => l > 0 && l < 90);
-  if (recent.length < 2) { els.cycleBars.innerHTML = ''; els.cycleBars.classList.add('hidden'); return; }
-  els.cycleBars.classList.remove('hidden');
-  const max = Math.max.apply(null, recent);
-  els.cycleBars.innerHTML = recent.map(l => {
-    const h = Math.max(14, Math.round((l / max) * 62));
-    return `<div class="mini-bar" style="height:${h}px"><span>${l}</span></div>`;
-  }).join('');
-}
 
 
 // beautiful explainer card for a tapped home row.
@@ -1525,7 +1593,6 @@ function renderAll() {
   applyPhaseTheme();
   renderHeader();
   renderStats();
-  renderSummary();
   renderCalendar();
   renderHistory();
   renderInsights();
