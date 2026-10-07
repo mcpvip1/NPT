@@ -156,12 +156,12 @@
           <div class="hero-duo">
             <div class="panel hcard">
               <div class="hcard-head"><span class="hcard-ico ico-ovu"><span data-icon="ovulation"></span></span><span class="hcard-title" data-lbl="lblCardOvulation">Ovulation</span></div>
-              <div class="hcard-main c-ovu" id="hc-ovu-in">&mdash;</div>
+              <div><span class="in-pill green" id="hc-ovu-in">&mdash;</span></div>
               <div class="hcard-sub" id="hc-ovu-day">&mdash;</div>
             </div>
             <div class="panel hcard">
               <div class="hcard-head"><span class="hcard-ico ico-next"><span data-icon="period"></span></span><span class="hcard-title" data-lbl="lblCardNext">Next Period</span></div>
-              <div class="hcard-main c-period" id="hc-next-in">&mdash;</div>
+              <div><span class="in-pill pink" id="hc-next-in">&mdash;</span></div>
               <div class="hcard-sub" id="hc-next-date">&mdash;</div>
             </div>
           </div>
@@ -175,9 +175,9 @@
           </div>
 
           <div class="hero-trio">
-            <div class="panel hstat"><b id="hs-cycle">&mdash;</b><span data-lbl="lblAvgCycle">Avg cycle</span></div>
-            <div class="panel hstat"><b id="hs-period">&mdash;</b><span data-lbl="homePeriodDays">Period Days</span></div>
-            <div class="panel hstat"><b id="hs-reg">&mdash;</b><span data-lbl="homeRegularity">Regularity</span></div>
+            <div class="panel hstat"><span class="hstat-ico blue"><span data-icon="calendar"></span></span><b id="hs-cycle">&mdash;</b><span data-lbl="lblAvgCycle">Avg cycle</span></div>
+            <div class="panel hstat"><span class="hstat-ico red"><span data-icon="period"></span></span><b id="hs-period">&mdash;</b><span data-lbl="homePeriodDays">Period Days</span></div>
+            <div class="panel hstat"><span class="hstat-ico yellow"><span data-icon="moon"></span></span><b id="hs-reg">&mdash;</b><span data-lbl="homeRegularity">Regularity</span></div>
           </div>
 
 
@@ -195,6 +195,7 @@
               </div>
               <div class="ds-phase-row"><span class="phase-pill" id="ds-phase">&mdash;</span></div>
               <div class="ds-log" id="ds-log"></div>
+              <button type="button" class="btn primary ds-log-btn" id="ds-log-btn"><span data-lbl="dsLogDay">Log this day</span></button>
             </div>
           </div>
 
