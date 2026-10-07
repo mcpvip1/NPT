@@ -975,7 +975,8 @@ function renderCycleRing(info, n, day) {
     if (ph === 'period') return lerpColor('#f43f5e', '#f9a8d4', (d - 1) / Math.max(1, pLen - 1));
     if (ph === 'fertile') return lerpColor('#bcd6fe', '#3b82f6', (d - fS) / Math.max(1, fE - fS));
     if (ph === 'peak') return '#8b5cf6';
-    return lerpColor('#f2f0f3', '#e2dee4', (d - fE - 1) / Math.max(1, n - fE - 1));
+    const t = Math.min(1, Math.max(0, (d - fE - 1) / Math.max(1, n - fE - 1)));
+    return lerpColor('#e9e5ec', '#d6d1da', t);
   };
   // thin connectors between day dots, then the dots on top (reference detail)
   const dotR = Math.min(6.5, (2 * Math.PI * r / n) * 0.28);
