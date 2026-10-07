@@ -249,7 +249,7 @@ input, select, textarea { font-family: inherit; }
 .content {
   flex: 1;
   padding: 0 18px;
-  padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   display: flex; flex-direction: column;
   gap: 16px;
 }
@@ -1106,7 +1106,7 @@ textarea { resize: vertical; }
 
 @media (min-width: 640px) {
   .ring-wrap { width: 300px; height: 300px; }
-  .content { max-width: 720px; margin: 0 auto; width: 100%; padding: 0 24px; padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
+  .content { max-width: 720px; margin: 0 auto; width: 100%; padding: 0 24px; padding-bottom: env(safe-area-inset-bottom, 0px); }
   .alarm { max-width: 672px; margin: 0 auto 12px; }
 
 .ins-stats { grid-template-columns: repeat(4, 1fr); }
