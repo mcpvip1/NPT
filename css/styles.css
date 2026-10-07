@@ -23,7 +23,7 @@
   --ring-period: #f43f5e;
   --ring-fertile: #3b82f6;
   --ring-peak: #8b5cf6;
-  --ring-luteal: #e4e1e6;
+  --ring-luteal: #ddd8e0;
 
   --r-lg: 24px;
   --r-md: 16px;
@@ -264,18 +264,11 @@ input, select, textarea { font-family: inherit; }
 .panel-head { font-size: .95rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 6px; }
 .sub-text { font-size: .78rem; color: var(--muted); margin-bottom: 12px; }
 
-.cal-head {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 12px;
-}
-.cal-head h2 { font-size: .95rem; font-weight: 700; }
-
 .legend {
   display: flex; flex-wrap: wrap; gap: 12px;
   padding-bottom: 10px; margin-bottom: 10px;
   border-bottom: 1px dashed var(--line);
 }
-.lg { display: flex; align-items: center; gap: 5px; font-size: .7rem; color: var(--muted); }
 .dot { width: 8px; height: 8px; border-radius: 50%; }
 .dot.p { background: var(--c-period); }
 .dot.f { background: var(--c-fertile); }
@@ -1076,9 +1069,7 @@ textarea { resize: vertical; }
   .content { max-width: 720px; margin: 0 auto; width: 100%; padding: 0 24px; padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
   .alarm { max-width: 672px; margin: 0 auto 12px; }
 
-  .cards-grid { grid-template-columns: repeat(4, 1fr); }
-
-  .ins-stats { grid-template-columns: repeat(4, 1fr); }
+.ins-stats { grid-template-columns: repeat(4, 1fr); }
 
   .days { gap: 6px; }
   .day { font-size: .88rem; }
@@ -1121,18 +1112,8 @@ textarea { resize: vertical; }
   }
 
   /* Home: hero + cards side by side */
-  .home-grid {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 20px;
-    align-items: start;
-  }
-  .cards-grid { grid-template-columns: repeat(2, 1fr); }
-
-  .panel { padding: 22px; }
-  .calendar-panel { max-width: 720px; margin: 0 auto; width: 100%; }
-
-  #tab-insights { max-width: 900px; margin: 0 auto; }
+.panel { padding: 22px; }
+#tab-insights { max-width: 900px; margin: 0 auto; }
 
   #tab-history .panel { max-width: 820px; margin: 0 auto; }
 
@@ -1257,15 +1238,6 @@ textarea { resize: vertical; }
    REFERENCE-STYLE HOME COMPONENTS
    ============================= */
 /* cycle status pill beside the name in the header */
-.header-status {
-  margin-top: 6px; font-size: .78rem; font-weight: 800; color: var(--primary-dark);
-  background: rgba(255,255,255,.6);
-  border: 1px solid rgba(255,255,255,.7);
-  padding: 5px 14px; border-radius: 999px;
-  box-shadow: 0 6px 16px -8px var(--glow-soft);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-}
-[data-theme="dark"] .header-status { background: rgba(255,255,255,.07); border-color: var(--line); color: var(--primary); }
 
 /* ---------- screen transitions: every tab glides in with a soft stagger ---------- */
 .page.active { animation: pageIn .38s cubic-bezier(.22,.9,.3,1); }
@@ -1289,8 +1261,6 @@ textarea { resize: vertical; }
   .page.active, .page.active > * { animation: none; }
 }
 
-.c-period { color: var(--c-period); }
-.c-fertile { color: var(--c-fertile); }
 .c-ovu { color: var(--c-ovu); }
 
 /* cycle summary + nav fab (restored) */
@@ -1305,9 +1275,6 @@ textarea { resize: vertical; }
 }
 .nav-fab:active { transform: scale(.93); }
 
-.sec-title { font-size: 1rem; font-weight: 800; color: var(--text); margin: 2px 2px 0; }
-.sec-head-row { display: flex; align-items: center; justify-content: space-between; }
-.sec-head-row .sec-title { margin: 0; }
 .nav-ico .ic3d { width: 27px; height: 27px; }
 .nav-ico { display: grid; place-items: center; }
 .nav-btn { gap: 2px; }
@@ -1403,7 +1370,6 @@ textarea { resize: vertical; }
   width: 120px; height: 120px; border-radius: 50%;
   background: rgba(255,255,255,.14); pointer-events: none;
 }
-.upd-ico { font-size: 1.9rem; display: block; margin-bottom: 8px; }
 .upd-flower { display: block; margin-bottom: 10px; position: relative; }
 .upd-hero h2 { font-size: 1.15rem; font-weight: 800; position: relative; }
 .upd-ver {
@@ -1680,7 +1646,6 @@ textarea { resize: vertical; }
 .hero-greet { font-size: 1.02rem; margin: 2px 0 10px; color: var(--text); }
 .hero-greet #header-greet { color: var(--primary); font-weight: 700; }
 .hero-greet #header-title { font-weight: 800; }
-.hero-today { font-size: .8rem; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
 .hero-date { font-size: 1.55rem; font-weight: 800; margin: 2px 0 4px; letter-spacing: -.01em; }
 .ring-wrap { position: relative; width: 280px; height: 280px; margin: 2px auto 0; }
 #cycle-ring { width: 100%; height: 100%; display: block; }
@@ -1698,7 +1663,7 @@ textarea { resize: vertical; }
 .dot.rlute { background: var(--ring-luteal); border: 1px solid var(--line); }
 
 .hero-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.hcard { padding: 14px; display: flex; flex-direction: column; gap: 7px; }
+.hcard { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
 .hcard-head { display: flex; align-items: center; gap: 8px; }
 .hcard-ico { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
 .hcard-ico .ic3d { width: 22px; height: 22px; }
@@ -1706,7 +1671,7 @@ textarea { resize: vertical; }
 .ico-ovu { background: var(--c-ovu-bg); }
 .ico-next { background: var(--c-period-bg); }
 .ico-fert { background: var(--c-fertile-bg); }
-.hcard-title { font-size: .82rem; font-weight: 700; }
+.hcard-title { font-size: .9rem; font-weight: 700; }
 [data-theme="dark"] .hcard-sub { font-size: .75rem; color: var(--muted); font-weight: 600; }
 
 .hcard-wide { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px; }
