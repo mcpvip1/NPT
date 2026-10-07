@@ -1134,29 +1134,18 @@ function initDaySheet() {
 }
 
 // regularity % from the last logged cycle lengths (null when too little data).
-function cycleRegularity() {
-  const starts = loggedPeriodStarts().slice(-7);
-  const lens = [];
-  for (let i = 1; i < starts.length; i++) lens.push(diffDays(parseDate(starts[i - 1]), parseDate(starts[i])));
-  const recent = lens.filter(l => l > 0 && l < 90);
-  if (recent.length < 2) return null;
-  const mean = recent.reduce((a, b) => a + b, 0) / recent.length;
-  const sd = Math.sqrt(recent.reduce((a, b) => a + (b - mean) * (b - mean), 0) / recent.length);
-  return Math.max(0, Math.min(100, Math.round(100 * (1 - sd / mean))));
-}
-
 // count a number up with easing (respects reduced-motion).
 function countUp(el, to, fmt) {
   if (!el || !(to > 0)) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    el.textContent = fmt(to);
+    el.innerHTML = fmt(to);
     return;
   }
   const t0 = performance.now(), dur = 650;
   const step = now => {
     const k = Math.min(1, (now - t0) / dur);
     const e = 1 - Math.pow(1 - k, 3);
-    el.textContent = fmt(Math.max(1, Math.round(to * e)));
+    el.innerHTML = fmt(Math.max(1, Math.round(to * e)));
     if (k < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -1164,16 +1153,16 @@ function countUp(el, to, fmt) {
 
 // replay the home stat numbers whenever the home tab opens.
 function animateHomeStats() {
+  const T = t();
   const w = cycleWindows();
   const info = cycleInfoFor(today());
   if (!w || !info) return;
   const n = state.data.cycleLength || 28;
   const day = Math.max(1, Math.min(n, diffDays(info.start, today()) + 1));
   countUp(els.ringDay, day, v => v);
-  countUp(els.hsCycle, n, v => v);
-  countUp(els.hsPeriod, state.data.periodLength || 0, v => v);
-  const reg = cycleRegularity();
-  if (reg != null) countUp(els.hsReg, reg, v => v + '%');
+  const u = t => `<span class="hstat-unit">${t}</span>`;
+  countUp(els.hsCycle, n, v => `${v}${u(T.infoDays)}`);
+  countUp(els.hsPeriod, state.data.periodLength || 0, v => `${v}${u(T.infoDays)}`);
 }
 
 // period starts detected from logged flow entries (a flow day after a gap)
