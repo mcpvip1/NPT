@@ -514,13 +514,11 @@ function initWelcome() {
   const wPaste = $('w-ai-paste');
   if (wPaste) wPaste.addEventListener('click', () => pasteInto($('w-ai-key')));
 
-  // step 0: new vs returning user
+  // step 0: new vs returning user (label triggers file picker natively — more reliable on Android)
   const wNewUser = $('wiz-new-user');
-  const wOldUser = $('wiz-old-user');
   const wRestoreFile = $('wiz-restore-file');
   if (wNewUser) wNewUser.addEventListener('click', () => wizShow(1));
-  if (wOldUser && wRestoreFile) {
-    wOldUser.addEventListener('click', () => wRestoreFile.click());
+  if (wRestoreFile) {
     wRestoreFile.addEventListener('change', () => {
       const f = wRestoreFile.files && wRestoreFile.files[0];
       if (!f) return;
@@ -531,6 +529,10 @@ function initWelcome() {
           renderBotHello();
           maybeShowInstallNudge();
         }
+        wRestoreFile.value = '';
+      };
+      r.onerror = () => {
+        toast(t().msgImportError, 'err');
         wRestoreFile.value = '';
       };
       r.readAsText(f);
