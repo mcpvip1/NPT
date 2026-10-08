@@ -1712,7 +1712,6 @@ function refreshAdvicePreview() {
 
 // ---------- settings form ----------
 function fillSettingsForm() {
-  if (typeof refreshGdriveStatus === 'function') refreshGdriveStatus();
   els.setName.value = state.data.userName || '';
   els.setLast.value = state.data.lastDate || '';
   els.setCycle.value = state.data.cycleLength;
