@@ -837,9 +837,15 @@
         <h3 data-lbl="importTitle" id="import-title">Import Data</h3>
         <button class="icon-btn" id="import-close" aria-label="Close"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg></button>
       </div>
-      <p class="sub-text" data-lbl="importHint">Paste exported JSON.</p>
-      <textarea id="import-text" rows="8" placeholder='{"data":{},"logs":{}}'></textarea>
-      <button id="import-go" class="btn primary full" data-lbl="confirm">Import</button>
+      <p class="sub-text" data-lbl="importHint">Choose your backup file.</p>
+      <label class="wiz-opt wiz-opt-big wiz-file-label">
+        <span class="wiz-opt-flag">📁</span>
+        <span class="wiz-opt-text">
+          <span class="wiz-opt-name" data-lbl="importChooseFile">Choose backup file</span>
+          <span class="wiz-opt-sub" data-lbl="importChooseFileSub">Restore starts automatically</span>
+        </span>
+        <input type="file" id="import-file" accept=".json,application/json" class="wiz-file-input">
+      </label>
     </div>
   </div>
 
