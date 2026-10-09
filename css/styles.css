@@ -1631,7 +1631,8 @@ textarea { resize: vertical; }
 .wiz-opts { display: grid; gap: 10px; }
 .wiz-restore { margin-top: 16px; width: 100%; }
 /* file input: off-screen, NOT display:none (Android blocks programmatic click on display:none) */
-.wiz-file-hidden { position: fixed; left: -9999px; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.wiz-file-label { position: relative; overflow: hidden; cursor: pointer; }
+.wiz-file-input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 /* step 0 big options */
 .wiz-opt-big { display: flex; align-items: center; gap: 14px; padding: 16px; text-align: left; }
 label.wiz-opt-big { cursor: pointer; }
