@@ -154,9 +154,8 @@ const els = {
   confirmCancel: $('c-cancel'),
 
   importModal: $('import'),
-  importText: $('import-text'),
-  importClose: $('import-close'),
-  importGo: $('import-go')
+  importFile: $('import-file'),
+  importClose: $('import-close')
 };
 
 // ---------- toast ----------
