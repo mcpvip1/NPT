@@ -521,7 +521,10 @@ function initWelcome() {
   if (wRestoreFile) {
     wRestoreFile.addEventListener('change', () => {
       const f = wRestoreFile.files && wRestoreFile.files[0];
-      if (!f) return;
+      if (!f) {
+        toast(t().msgImportError, 'err');
+        return;
+      }
       const r = new FileReader();
       r.onload = () => {
         if (importBackupData(r.result)) {
