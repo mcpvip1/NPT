@@ -309,6 +309,32 @@ function importBackupData(raw) {
     });
   }
 
+  // Onboarding step 0: returning user restore (top-level so it attaches even if initWelcome has issues)
+  const wRestoreFileTop = $('wiz-restore-file');
+  if (wRestoreFileTop) {
+    wRestoreFileTop.addEventListener('change', () => {
+      const f = wRestoreFileTop.files && wRestoreFileTop.files[0];
+      if (!f) {
+        toast(t().msgImportError, 'err');
+        return;
+      }
+      const r = new FileReader();
+      r.onload = () => {
+        if (importBackupData(r.result)) {
+          closeModal(els.welcome);
+          renderBotHello();
+          maybeShowInstallNudge();
+        }
+        wRestoreFileTop.value = '';
+      };
+      r.onerror = () => {
+        toast(t().msgImportError, 'err');
+        wRestoreFileTop.value = '';
+      };
+      r.readAsText(f);
+    });
+  }
+
   $('btn-reset').addEventListener('click', async () => {
     const T = t();
     const ok = await askConfirm(T.confirmResetTitle, T.confirmResetMsg);
@@ -527,33 +553,10 @@ function initWelcome() {
   const wPaste = $('w-ai-paste');
   if (wPaste) wPaste.addEventListener('click', () => pasteInto($('w-ai-key')));
 
-  // step 0: new vs returning user (label triggers file picker natively — more reliable on Android)
+  // step 0: new vs returning user
   const wNewUser = $('wiz-new-user');
-  const wRestoreFile = $('wiz-restore-file');
   if (wNewUser) wNewUser.addEventListener('click', () => wizShow(1));
-  if (wRestoreFile) {
-    wRestoreFile.addEventListener('change', () => {
-      const f = wRestoreFile.files && wRestoreFile.files[0];
-      if (!f) {
-        toast(t().msgImportError, 'err');
-        return;
-      }
-      const r = new FileReader();
-      r.onload = () => {
-        if (importBackupData(r.result)) {
-          closeModal(els.welcome);
-          renderBotHello();
-          maybeShowInstallNudge();
-        }
-        wRestoreFile.value = '';
-      };
-      r.onerror = () => {
-        toast(t().msgImportError, 'err');
-        wRestoreFile.value = '';
-      };
-      r.readAsText(f);
-    });
-  }
+  // (wiz-restore-file change listener is attached at top-level for reliability)
 }
 
 function initLanguage() {
