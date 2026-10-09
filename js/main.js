@@ -221,7 +221,6 @@ function initSettings() {
   });
 
   $('btn-import').addEventListener('click', () => {
-    els.importText.value = '';
     openModal(els.importModal);
   });
   els.importClose.addEventListener('click', () => closeModal(els.importModal));
@@ -290,11 +289,25 @@ function importBackupData(raw) {
     return false;
   }
 }
-  els.importGo.addEventListener('click', () => {
-    const raw = els.importText.value.trim();
-    if (!raw) return;
-    if (importBackupData(raw)) closeModal(els.importModal);
-  });
+  if (els.importFile) {
+    els.importFile.addEventListener('change', () => {
+      const f = els.importFile.files && els.importFile.files[0];
+      if (!f) {
+        toast(t().msgImportError, 'err');
+        return;
+      }
+      const r = new FileReader();
+      r.onload = () => {
+        if (importBackupData(r.result)) closeModal(els.importModal);
+        els.importFile.value = '';
+      };
+      r.onerror = () => {
+        toast(t().msgImportError, 'err');
+        els.importFile.value = '';
+      };
+      r.readAsText(f);
+    });
+  }
 
   $('btn-reset').addEventListener('click', async () => {
     const T = t();
